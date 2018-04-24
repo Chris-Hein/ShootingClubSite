@@ -1,0 +1,80 @@
+/*		Tablet Layout: 768px.
+		Gutters: 24px.
+		Outer margins: 28px.
+		Inherits styles from: Default Layout.
+-----------------------------------------------------------------
+cols    1     2      3      4      5      6      7      8
+px      68    160    252    344    436    528    620    712    */
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+.mainmenu {display: block;}
+.small_device_menu, .small_menu_area {display: none;}
+.tab_comments { margin-left: 8px;}
+.nav > li > a { display: block; padding: 10px 5px; position: relative;}
+.single_post h1 a {line-height: 1.5;}
+#wp-calendar th {padding: 10px 8px;}
+#wp-calendar tbody td {padding: 15px 8px;}
+    
+    
+}
+
+
+
+
+/*		Mobile Layout: 320px.
+		Gutters: 24px.
+		Outer margins: 34px.
+		Inherits styles from: Default Layout.
+---------------------------------------------
+cols    1     2      3
+px      68    160    252    */
+
+@media only screen and (max-width: 767px) {
+	
+.sidebar_section {float: none; width: 100%}
+.mainsection {float: none; width: 100%}
+div.mobile_menu_area { width: 177px;}
+.mainmenu {display: none;}
+.small_device_menu {display: block;}
+.mainmenu ul li:hover, .current_page_parent, .current_page_item { background: none repeat scroll 0 0 rgba(0, 0, 0, 0);}
+.single_post {width: 95%}
+.logo { margin: 0 auto;text-align: center;width: 100%;}
+.logo p {font-size: 16px;}
+.logo a {font-size: 30px;}
+.small_menu_area ul li a {font-size: 14px;text-transform: capitalize;}
+.small_menu_area ul li a { font-size: 16px;padding: 5px 0;  text-transform: capitalize;}
+.small_menu_area ul ul li a {font-size: 16px;}
+.header_image {float: none;}
+
+}
+
+
+
+
+
+
+/*		Wide Mobile Layout: 480px.
+		Gutters: 24px.
+		Outer margins: 22px.
+		Inherits styles from: Default Layout, Mobile Layout.
+------------------------------------------------------------
+cols    1     2      3      4      5
+px      68    160    252    344    436    */
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+	
+.sidebar_section {float: none; width: 100%}
+.mainsection {float: none; width: 100%}
+.mainmenu {display: none;}
+.small_device_menu {display: block;}
+.mainmenu ul li:hover, .current_page_parent, .current_page_item { background: none repeat scroll 0 0 rgba(0, 0, 0, 0);}
+.single_post {width: 95%}
+
+.logo p {font-size: 16px;}
+.logo a {font-size: 30px;}
+.small_menu_area ul li a {font-size: 14px;text-transform: capitalize;}
+.small_menu_area ul li a { font-size: 16px;padding: 5px 0;  text-transform: capitalize;}
+.small_menu_area ul ul li a {font-size: 16px;}
+
+}
+
