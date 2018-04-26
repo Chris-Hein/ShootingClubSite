@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<markers>
+  <marker>
+    <marker_id>2</marker_id>
+    <map_id>1</map_id>
+    <title></title>
+    <address>24 Reeves Rd, New Glasgow, NS B2H 5C7, Canada</address>
+    <desc></desc>
+    <pic></pic>
+    <icon></icon>
+    <linkd></linkd>
+    <lat>45.552684</lat>
+    <lng>-62.589297</lng>
+    <anim>0</anim>
+    <retina>0</retina>
+    <category></category>
+    <infoopen>1</infoopen>
+  </marker>
+  <marker>
+    <marker_id>3</marker_id>
+    <map_id>1</map_id>
+    <title></title>
+    <address>40 Foster Avenue Road, Stellarton, NS B0K 1S0, Canada</address>
+    <desc></desc>
+    <pic></pic>
+    <icon></icon>
+    <linkd></linkd>
+    <lat>45.564594</lat>
+    <lng>-62.663941</lng>
+    <anim>0</anim>
+    <retina>0</retina>
+    <category></category>
+    <infoopen>1</infoopen>
+  </marker>
+</markers>
