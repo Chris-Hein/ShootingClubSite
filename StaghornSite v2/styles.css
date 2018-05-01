@@ -1,13 +1,14 @@
 ﻿body {
-
+    color:white;
+    background-color:darkseagreen;
 }
 
 .fa {
-    padding: 20px;
-    font-size: 30px;
+    /*padding: 20px;
+    font-size: 20px;
     width: 50px;
     text-align: center;
-    text-decoration: none;
+    text-decoration: none;*/
 }
 
 .fa:hover {
@@ -15,6 +16,38 @@
 }
 
 .fa-facebook {
-    background: #3B5998;
-    color: white;
+    /*background: #3B5998;*/
+    color: teal;
+}
+
+table {
+    border: 1px solid seagreen;
+    border-collapse: collapse;
+    width:100%;
+    color:black;
+    
+}
+
+table tr:nth-child(even) {
+    background-color:lightgray;
+}
+
+table tr:nth-child(odd) {
+    background-color:darkgray;
+}
+
+.container {
+    background-color:darkseagreen;
+}
+
+.container1 {
+    background-color:darkolivegreen;
+}
+
+.button {
+    color:orange;
+}
+
+.instructions {
+    color:black;
 }

@@ -1,15 +1,31 @@
 ﻿<%@ Page Language="C#" Debug="true" ClientTarget="uplevel" EnableEventValidation="false" validateRequest="false" EnableViewState="true" %>
 <%@ Import Namespace="MySql.Data.MySqlClient" %>
-<%@Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Net.Mail" %>
 <%@ Import Namespace="System.Net" %>
 
 <!DOCTYPE html>
 
 <script runat="server">
+    // Variables
+    WebLogin weblogin;
+
     // Page load
     protected void page_load() {
-        //
+        generateLogin();
+        setLoginState();
+    }
+
+    protected void setLoginState() {
+        if (Session["username"] != null) {
+            lblLogin.Text = "Log Out";
+            lblCurrentUser.Text = "You are logged in as " + Session["username"].ToString();
+            //btnLogin.Text = "Logout";
+        } else {
+            lblLogin.Text = "Log In";
+            lblCurrentUser.Text = "You are not logged in";
+            //btnLogin.Text = "Login";
+        }
     }
 
     // Method to generate the body text of automated messages
@@ -35,13 +51,43 @@
         smtpobj.Send(o);
     }
 
+    protected void userLogout(Object src, EventArgs args) {
+        Session.Remove("username");
+        Session.Remove("weblogin");
+        Response.Redirect("Default.aspx");
+    }
+
+    protected void userLogin(Object src, EventArgs args) {
+        weblogin.username = txtUsername.Text;
+        weblogin.password = txtPassword.Text;
+        Session["username"] = txtUsername.Text;
+
+        if (weblogin.unlock()) {
+            Response.Redirect("admin.aspx");
+        } else {
+            lblLoginError.Text = "Invalid username/password";
+        }
+    }
+
+    protected void generateLogin() {
+        if ((!Page.IsPostBack) || (Session["weblogin"] == null)) {
+            // First visit
+            // DB name, username, password, table
+            weblogin = new WebLogin("login", "root", "", "login");
+            Session["weblogin"] = weblogin;
+        } else {
+            // Postback
+            weblogin = (WebLogin)Session["weblogin"];
+        }
+    }
+
     protected void selectHome(Object src, EventArgs args) {
         if (homePanel.Style["display"] == "none") {
             homePanel.Style.Add("display", "block");
             btnHome.CssClass = "btn btn-warning";
         } else {
             homePanel.Style.Add("display", "none");
-            btnHome.CssClass = "btn btn-info";
+            btnHome.CssClass = "btn btn-success";
         }
     }
 
@@ -51,7 +97,7 @@
             btnNews.CssClass = "btn btn-warning";
         } else {
             newsPanel.Style.Add("display", "none");
-            btnNews.CssClass = "btn btn-info";
+            btnNews.CssClass = "btn btn-success";
         }
     }
 
@@ -61,7 +107,7 @@
             btnAbout.CssClass = "btn btn-warning";
         } else {
             aboutPanel.Style.Add("display", "none");
-            btnAbout.CssClass = "btn btn-info";
+            btnAbout.CssClass = "btn btn-success";
         }
     }
 
@@ -71,7 +117,7 @@
             btnCalendar.CssClass = "btn btn-warning";
         } else {
             calendarPanel.Style.Add("display", "none");
-            btnCalendar.CssClass = "btn btn-info";
+            btnCalendar.CssClass = "btn btn-success";
         }
     }
 
@@ -81,7 +127,7 @@
             btnLinks.CssClass = "btn btn-warning";
         } else {
             linksPanel.Style.Add("display", "none");
-            btnLinks.CssClass = "btn btn-info";
+            btnLinks.CssClass = "btn btn-success";
         }
     }
 
@@ -91,7 +137,7 @@
             btnContact.CssClass = "btn btn-warning";
         } else {
             contactPanel.Style.Add("display", "none");
-            btnContact.CssClass = "btn btn-info";
+            btnContact.CssClass = "btn btn-success";
         }
     }
 
@@ -101,7 +147,17 @@
             btnMembership.CssClass = "btn btn-warning";
         } else {
             membershipPanel.Style.Add("display", "none");
-            btnMembership.CssClass = "btn btn-info";
+            btnMembership.CssClass = "btn btn-success";
+        }
+    }
+
+    protected void selectLogin(Object src, EventArgs args) {
+        if (loginPanel.Style["display"] == "none") {
+            loginPanel.Style.Add("display", "block");
+            //lblLogin.CssClass = "btn btn-warning";
+        } else {
+            loginPanel.Style.Add("display", "none");
+            //lblLogin.CssClass = "btn btn-warning";
         }
     }
 
@@ -123,6 +179,8 @@
     <!-- Google icon stylesheet -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXaxu38FBkmm3_ekVqu6IpCDIWY6yOyxI&callback=initMap"></script>
+    <!-- site stylesheet -->
+    <link rel="stylesheet" href="styles.css" />
     <script type="text/javascript">
         $(document).ready(function () {
             // Toggles sliding the home panel open and closed
@@ -160,6 +218,11 @@
                 $("#membershipPanel").slideToggle("fast");
             });
 
+            // Toggles sliding the login panel open and closed
+            $("#lblLogin").click(function () {
+                $("#loginPanel").slideToggle("fast");
+            });
+
             // Handles button enabling/disabling
             // Variables
             var $input = $('input:text');
@@ -195,9 +258,6 @@
                 disabled ? $submit.attr('disabled', true) : $submit.removeAttr('disabled');
             });
 
-            
-            
-
             // Handles implementation of google maps functionality
             // Also handles adding markers for range locations and
             // locations you can buy a membership
@@ -223,6 +283,11 @@
                 var shootingRanges2 = new google.maps.Map(document.getElementById('contactMap'), {
                     zoom: 12,
                     center: range1
+                });
+
+                var shootingRanges = new google.maps.Map(document.getElementById('locMap'), {
+                    zoom: 12,
+                    center: range2
                 });
 
                 //------------------------------------------------------------ Markers - Purchasing Locations
@@ -268,6 +333,20 @@
                     map: shootingRanges2,
                     label: { text: '40 Foster Ave, Stellarton', color: '#5fd615' }
                 });
+
+                //------------------------------------------------------------ Markers - Range Locations
+
+                var marker = new google.maps.Marker({
+                    position: range1,
+                    map: shootingRanges,
+                    label: { text: '24 Reeves Rd, New Glasgow', color: '#5fd615' },
+                });
+
+                var marker = new google.maps.Marker({
+                    position: range2,
+                    map: shootingRanges,
+                    label: { text: '40 Foster Ave, Stellarton', color: '#5fd615' }
+                });
             }
 
         });
@@ -280,37 +359,169 @@
             image
         </div>
         <div class="container col-sm-4 well">
-            logged in as
+            <asp:Label ID="lblCurrentUser" Text="" runat="server" />
         </div>
         <div class="container col-sm-4 well">
             page name
         </div>
         <div class="container col-sm-4 well">
-            logout
+            <asp:Label ID="lblLogin" Text="login" runat="server" />
         </div>
         <div class="container col-sm-12 well" style="text-align:center">
-            <asp:Button ID="btnHome" Text="Home" CssClass="btn btn-info" Width="150px" OnClick="selectHome" runat="server" />
-            <asp:Button ID="btnNews" Text="News"  CssClass="btn btn-info" Width="150px" OnClick="selectNews" runat="server" />
-            <asp:Button ID="btnAbout" Text="About"  CssClass="btn btn-info" Width="150px" OnClick="selectAbout" runat="server" />
-            <asp:Button ID="btnCalendar" Text="Calendar"  CssClass="btn btn-info" Width="150px" OnClick="selectCalendar" runat="server" />
-            <asp:Button ID="btnLinks" Text="Links"  CssClass="btn btn-info" Width="150px" OnClick="selectLinks" runat="server" />
-            <asp:Button ID="btnContact" Text="Contact Us"  CssClass="btn btn-info" Width="150px" OnClick="selectContactUs" runat="server" />
-            <asp:Button ID="btnMembership" Text="Buy Membership"  CssClass="btn btn-info" Width="150px" OnClick="selectMembership" runat="server" />
+            <asp:Button ID="btnHome" Text="The Club" CssClass="btn btn-success" Width="150px" OnClick="selectHome" runat="server" />
+            <asp:Button ID="btnNews" Text="News"  CssClass="btn btn-success" Width="150px" OnClick="selectNews" runat="server" />
+            <asp:Button ID="btnAbout" Text="About"  CssClass="btn btn-success" Width="150px" OnClick="selectAbout" runat="server" />
+            <asp:Button ID="btnCalendar" Text="Book"  CssClass="btn btn-success" Width="150px" OnClick="selectCalendar" runat="server" />
+            <asp:Button ID="btnLinks" Text="Links"  CssClass="btn btn-success" Width="150px" OnClick="selectLinks" runat="server" />
+            <asp:Button ID="btnContact" Text="Contact Us"  CssClass="btn btn-success" Width="150px" OnClick="selectContactUs" runat="server" />
+            <asp:Button ID="btnMembership" Text="Buy Membership"  CssClass="btn btn-success" Width="150px" OnClick="selectMembership" runat="server" />
         </div>
+
+        <div id="loginPanel" class="container col-sm-12" runat="server" style="display:none">
+            <div class="container col-sm-10 ">
+                <br /><br /><br /><br /><br />
+            </div>
+            <div class="container col-sm-2 well" style="text-align:center;">
+                <asp:TextBox ID="txtUsername" Text="username" CssClass="form-control" MaxLength="12" runat="server" />
+                <asp:TextBox ID="txtPassword" Text="password" CssClass="form-control" MaxLength="12" runat="server" />
+                <br />
+                <asp:Button ID="btnLogin" Text="Login" CssClass="btn btn-success" OnClick="userLogin" Width="75px" runat="server" />
+                <asp:Button ID="btnLogout" Text="Logout" CssClass="btn btn-success" OnClick="userLogout" Width="75px" runat="server" />
+                <asp:Label ID="lblLoginError" Text="" CssClass="text text-danger" Font-Size="XX-Small" runat="server" />
+            </div>
+        </div>
+
         <div id="homePanel" class="container col-sm-12 well" style="display:none;" runat="server">
-            page content -- home
+            <div class="container col-sm-3 well">
+                1
+            </div>
+            <div class="container1 col-sm-6 well">
+                2
+            </div>
+            <div class="container col-sm-3 well">
+                3
+            </div>
+            <div class="container col-sm-12" style="text-align:left; color:black">
+                Established 1976
+            </div>
+            <div class="container col-sm-2" style="text-align:center; color:black">
+                Book a session
+            </div>
+            <div class="container col-sm-4" style="text-align:center; color:black">
+                Events
+            </div>
+            <div class="container col-sm-6" style="text-align:center; color:black">
+                Location
+            </div>
+
+            <div class="container1 col-sm-2 well" style="text-align:center">
+                <asp:Label ID="lblCalendarIcon" CssClass="fa fa-calendar" ForeColor="black" Font-Size="90px" runat="server" />
+                <br /><br /><br /><br />
+                <asp:Button ID="btnBook" Text="Book"  CssClass="btn btn-success" Width="150px" runat="server" /><br />
+            </div>
+
+            <div class="container1 col-sm-4 well">
+                events go here
+                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+            </div>
+
+            <div class="container1 col-sm-6 well">
+                <div id="locMap" style="width:100%;height:200px;background-color:gray;">
+                    Error: Google Maps API failed to load
+                </div>        
+            </div>
+
+            <div class="container1 col-sm-8 well">
+                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
+                <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
+                <asp:Label ID="Label8" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
+            </div>
+                <div class="container1 col-sm-4 well" style="text-align:center;">
+                    <br />
+                    <asp:Label ID="Label9" Text="Copyright 2018 Staghorn Shooting Club" CssClass="instructions" runat="server" />
+                </div>
+            </div>
         </div>
         <div id="newsPanel" class="container col-sm-12 well" style="display:none;" runat="server">
             page content -- news
         </div>
         <div id="aboutPanel" class="container col-sm-12 well" style="display:none;" runat="server">
-            page content -- about
-        </div>
+            <div class="container col-sm-8 well">
+                image for about us
+            </div>
+            <div class="container col-sm-4 well">
+                view courses
+            </div>
+
+            <div class="container col-sm-10" style="text-align:right">
+                <asp:Label ID="lblExecutivesLabel" Text="Club Executives" style="font-weight:bold" runat="server" />
+            </div>
+            <div class="container col-sm-2" style="text-align:right">
+                <br />
+            </div>
+
+            <div class="container1 col-sm-6 well">
+                <asp:Label ID="lblAboutUs" Text="About us goes here" runat="server" />
+                
+                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+            </div>
+
+            <div class="container1 col-sm-6 well">
+                <table class="table">
+                    <tr>
+                        <th>Name</th>
+                        <th>Title</th>
+                    </tr>
+                    <tr>
+                        <td>Nancy MacGregor</td>
+                        <td>President</td>
+                    </tr>
+                    <tr>
+                        <td>Dan MacDonald</td>
+                        <td>Vice President</td>
+                    </tr>
+                    <tr>
+                        <td>Ken Carpenter Sr</td>
+                        <td>Secretary</td>
+                    </tr>
+                    <tr>
+                        <td>Bob Stackhouse</td>
+                        <td>Treasurer</td>
+                    </tr>
+                </table>
+                
+            </div>
+
+            <div class="container1 col-sm-8 well">
+                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
+                <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
+                <asp:Label ID="Label1" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
+            </div>
+                <div class="container1 col-sm-4 well" style="text-align:center;">
+                    <br />
+                    <asp:Label ID="Label4" Text="Copyright 2018 Staghorn Shooting Club" CssClass="instructions" runat="server" />
+                </div>
+            </div>
         <div id="calendarPanel" class="container col-sm-12 well" style="display:none;" runat="server">
             page content -- calendar
         </div>
         <div id="linksPanel" class="container col-sm-12 well" style="display:none;" runat="server">
-            page content -- links
+            <asp:Label ID="lblLinksTitle" Text="You can visit our facebook page by clicking " runat="server" />
+            <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" style=" text-decoration:none; color:white; font-weight:bold"> here</a>
+            <asp:Label ID="Label5" Text="or by clicking one of the facebook links in the page footer." runat="server" />
+            <br /><br /><br /><br /><br />
+
+
+            <div class="container1 col-sm-8 well">
+                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
+                <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
+                <asp:Label ID="Label6" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
+            </div>
+                <div class="container1 col-sm-4 well" style="text-align:center;">
+                    <br />
+                    <asp:Label ID="Label7" Text="Copyright 2018 Staghorn Shooting Club" CssClass="instructions" runat="server" />
+                </div>
+            </div>
         </div>
         <div id="contactPanel" class="container col-sm-12 well" style="display:none;" runat="server">
             <div class="container col-sm-8 well">
@@ -320,32 +531,32 @@
                 view courses
             </div>
 
-            <div class="container col-sm-6 well">
+            <div class="container1 col-sm-6 well">
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">phone</i>
-                <asp:Label ID="lblPhoneTitle" Text="Phone: (902) 331-0548" runat="server" /><br />
+                <asp:Label ID="lblPhoneTitle" Text="Phone: (902) 331-0548" CssClass="instructions" runat="server" /><br />
 
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
-                <asp:Label ID="lblAddressTitle" Text="Address: 239 West River East Side Road, West River Station, NS, B0K 1Z0" runat="server" /><br />
+                <asp:Label ID="lblAddressTitle" Text="Address: 239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" /><br />
 
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">mail</i>
-                <asp:Label ID="lblMsgTitle" Text="Send us a message below!" runat="server" /><br /><br />
+                <asp:Label ID="lblMsgTitle" Text="Send us a message below!" CssClass="instructions" runat="server" /><br /><br />
 
-                <asp:Label ID="lblContactName" Text="Full Name" CssClass="label label-info" Font-Size="Small" runat="server" />
+                <asp:Label ID="lblContactName" Text="Full Name" CssClass="label label-success" Font-Size="Small" runat="server" />
                 <asp:TextBox ID="txtContactName" Text="Enter your name" CssClass="form-control" MaxLength="25" runat="server" Class="contact" />
                 <br />
-                <asp:Label ID="lblContactEmail" Text="Email" CssClass="label label-info" Font-Size="Small" runat="server" />
+                <asp:Label ID="lblContactEmail" Text="Email" CssClass="label label-success" Font-Size="Small" runat="server" />
                 <asp:TextBox ID="txtContactEmail" Text="Enter your email" CssClass="form-control" MaxLength="25" runat="server" Class="contact" />
                 <br />
-                <asp:Label ID="lblContactMessage" Text="Message" CssClass="label label-info" Font-Size="Small" runat="server" />
+                <asp:Label ID="lblContactMessage" Text="Message" CssClass="label label-success" Font-Size="Small" runat="server" />
                 <asp:TextBox ID="txtContactMessage" Text="Enter your message" CssClass="form-control" TextMode="Multiline" MaxLength="25" runat="server" Class="contact" />
                 <br />
-                <asp:Button ID="btnContactSend" Text="Submit" CssClass="btn btn-info" runat="server" />
+                <asp:Button ID="btnContactSend" Text="Submit" CssClass="btn btn-success" runat="server" />
                 <asp:Label ID="lblContactWarning" Text="*Red outlines indicate required fields" CssClass="text text-danger" Font-Size="XX-Small" runat="server" />
                 <br /><br /><br />
                 <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                 <br /><br /><br />-->
             </div>
-            <div class="container col-sm-6 well">
+            <div class="container1 col-sm-6 well">
                 <div id="contactMap" style="width:100%;height:459px;background-color:gray;" class="container col-sm-12 well">
                     Error: Google Map API cannot be loaded
                 </div>
@@ -357,14 +568,14 @@
                 4<br /><br /><br /><br /><br /><br /><br />
             </div>
             
-                <div class="container col-sm-8 well">
+                <div class="container1 col-sm-8 well">
                     <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
                     <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
-                    <asp:Label ID="Label3" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" runat="server" />
+                    <asp:Label ID="Label3" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
                 </div>
-                <div class="container col-sm-4 well" style="text-align:center;">
+                <div class="container1 col-sm-4 well" style="text-align:center;">
                     <br />
-                    <asp:Label ID="lblCopyright2" Text="Copyright 2018 Staghorn Shooting Club" runat="server" />
+                    <asp:Label ID="lblCopyright2" Text="Copyright 2018 Staghorn Shooting Club" CssClass="instructions" runat="server" />
                 </div>  
             
         </div>
@@ -380,36 +591,36 @@
             <div class="container col-sm-6 well">
 
             <div class="container col-sm-12 well">
-                <asp:Label ID="lblRatesTitle" Text="Current Membership Rates:" Font-Size="Small" runat="server" /><br />
-                <asp:Label ID="lblRegularRate" Text="Regular Membership ($50)" Font-Size="Small" runat="server" /><br />
-                <asp:Label ID="lblSeniorRate" Text="Seniors Membership ($40)" Font-Size="Small" runat="server" /><br />
+                <asp:Label ID="lblRatesTitle" Text="Current Membership Rates:" Font-Size="Small" CssClass="instructions" runat="server" /><br />
+                <asp:Label ID="lblRegularRate" Text="Regular Membership ($50)" Font-Size="Small" CssClass="instructions" runat="server" /><br />
+                <asp:Label ID="lblSeniorRate" Text="Seniors Membership ($40)" Font-Size="Small" CssClass="instructions" runat="server" /><br />
             </div>
 
                 <form method="post">
                     <!--<input type="text" name="os0" size="20" />-->
-                    <asp:Label ID="lblName" Text="Name" CssClass="label label-info" Font-Size="Small" runat="server" />
-                    <asp:TextBox ID="os0" Text="" CssClass="form-control" MaxLength="25" runat="server" Class="input" />
+                    <asp:Label ID="lblName" Text="Name" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <asp:TextBox ID="os0" Text=" Enter name" CssClass="form-control" MaxLength="25" runat="server" Class="input" />
                     <input type="hidden" name="on0" value="Name" />
                     <asp:RequiredFieldValidator ID="valName" ControlToValidate="os0" runat="server" CssClass="text text-danger" Text="*Name is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
                     
-                    <asp:Label ID="lblCivic" Text="Civic Address" CssClass="label label-info" Font-Size="Small" runat="server" />
-                    <asp:TextBox ID="os1" Text="" CssClass="form-control" runat="server" Class="input" />
+                    <asp:Label ID="lblCivic" Text="Civic Address" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <asp:TextBox ID="os1" Text="Enter address" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os1" size="20" />-->
                     <input type="hidden" name="on1" value="Civic Address" />
                     <asp:RequiredFieldValidator ID="valCivic" ControlToValidate="os1" runat="server" CssClass="text text-danger" Text="*Your civic number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
 
 
-                    <asp:Label ID="lblTown" Text="Town" CssClass="label label-info" Font-Size="Small" runat="server" />
-                    <asp:TextBox ID="os2" Text="" CssClass="form-control" runat="server" Class="input" />
+                    <asp:Label ID="lblTown" Text="Town" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <asp:TextBox ID="os2" Text="Enter town" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os2" size="20" />-->
                     <input type="hidden" name="on2" value="Town" />
                     <asp:RequiredFieldValidator ID="valTown" ControlToValidate="os2" runat="server" CssClass="text text-danger" Text="*Town is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
                     
-                    <asp:Label ID="lblPostal" Text="Postal Code" CssClass="label label-info" Font-Size="Small" runat="server" />
-                    <asp:TextBox ID="os3" Text="" CssClass="form-control" runat="server" Class="input" />
+                    <asp:Label ID="lblPostal" Text="Postal Code" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <asp:TextBox ID="os3" Text="B0K 1S0" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os3" size="20" />-->
                     <input type="hidden" name="on3" value="Postal Code" />
                     <asp:RequiredFieldValidator ID="valPostal" ControlToValidate="os3" runat="server" CssClass="text text-danger" Text="*Your postal code is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br />
@@ -417,44 +628,44 @@
                     <asp:RegularExpressionValidator ID="valPostal1" runat="server" ErrorMessage="*You must enter a valid postal code (V2X 7E7 format)" CssClass="text text-danger" Font-Size="XX-Small" ControlToValidate="os3" ValidationExpression="[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]"></asp:RegularExpressionValidator><br />
 
 
-                    <asp:Label ID="lblOccupation" Text="Occupation" CssClass="label label-info" Font-Size="Small" runat="server" />
-                    <asp:TextBox ID="os4" Text="" CssClass="form-control" runat="server" Class="input" />
+                    <asp:Label ID="lblOccupation" Text="Occupation" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <asp:TextBox ID="os4" Text="Enter occupation" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os4" size="20" />-->
                     <input type="hidden" name="on4" value="Occupation" />
                     <asp:RequiredFieldValidator ID="valOccupation" ControlToValidate="os4" runat="server" CssClass="text text-danger" Text="*Occupation is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
                     
-                    <asp:Label ID="lblPhone" Text="Phone Number" CssClass="label label-info" Font-Size="Small" runat="server" />
-                    <asp:TextBox ID="os5" Text="" CssClass="form-control" runat="server" Class="input" />
+                    <asp:Label ID="lblPhone" Text="Phone Number" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <asp:TextBox ID="os5" Text="902-555-5555" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os5" size="20" />-->
                     <input type="hidden" name="on5" value="Phone" />
                     <asp:RequiredFieldValidator ID="valPhone" ControlToValidate="os5" runat="server" CssClass="text text-danger" Text="*Phone number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br />
                     <asp:RegularExpressionValidator ID="valPhone2" runat="server" ErrorMessage="*You must enter a valid phone number (902-555-5555 format)" CssClass="text text-danger" Font-Size="XX-Small" ControlToValidate="os5" ValidationExpression="\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*"></asp:RegularExpressionValidator><br />
 
 
-                    <asp:Label ID="lblDob" Text="Date of Birth" CssClass="label label-info" Font-Size="Small" runat="server" />
-                    <asp:TextBox ID="os6" Text="" CssClass="form-control" runat="server" Class="input" />
+                    <asp:Label ID="lblDob" Text="Date of Birth" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <asp:TextBox ID="os6" Text="Enter dob" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os6" size="20" />-->
                     <input type="hidden" name="on6" value="DOB" />
                     <asp:RequiredFieldValidator ID="valDob" ControlToValidate="os6" runat="server" CssClass="text text-danger" Text="*DOB is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
                     
-                    <asp:Label ID="lblLicenseNumber" Text="Firearms License Number" CssClass="label label-info" Font-Size="Small" runat="server" />
-                    <asp:TextBox ID="os7" Text="" CssClass="form-control" runat="server" Class="input" />
+                    <asp:Label ID="lblLicenseNumber" Text="Firearms License Number" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <asp:TextBox ID="os7" Text="12345678.0001" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os7" size="20" />-->
                     <input type="hidden" name="on7" value="Firearms License Number" />
                     <asp:RequiredFieldValidator ID="valLicenseNumber" ControlToValidate="os7" runat="server" CssClass="text text-danger" Text="*Your firearms license number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /> 
                     <asp:RegularExpressionValidator ID="valLicenseNumber1" runat="server" ErrorMessage="*You must enter a valid firearms license number (12345678.0001 format)" CssClass="text text-danger" Font-Size="XX-Small" ControlToValidate="os7" ValidationExpression="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][.][0-9][0-9][0-9][0-9]"></asp:RegularExpressionValidator><br />
 
 
-                    <asp:Label ID="lblExpiration" Text="Expiration Date" CssClass="label label-info" Font-Size="Small" runat="server" />
-                    <asp:TextBox ID="os8" Text="" CssClass="form-control" runat="server" Class="input" />
+                    <asp:Label ID="lblExpiration" Text="Expiration Date" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <asp:TextBox ID="os8" Text="Enter expiration date" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os8" size="20" />-->
                     <input type="hidden" name="on8" value="Exp Date" />
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ControlToValidate="os8" runat="server" CssClass="text text-danger" Text="*Your FLN expiration date is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br /> 
 
                     
-                    <asp:Button ID="btnSubmit" Text="Order Membership" CssClass="btn btn-info" PostBackUrl="https://www.paypal.com/cgi-bin/webscr" runat="server" />
+                    <asp:Button ID="btnSubmit" Text="Order Membership" CssClass="btn btn-success" PostBackUrl="https://www.paypal.com/cgi-bin/webscr" runat="server" />
 
                     <input type="hidden" name="currency_code" value="CAD" />
                     <input type="hidden" name="charset" value="utf-8" />
@@ -469,11 +680,11 @@
                 </form>
             </div>
             <div class="container col-sm-6 well">
-                <asp:Label ID="lblBenefits" Text="Benefits of Membership" Font-Size="Small" runat="server" /><br />
+                <asp:Label ID="lblBenefits" Text="Benefits of Membership" Font-Size="Small" CssClass="instructions" runat="server" /><br />
                 <div class="container col-sm-12 well">
                     <br /><br /><br /><br /><br /><br /><br /><br /><br />
                 </div>
-                <asp:Label ID="lblWhereBecomeMember" Text="Where to Become a Member" Font-Size="Small" runat="server" /><br />
+                <asp:Label ID="lblWhereBecomeMember" Text="Where to Become a Member" Font-Size="Small" CssClass="instructions" runat="server" /><br />
                 <div class="container col-sm-12 well">
                     <br /><br /><br /><br /><br /><br /><br /><br /><br />
                 </div>
@@ -487,14 +698,14 @@
 
             </div>
             
-                <div class="container col-sm-8 well">
+                <div class="container1 col-sm-8 well">
                     <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
                     <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
-                    <asp:Label ID="Label2" Text="239 West River East Side Road, West River Station, NS, B0K 1ZO" runat="server" />
+                    <asp:Label ID="Label2" Text="239 West River East Side Road, West River Station, NS, B0K 1ZO" CssClass="instructions" runat="server" />
                 </div>
-                <div class="container col-sm-4 well" style="text-align:center;">
+                <div class="container1 col-sm-4 well" style="text-align:center;">
                     <br />
-                    <asp:Label ID="lblCopyright1" Text="Copyright 2018 Staghorn Shooting Club" runat="server" />
+                    <asp:Label ID="lblCopyright1" Text="Copyright 2018 Staghorn Shooting Club" CssClass="instructions" runat="server" />
                 </div>  
             
        </div>
