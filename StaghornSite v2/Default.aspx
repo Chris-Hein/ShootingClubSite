@@ -9,20 +9,38 @@
 <script runat="server">
     // Variables
     WebLogin weblogin;
+    Admin admin;
+
+    MySqlConnection dbConnection;
+    MySqlCommand dbCommand;
+    MySqlDataAdapter dbAdapter;
+    DataSet dbDataSet;
+    MySqlDataReader dbReader;
+    string sqlString;
 
     // Page load
     protected void page_load() {
+        admin = new Admin();
+        
         generateLogin();
         setLoginState();
+        loadData();
+    }
+
+    protected void loadData() {
+        // Loads the data for the about us section
+        lblAboutUs.Text = Convert.ToString(admin.getAboutUsData());
+        displayEvents();
+        displayNews();
     }
 
     protected void setLoginState() {
         if (Session["username"] != null) {
-            lblLogin.Text = "Log Out";
+            //lblLogin.Text = "Log Out";
             lblCurrentUser.Text = "You are logged in as " + Session["username"].ToString();
             //btnLogin.Text = "Logout";
         } else {
-            lblLogin.Text = "Log In";
+            //lblLogin.Text = "Log In";
             lblCurrentUser.Text = "You are not logged in";
             //btnLogin.Text = "Login";
         }
@@ -79,6 +97,78 @@
             // Postback
             weblogin = (WebLogin)Session["weblogin"];
         }
+    }
+
+    protected void displayNews() {
+        dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
+        sqlString = "SELECT * FROM news WHERE id > 0 ORDER BY id DESC";
+        dbAdapter = new MySqlDataAdapter(sqlString, dbConnection);
+        DataTable table = new DataTable();
+        dbAdapter.Fill(table);
+
+        PagedDataSource pds = new PagedDataSource();
+        pds.DataSource = table.DefaultView;
+        pds.AllowPaging = true;
+        pds.PageSize = 4;
+
+        int currentPage;
+
+        if (Request.QueryString["page"] != null) {
+            currentPage = Int32.Parse(Request.QueryString["page"]);
+        } else {
+            currentPage = 1;
+        }
+
+        pds.CurrentPageIndex = currentPage - 1;
+        lblPageInfo2.Text = "Event " + currentPage + " of " + pds.PageCount;
+
+        if (!pds.IsFirstPage) {
+            linkPrev2.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage - 1);
+        }
+
+        if (!pds.IsLastPage) {
+            linkNext2.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage + 1);
+        }
+        // Binding the data to the repeater
+        repDisplayNews.DataSource = pds;
+        repDisplayNews.DataBind();
+    }
+    
+    
+    // Sets up the loading and paging for events
+    protected void displayEvents() {
+        dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
+        sqlString = "SELECT * FROM event WHERE id > 0 ORDER BY id DESC";
+        dbAdapter = new MySqlDataAdapter(sqlString, dbConnection);
+        DataTable table = new DataTable();
+        dbAdapter.Fill(table);
+
+        PagedDataSource pds = new PagedDataSource();
+        pds.DataSource = table.DefaultView;
+        pds.AllowPaging = true;
+        pds.PageSize = 1;
+
+        int currentPage;
+
+        if (Request.QueryString["page"] != null) {
+            currentPage = Int32.Parse(Request.QueryString["page"]);
+        } else {
+            currentPage = 1;
+        }
+
+        pds.CurrentPageIndex = currentPage - 1;
+        lblPageInfo1.Text = "Event " + currentPage + " of " + pds.PageCount;
+
+        if (!pds.IsFirstPage) {
+            linkPrev1.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage - 1);
+        }
+
+        if (!pds.IsLastPage) {
+            linkNext1.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage + 1);
+        }
+        // Binding the data to the repeater
+        repDisplayEvents.DataSource = pds;
+        repDisplayEvents.DataBind();
     }
 
     protected void selectHome(Object src, EventArgs args) {
@@ -219,7 +309,7 @@
             });
 
             // Toggles sliding the login panel open and closed
-            $("#lblLogin").click(function () {
+            $("#imgTitle").click(function () {
                 $("#loginPanel").slideToggle("fast");
             });
 
@@ -355,33 +445,21 @@
 <body>
     <form runat="server">
     <div class="container col-sm-12 well">
-        <div class="container col-sm-12 well">
-            image
+        <div class="container col-sm-1">
+            <asp:Image ID="imgTitle" ImageUrl="images/stagtitle.jpg" Height="60px" Width="60px" runat="server" AlternateText="Staghorn" />
         </div>
-        <div class="container col-sm-4 well">
-            <asp:Label ID="lblCurrentUser" Text="" runat="server" />
-        </div>
-        <div class="container col-sm-4 well">
-            page name
-        </div>
-        <div class="container col-sm-4 well">
-            <asp:Label ID="lblLogin" Text="login" runat="server" />
-        </div>
-        <div class="container col-sm-12 well" style="text-align:center">
-            <asp:Button ID="btnHome" Text="The Club" CssClass="btn btn-success" Width="150px" OnClick="selectHome" runat="server" />
-            <asp:Button ID="btnNews" Text="News"  CssClass="btn btn-success" Width="150px" OnClick="selectNews" runat="server" />
-            <asp:Button ID="btnAbout" Text="About"  CssClass="btn btn-success" Width="150px" OnClick="selectAbout" runat="server" />
-            <asp:Button ID="btnCalendar" Text="Book"  CssClass="btn btn-success" Width="150px" OnClick="selectCalendar" runat="server" />
-            <asp:Button ID="btnLinks" Text="Links"  CssClass="btn btn-success" Width="150px" OnClick="selectLinks" runat="server" />
-            <asp:Button ID="btnContact" Text="Contact Us"  CssClass="btn btn-success" Width="150px" OnClick="selectContactUs" runat="server" />
-            <asp:Button ID="btnMembership" Text="Buy Membership"  CssClass="btn btn-success" Width="150px" OnClick="selectMembership" runat="server" />
+        <div class="container col-sm-11" style="margin-top:10px;">
+            <asp:Label ID="lblTitle" Text="Staghorn Shooting Club" Font-Size="30px" ForeColor="black" runat="server" />
+            <br /><br /><br /><br />
         </div>
 
-        <div id="loginPanel" class="container col-sm-12" runat="server" style="display:none">
-            <div class="container col-sm-10 ">
-                <br /><br /><br /><br /><br />
-            </div>
-            <div class="container col-sm-2 well" style="text-align:center;">
+        <div class="container col-sm-12 well">
+            <asp:Label ID="lblCurrentUser" Text="" runat="server" />
+        </div>
+        <!-- Login Panel -->
+        <div id="loginPanel" class="container col-sm-3" runat="server" style="display:none">
+            
+            <div class="container col-sm-10 well" style="text-align:center;">
                 <asp:TextBox ID="txtUsername" Text="username" CssClass="form-control" MaxLength="12" runat="server" />
                 <asp:TextBox ID="txtPassword" Text="password" CssClass="form-control" MaxLength="12" runat="server" />
                 <br />
@@ -389,17 +467,34 @@
                 <asp:Button ID="btnLogout" Text="Logout" CssClass="btn btn-success" OnClick="userLogout" Width="75px" runat="server" />
                 <asp:Label ID="lblLoginError" Text="" CssClass="text text-danger" Font-Size="XX-Small" runat="server" />
             </div>
+
+            <div class="container col-sm-9 ">
+
+            </div>
         </div>
+        
+        <div class="container col-sm-12 well" style="text-align:center">
+            <asp:Button ID="btnHome" OnClientClick="return false" Text="The Club" CssClass="btn btn-success" Width="150px" OnClick="selectHome" runat="server" />
+            <asp:Button ID="btnNews" OnClientClick="return false" Text="News" CssClass="btn btn-success" Width="150px" OnClick="selectNews" runat="server" />
+            <asp:Button ID="btnAbout" OnClientClick="return false" Text="About" CssClass="btn btn-success" Width="150px" OnClick="selectAbout" runat="server" />
+            <asp:Button ID="btnCalendar" OnClientClick="return false" Text="Book"  CssClass="btn btn-success" Width="150px" OnClick="selectCalendar" runat="server" />
+            <asp:Button ID="btnLinks" OnClientClick="return false" Text="Links"  CssClass="btn btn-success" Width="150px" OnClick="selectLinks" runat="server" />
+            <asp:Button ID="btnContact" OnClientClick="return false" Text="Contact Us"  CssClass="btn btn-success" Width="150px" OnClick="selectContactUs" runat="server" />
+            <asp:Button ID="btnMembership" OnClientClick="return false" Text="Buy Membership"  CssClass="btn btn-success" Width="150px" OnClick="selectMembership" runat="server" />
+        </div>
+
+        
 
         <div id="homePanel" class="container col-sm-12 well" style="display:none;" runat="server">
             <div class="container col-sm-3 well">
-                1
+                1<br /><br /><br /><br /><br /><br /><br />
             </div>
             <div class="container1 col-sm-6 well">
-                2
+                <asp:Label ID="lblHomeTitle" Text="Welcome to Staghorn Shooting Club" runat="server" /><br /><br />
+                <asp:Label ID="lblHomeContent" Text="Bacon ipsum dolor amet leberkas ullamco duis eu, beef reprehenderit strip steak cillum bresaola in magna pork chop t-bone buffalo cupim. Incididunt sunt ea lorem short loin landjaeger. Bacon ipsum dolor amet leberkas ullamco duis eu, beef reprehenderit strip steak cillum bresaola in magna pork chop t-bone buffalo cupim. Incididunt sunt ea lorem short loin landjaeger." runat="server" />
             </div>
             <div class="container col-sm-3 well">
-                3
+                3<br /><br /><br /><br /><br /><br /><br />
             </div>
             <div class="container col-sm-12" style="text-align:left; color:black">
                 Established 1976
@@ -415,20 +510,66 @@
             </div>
 
             <div class="container1 col-sm-2 well" style="text-align:center">
-                <asp:Label ID="lblCalendarIcon" CssClass="fa fa-calendar" ForeColor="black" Font-Size="90px" runat="server" />
-                <br /><br /><br /><br />
+                <asp:Label ID="lblCalendarIcon" CssClass="fa fa-calendar" ForeColor="black" Font-Size="90px" runat="server" /><br /><br />
+                <div class="container1 col-sm-12 well">
+                    <asp:Label ID="lblCalendarInfo" Text="Click the button below to book a session at one of our shooting ranges" runat="server" />
+                </div>
+                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                 <asp:Button ID="btnBook" Text="Book"  CssClass="btn btn-success" Width="150px" runat="server" /><br />
             </div>
 
             <div class="container1 col-sm-4 well">
-                events go here
-                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                <!-- Start Display Data -->
+                    <!-- Repeater to display the existing events -->
+                    <asp:repeater id="repDisplayEvents" runat="server">
+                    <HeaderTemplate>
+                            <thead>
+                             </thead>
+                              <tbody>
+                            </HeaderTemplate>
+                            <ItemTemplate>  
+                                <div id="displayEvents" class="news well" style="text-align:center; padding:2px; color:black;">
+                                    <td>
+                                        <asp:Label ID="lblEventNameTitle" Text="Name of Event: " ForeColor="white" Font-Bold="true" runat="server" />
+                                        <asp:Label ID="lblEventName" Text='<%# Eval("name") %>' ForeColor="white" runat="server" /> <br /><br />
+                                    </td>
+                                    <td>
+                                        <asp:Label ID="lblEventLocationTitle" Text="Location of Event: " ForeColor="white" Font-Bold="true" runat="server" />
+                                        <asp:Label ID="lblEventLocation" Text='<%# Eval("location") %>' ForeColor="white" runat="server" /> <br /><br />
+                                    </td>
+                                    <td>
+                                        <asp:Label ID="lblEventDateTitle" Text="Date of Event: " ForeColor="white" Font-Bold="true" runat="server" />
+                                        <asp:Label ID="lblEventDate" Text='<%# Eval("eventdate") %>' ForeColor="white" runat="server" /> <br /><br />
+                                    </td>
+                                    <td>
+                                        <asp:Label ID="lblEventDescriptionTitle" Text="Description of Event: " ForeColor="white" Font-Bold="true" runat="server" /><br />
+                                        <asp:Label ID="lblEventDescription" Text='<%# Eval("description") %>' ForeColor="white" runat="server" /> <br /><br />
+                                    </td>
+                                    <td>
+                                        <asp:Label ID="lblEventPublishedTitle" Text="This event was published: " ForeColor="white" Font-Bold="true" runat="server" />
+                                        <asp:Label ID="lblEventPublished" Text='<%# Eval("publishdate") %>' ForeColor="white" runat="server" /> <br /><br />
+                                    </td>
+                                </div>
+                            </ItemTemplate>
+                            <FooterTemplate>
+                             </tbody>
+                        </FooterTemplate>
+                      </asp:repeater>
+                    <!-- Navigation -->
+                    <div class="col-sm-12" style="text-align:center; color:black;">
+                        <ul class="pager">
+                            <li><asp:HyperLink ID="linkPrev1" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server"><<</asp:HyperLink></li>
+                            <li><asp:Label ID="lblPageInfo1" ForeColor="white" BackColor="darkolivegreen" runat="server" /></li>
+                            <li><asp:HyperLink ID="linkNext1" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li>
+                        </ul><br />
+                    </div> 
+                    <!-- End Display Data -->
             </div>
 
             <div class="container1 col-sm-6 well">
-                <div id="locMap" style="width:100%;height:200px;background-color:gray;">
+                <div id="locMap" style="width:100%;height:370px;background-color:gray;">
                     Error: Google Maps API failed to load
-                </div>        
+                </div>
             </div>
 
             <div class="container1 col-sm-8 well">
@@ -443,7 +584,43 @@
             </div>
         </div>
         <div id="newsPanel" class="container col-sm-12 well" style="display:none;" runat="server">
-            page content -- news
+            <!-- Start Display Data -->
+                    <!-- Repeater to display the existing events -->
+                    <asp:repeater id="repDisplayNews" runat="server">
+                    <HeaderTemplate>
+                            <thead>
+                             </thead>
+                              <tbody>
+                            </HeaderTemplate>
+                            <ItemTemplate>  
+                                <div id="displayEvents" class="news well" style="text-align:center; padding:2px; color:black;">
+                                    <td>
+                                        <asp:Label ID="lblEventNewsDateTitle" Text="Date: " ForeColor="white" Font-Bold="true" runat="server" /><br />
+                                        <asp:Label ID="lblEventNewsDate" Text='<%# Eval("date") %>' ForeColor="white" runat="server" /> <br /><br />
+                                    </td>
+                                    <td>
+                                        <asp:Label ID="lblEventNewsTitle" Text="Title: " ForeColor="white" Font-Bold="true" runat="server" /><br />
+                                        <asp:Label ID="lblEventNews" Text='<%# Eval("title") %>' ForeColor="white" runat="server" /> <br /><br />
+                                    </td>
+                                    <td>
+                                        <asp:Label ID="lblEventNewsArticleTitle" Text="Article: " ForeColor="white" Font-Bold="true" runat="server" /><br />
+                                        <asp:Label ID="lblEventNewsArticle" Text='<%# Eval("content") %>' ForeColor="white" runat="server" /> <br /><br />
+                                    </td>
+                                </div>
+                            </ItemTemplate>
+                            <FooterTemplate>
+                             </tbody>
+                        </FooterTemplate>
+                      </asp:repeater>
+                    <!-- Navigation -->
+                    <div class="col-sm-12" style="text-align:center; color:black;">
+                        <ul class="pager">
+                            <li><asp:HyperLink ID="linkPrev2" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server"><<</asp:HyperLink></li>
+                            <li><asp:Label ID="lblPageInfo2" ForeColor="white" BackColor="darkolivegreen" runat="server" /></li>
+                            <li><asp:HyperLink ID="linkNext2" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li>
+                        </ul><br />
+                    </div> 
+                    <!-- End Display Data -->
         </div>
         <div id="aboutPanel" class="container col-sm-12 well" style="display:none;" runat="server">
             <div class="container col-sm-8 well">
@@ -461,7 +638,7 @@
             </div>
 
             <div class="container1 col-sm-6 well">
-                <asp:Label ID="lblAboutUs" Text="About us goes here" runat="server" />
+                <asp:Label ID="lblAboutUs" Text="" runat="server" />
                 
                 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
             </div>

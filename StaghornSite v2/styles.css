@@ -51,3 +51,8 @@ table tr:nth-child(odd) {
 .instructions {
     color:black;
 }
+
+.news {
+    background-color:darkolivegreen;
+    color:white;
+}
