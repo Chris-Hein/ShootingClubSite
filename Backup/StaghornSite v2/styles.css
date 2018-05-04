@@ -43,6 +43,16 @@ table tr:nth-child(odd) {
 .container1 {
     background-color:darkolivegreen;
     border-radius: 15px 15px 15px 15px;
+
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    flex-direction: column;
+}
+
+.container2 {
+    border-radius: 15px 15px 15px 15px;
+    background-color:darkseagreen;
 }
 
 .button {
@@ -66,3 +76,45 @@ table tr:nth-child(odd) {
 .whiteText {
     color:white;
 }
+
+.blackText {
+    color:black;
+}
+
+.equal-test {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    flex-direction: column;
+}
+
+.equal-test1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    flex-direction: row;
+    flex-item-align:center;
+}
+
+@media screen and (max-width:845px) {
+    .header {  
+        visibility:hidden;
+    }
+
+    .header {
+        visibility:hidden;
+    }
+}
+
+@media screen and (max-width:770px) {
+    /*
+    .header {
+        display:block; 
+    }
+
+    .header {
+        display:block; 
+    }
+    */
+}
+

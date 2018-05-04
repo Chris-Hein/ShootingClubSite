@@ -434,7 +434,7 @@
 </head>
 <body>
     <form runat="server">
-    <div class="container col-sm-12 well">
+    <div class="container2 col-sm-12 well">
         <div class="container col-sm-4">
             <asp:Label ID="lblUsername" Text="" runat="server" />
         </div>
@@ -447,7 +447,7 @@
 
         
 
-        <div class="container col-sm-12 well btn-group btn-group-justified" style="text-align:center;">
+        <div class="container2 col-sm-12 well btn-group btn-group-justified" style="text-align:center;">
             <asp:Button ID="btnNews" OnClientClick="return false" Text="News" CssClass="btn btn-success" Width="75px" runat="server" />
             <asp:Button ID="btnEvents" OnClientClick="return false" Text="Events" CssClass="btn btn-success" Width="75px" runat="server" />
             <asp:Button ID="btnAbout" OnClientClick="return false" Text="About" CssClass="btn btn-success" Width="75px" runat="server" />
@@ -456,13 +456,13 @@
         
 
         <!-- Events -->
-        <div id="eventsPanel" class="container col-sm-12 " style="display:none" runat="server">
-            <div class="container col-sm-6 well">
-                <div class="container col-sm-12 well" style="text-align:center;">
+        <div id="eventsPanel" class="container2 col-sm-12 " style="display:none" runat="server">
+            <div class="container2 col-sm-6 well">
+                <div class="container1 col-sm-12 well" style="text-align:center;">
                     add new event
                 </div>
 
-                <div class="container col-sm-12 well">
+                <div class="container1 col-sm-12 well">
                     <asp:Label ID="lblEventName" Text="Event Name" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtEventName" Text="" CssClass="form-control" MaxLength="100" runat="server" />
                     <asp:Label ID="lblEventNameRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
@@ -488,12 +488,12 @@
                     <asp:Label ID="lblEventError" Text="" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
                 </div>  
             </div>
-            <div class="container col-sm-6 well">
-                <div class="container col-sm-12 well" style="text-align:center;">
+            <div class="container2 col-sm-6 well">
+                <div class="container1 col-sm-12 well" style="text-align:center;">
                     view existing events
                 </div>
 
-                <div class="container col-sm-12 ">
+                <div class="container2 col-sm-12 ">
                     <!-- Start Display Data -->
                     <!-- Repeater to display the existing events -->
                     <asp:repeater id="repDisplayEvents" runat="server">
@@ -546,13 +546,13 @@
         </div>
 
         <!-- News -->
-        <div id="newsPanel" class="container col-sm-12 " style="display:none;" runat="server">
-            <div class="container col-sm-6 well">
-                <div class="container col-sm-12 well" style="text-align:center;">
+        <div id="newsPanel" class="container2 col-sm-12 " style="display:none;" runat="server">
+            <div class="container2 col-sm-6 well">
+                <div class="container1 col-sm-12 well" style="text-align:center;">
                     add new news article
                 </div>
 
-                <div class="container col-sm-12 well">
+                <div class="container1 col-sm-12 well">
                     <asp:Label ID="lblNewsTitle" Text="Article Title" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtNewsTitle" Text="" CssClass="form-control" MaxLength="100" runat="server" />
                     <asp:Label ID="lblNewsTitleCharsTitle" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
@@ -568,8 +568,8 @@
                     <asp:Label ID="lblNewsError" Text="" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
                 </div>  
             </div>
-            <div class="container col-sm-6 well">
-                <div class="container col-sm-12 well" style="text-align:center;">
+            <div class="container2 col-sm-6 well">
+                <div class="container1 col-sm-12 well" style="text-align:center;">
                     view existing news articles
                 </div>
 
@@ -613,22 +613,24 @@
         </div>
 
         <!-- About -->
-        <div id="aboutPanel" class="container col-sm-12 well" style="display:none" runat="server">
-            <div class="container col-sm-6 well">
+        <div class="container2 col-sm-12">
+        <div id="aboutPanel" class="container2 col-sm-12 well" style="display:none" runat="server">
+            <div class="container1 col-sm-6 well">
                 <asp:TextBox ID="txtAboutUs" TextMode="MultiLine" CssClass="form-control" MaxLength="200" Height="300px" runat="server" />
                 
                 <asp:Label ID="lblAboutCharsTitle" Text="Characters Remaining: " Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
                 <asp:Label ID="lblAboutChars" Text="500" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
                 <br /><br />
                 <asp:Button ID="btnSubmitAbout" OnClick="updateAboutUs" Text="Edit" CssClass="btn btn-success" runat="server" />
-                <asp:Label ID="lblEditError" Text="" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
-
-                
+                <asp:Label ID="lblEditError" Text="" Font-Size="XX-Small" CssClass="text text-danger" runat="server" />    
             </div>
-            <div class="container col-sm-6 well">
+            <div class="container2 col-sm-6 well">
                 edit about page info
-                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
             </div>
+
+            </div>
+
         </div>
     </div>
     </form>

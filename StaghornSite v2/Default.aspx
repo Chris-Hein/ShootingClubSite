@@ -78,9 +78,9 @@
     protected void userLogin(Object src, EventArgs args) {
         weblogin.username = txtUsername.Text;
         weblogin.password = txtPassword.Text;
-        Session["username"] = txtUsername.Text;
 
         if (weblogin.unlock()) {
+            Session["username"] = txtUsername.Text;
             Response.Redirect("admin.aspx");
         } else {
             lblLoginError.Text = "Invalid username/password";
@@ -444,7 +444,7 @@
 </head>
 <body>
     <form runat="server">
-    <div class="container col-sm-12 well">
+    <div class="container2 col-sm-12 well">
         <div class="container col-sm-1">
             <asp:Image class="img-rounded img-responsive" ID="imgTitle" ImageUrl="images/stagtitle.jpg" Height="60px" Width="60px" runat="server" AlternateText="Staghorn" />
         </div>
@@ -453,18 +453,18 @@
             <br /><br /><br /><br />
         </div>
 
-        <div class="container col-sm-12 well">
+        <div class="container1 col-sm-12 well">
             <asp:Label ID="lblCurrentUser" Text="" runat="server" />
         </div>
         <!-- Login Panel -->
         <div id="loginPanel" class="container col-sm-3" runat="server" style="display:none">
             
-            <div class="container col-sm-10 well btn-group btn-group-justified" style="text-align:center;">
+            <div class="container1 col-sm-10 well btn-group " style="text-align:center;">
                 <asp:TextBox ID="txtUsername" Text="username" CssClass="form-control" MaxLength="12" runat="server" />
                 <asp:TextBox ID="txtPassword" Text="password" CssClass="form-control" MaxLength="12" runat="server" />
                 <br />
-                <asp:Button ID="btnLogin" Text="Login" CssClass="btn btn-success" OnClick="userLogin" Width="75px" runat="server" />
-                <asp:Button ID="btnLogout" Text="Logout" CssClass="btn btn-success" OnClick="userLogout" Width="75px" runat="server" />
+                <asp:Button ID="btnLogin" Text="Login" CssClass="btn btn-success" OnClick="userLogin" runat="server" />
+                <asp:Button ID="btnLogout" Text="Logout" CssClass="btn btn-success" OnClick="userLogout" runat="server" />
                 <asp:Label ID="lblLoginError" Text="" CssClass="text text-danger" Font-Size="XX-Small" runat="server" />
             </div>
 
@@ -473,7 +473,7 @@
             </div>
         </div>
         
-        <div class="container col-sm-12 well btn-group btn-group-justified" style="text-align:center">
+        <div class="container2 col-sm-12 well btn-group btn-group-justified" style="text-align:center">
             <asp:Button type="button" ID="btnHome" OnClientClick="return false" Text="The Club" CssClass="btn btn-success" Width="150px" OnClick="selectHome" runat="server" />
             <asp:Button type="button" ID="btnNews" OnClientClick="return false" Text="News" CssClass="btn btn-success" Width="150px" OnClick="selectNews" runat="server" />
             <asp:Button type="button" ID="btnAbout" OnClientClick="return false" Text="About" CssClass="btn btn-success" Width="150px" OnClick="selectAbout" runat="server" />
@@ -483,12 +483,11 @@
             <asp:Button type="button" ID="btnMembership" OnClientClick="return false" Text="Buy Membership"  CssClass="btn btn-success" Width="150px" OnClick="selectMembership" runat="server" />
         </div>
 
-        
-
-        <div id="homePanel" class="container col-sm-12 well" runat="server">
+        <div id="homePanel" class="container2 col-sm-12 well" runat="server">
         <div class="container col-sm-12">
-            <div class="container col-sm-3 " style="text-align:center;">
+            <div class="container col-sm-3 blackText" style="text-align:center;">
                 <asp:Image class="img-rounded img-responsive" ID="imgRange" ImageUrl="images/range.jpg" Height="200px" Width="610px" runat="server" AlternateText="range" />
+                Established 1976
             </div>
             <div class="container1 col-sm-6 well">
                 <asp:Label ID="lblHomeTitle" Text="Welcome to Staghorn Shooting Club" runat="server" /><br /><br />
@@ -499,29 +498,30 @@
                 <asp:Image class="img-rounded img-responsive" ID="imgCourses" ImageUrl="images/coursesplaceholder2.jpg" Height="200px" Width="610px" runat="server" AlternateText="range" />
             </div>
             <div class="container col-sm-12" style="text-align:left; color:black">
-                Established 1976
+                <!-- Established 1976 -->
             </div>
         </div>
-            <div class="container col-sm-2" style="text-align:center; color:black">
+            <div class="container col-sm-2 header" style="text-align:center; color:black">
                 Book a session
             </div>
-            <div class="container col-sm-4" style="text-align:center; color:black">
+            <div class="container col-sm-4 header" style="text-align:center; color:black">
                 Events
             </div>
-            <div class="container col-sm-6" style="text-align:center; color:black">
+            <div class="container col-sm-6 header" style="text-align:center; color:black">
                 Location
             </div>
-
-            <div class="container1 col-sm-2 well" style="text-align:center">
+ <!-- --><div class="container col-sm-12">
+            <div class="container1 col-sm-2 well equal-test" style="text-align:center">
                 <asp:Label ID="lblCalendarIcon" CssClass="fa fa-calendar" ForeColor="black" Font-Size="90px" runat="server" /><br /><br />
                 <div class="container1 col-sm-12 well">
                     <asp:Label ID="lblCalendarInfo" Text="Click the button below to book a session at one of our shooting ranges" runat="server" />
                 </div>
-                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                <asp:Button ID="btnBook" Text="Book"  CssClass="btn btn-success" Width="150px" runat="server" /><br />
+                
+                <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />-->
+                <asp:Button ID="btnBook" Text="Book"  CssClass="btn btn-success" runat="server" /><br />
             </div>
 
-            <div class="container1 col-sm-4 well">
+            <div class="container1 col-sm-4 well equal-test">
                 <!-- Start Display Data -->
                     <!-- Repeater to display the existing events -->
                     <asp:repeater id="repDisplayEvents" runat="server">
@@ -559,7 +559,7 @@
                         </FooterTemplate>
                       </asp:repeater>
                     <!-- Navigation -->
-                    <div class="col-sm-12" style="text-align:center; color:black;">
+                    <div class="col-sm-12" style="text-align:center;">
                         <ul class="pager">
                             <li><asp:HyperLink ID="linkPrev1" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server"><<</asp:HyperLink></li>
                             <li><asp:Label ID="lblPageInfo1" ForeColor="white" BackColor="darkolivegreen" runat="server" /></li>
@@ -569,22 +569,28 @@
                     <!-- End Display Data -->
             </div>
 
-            <div class="container1 col-sm-6 well">
-                <div id="locMap" style="width:100%;height:370px;background-color:gray;">
+            <div class="container1 col-sm-6 well equal-test">
+                <div id="locMap" class="container1 col-sm-12 well" style="width:100%;height:370px;background-color:gray;">
                     Error: Google Maps API failed to load
                 </div>
             </div>
 
-            <div class="container1 col-sm-8 well">
+<!-- --></div>
+
+            <div class="container col-sm-12">
+            <div class="container1 col-sm-8 well equal-test1">
                 <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                 <asp:Label ID="Label8" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
             </div>
-                <div class="container1 col-sm-4 well" style="text-align:center;">
+                <div class="container1 col-sm-4 well equal-test1" style="text-align:center;">
                     <br />
                     <asp:Label ID="Label9" Text="Copyright 2018 Staghorn Shooting Club" CssClass="instructions" runat="server" />
+                    <br /><br />
                 </div>
             </div>
+            </div>
+
         </div>
         <div id="newsPanel" class="container1 col-sm-12 well" style="display:none;" runat="server">
             <!-- Start Display Data -->
@@ -625,7 +631,7 @@
                     </div> 
                     <!-- End Display Data -->
         </div>
-        <div id="aboutPanel" class="container col-sm-12 well" style="display:none;" runat="server">
+        <div id="aboutPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <div class="container col-sm-8">
                 <asp:Image class="img-rounded img-responsive" ID="imgAbout" ImageUrl="images/aboutustemp.jpg" Height="200px" Width="1200px" runat="server" AlternateText="about us" />
                 <br /><br /><br /><br />
@@ -675,27 +681,28 @@
                 <br /><br /><br />
             </div>
 
-            <div class="container1 col-sm-8 well">
+            <div class="container1 col-sm-8 well equal-test1">
                 <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                 <asp:Label ID="Label1" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
             </div>
-                <div class="container1 col-sm-4 well" style="text-align:center;">
+                <div class="container1 col-sm-4 well equal-test1" style="text-align:center;">
                     <br />
                     <asp:Label ID="Label4" Text="Copyright 2018 Staghorn Shooting Club" CssClass="instructions" runat="server" />
+                    <br /><br />
                 </div>
             </div>
         <div id="calendarPanel" class="container col-sm-12 well" style="display:none;" runat="server">
-            page content -- calendar
+            page content -- booking
         </div>
-        <div id="linksPanel" class="container col-sm-12 well" style="display:none;" runat="server">
+        <div id="linksPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <asp:Label ID="lblLinksTitle" Text="You can visit our facebook page by clicking " runat="server" />
             <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" style=" text-decoration:none; color:white; font-weight:bold"> here</a>
             <asp:Label ID="Label5" Text="or by clicking one of the facebook links in the page footer." runat="server" />
             <br /><br /><br /><br /><br />
 
 
-            <div class="container1 col-sm-8 well">
+            <div class="container1 col-sm-8 well equal-test1">
                 <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                 <asp:Label ID="Label6" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
@@ -706,7 +713,7 @@
                 </div>
             </div>
         </div>
-        <div id="contactPanel" class="container col-sm-12 well" style="display:none;" runat="server">
+        <div id="contactPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <div class="container col-sm-8 ">
                 <asp:Image class="img-rounded img-responsive" ID="Image1" ImageUrl="images/contactustemp.png" Height="200px" Width="1200px" runat="server" AlternateText="contact us" />
                 <br /><br /><br /><br />
@@ -744,18 +751,18 @@
                 <br /><br /><br />-->
             </div>
             <div class="container1 col-sm-6 well">
-                <div id="contactMap" style="width:100%;height:459px;background-color:gray;" class="container col-sm-12 well">
+                <div id="contactMap" style="width:100%;height:459px;background-color:gray;" class="container1 col-sm-12 well">
                     Error: Google Map API cannot be loaded
                 </div>
             </div>
-            <div class="container col-sm-6 well">
+            <!--<div class="container col-sm-6 well">
                 3<br /><br /><br /><br /><br /><br /><br />
             </div>
             <div class="container col-sm-6 well">
                 4<br /><br /><br /><br /><br /><br /><br />
-            </div>
+            </div>-->
             
-                <div class="container1 col-sm-8 well">
+                <div class="container1 col-sm-8 well equal-test1">
                     <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
                     <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                     <asp:Label ID="Label3" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
@@ -766,7 +773,7 @@
                 </div>  
             
         </div>
-        <div id="membershipPanel" class="container col-sm-12 well" style="display:none;" runat="server">
+        <div id="membershipPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
            
             <div class="container col-sm-8">
                 <asp:Image class="img-rounded img-responsive" ID="Image2" ImageUrl="images/becomemembertemp.jpg" Height="200px" Width="1200px" runat="server" AlternateText="become a member" />
@@ -783,7 +790,7 @@
             <div class="container1 col-sm-12 well">
                 <asp:Label ID="lblRatesTitle" Text="Current Membership Rates:" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /><br />
                 <asp:Label ID="lblRegularRate" Text="Regular Membership ($50)" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /><br />
-                <asp:Label ID="lblSeniorRate" Text="Seniors Membership ($40)" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /><br />
+                <asp:Label ID="lblSeniorRate" Text="Seniors (65+) Membership ($40)" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /><br />
             </div>
 
                 <form method="post">
@@ -869,7 +876,7 @@
                     <input type="hidden" name="tax" id="tax" value="0" />
                 </form>
             </div>
-            <div class="container col-sm-6 well">
+            <div class="container2 col-sm-6 well">
                 <asp:Label ID="lblBenefits" Text="Benefits of Membership" Font-Size="Small" CssClass="instructions" runat="server" /><br />
                 <div class="container1 col-sm-12 well whiteText">
                     These are the benefits of membership
@@ -889,8 +896,10 @@
                     <br />
                 </div>
 
-                <div id="memberMap" style="width:100%;height:459px;background-color:gray;" class="container col-sm-12 well">
-                    Error: Google Map API cannot be loaded
+                <div class="container1 col-sm-12 well">
+                    <div id="memberMap" style="width:100%;height:459px;background-color:gray;" class="container1 col-sm-12 well">
+                        Error: Google Map API cannot be loaded
+                    </div>
                 </div>
 
                 <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
@@ -898,7 +907,7 @@
 
             </div>
             
-                <div class="container1 col-sm-8 well">
+                <div class="container1 col-sm-8 well equal-test1">
                     <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
                     <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                     <asp:Label ID="Label2" Text="239 West River East Side Road, West River Station, NS, B0K 1ZO" CssClass="instructions" runat="server" />
@@ -906,6 +915,7 @@
                 <div class="container1 col-sm-4 well" style="text-align:center;">
                     <br />
                     <asp:Label ID="lblCopyright1" Text="Copyright 2018 Staghorn Shooting Club" CssClass="instructions" runat="server" />
+                    
                 </div>  
             
        </div>
