@@ -96,6 +96,49 @@ table tr:nth-child(odd) {
     flex-item-align:center;
 }
 
+.positioning {
+    margin-top:20px;
+}
+
+.well1 {
+    height: 430px !important;
+}
+
+.well2 {
+    height: 300px !important;
+}
+
+.well3 {
+    height: 305px !important;
+    border:1px solid white;
+}
+
+.well4 {
+    height: 610px !important;
+}
+
+.well5 {
+    height: 1200px !important;
+    border:1px solid white;
+}
+
+.well6 {
+    height: 385px !important;
+}
+
+.well7 {
+    height: 565px !important;
+}
+
+.well8 {
+    height: 430px !important;
+    border:1px solid white;
+}
+
+.deleteButton {
+    border-radius:20%;
+}
+
 @media screen and (max-width:845px) {
     .header {  
         visibility:hidden;

@@ -19,6 +19,7 @@ public class Admin {
 
     //----------------------------------------------------------------------------------- Get Methods
 
+    // Method to pull about us info from the database so it can be displayed
     public string getAboutUsData() {
         try {
             dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
@@ -76,6 +77,32 @@ public class Admin {
             dbCommand.Parameters.AddWithValue("@eventdate", eventdate);
             dbCommand.Parameters.AddWithValue("@description", description);
             dbCommand.Parameters.AddWithValue("@publishdate", publishdate);
+            dbCommand.ExecuteNonQuery();
+        } finally {
+            dbConnection.Close();
+        }
+    }
+
+    // Method to delete a news article
+    public void deleteNews(string newsid) {
+        try {
+            dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
+            dbConnection.Open();
+            sqlString = "DELETE FROM news WHERE id=" + newsid;
+            dbCommand = new MySqlCommand(sqlString, dbConnection);
+            dbCommand.ExecuteNonQuery();
+        } finally {
+            dbConnection.Close();
+        }
+    }
+
+    // Method to delete an event
+    public void deleteEvent(string eventid) {
+        try {
+            dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
+            dbConnection.Open();
+            sqlString = "DELETE FROM event WHERE id=" + eventid;
+            dbCommand = new MySqlCommand(sqlString, dbConnection);
             dbCommand.ExecuteNonQuery();
         } finally {
             dbConnection.Close();

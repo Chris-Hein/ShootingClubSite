@@ -28,7 +28,7 @@
             displayNewsArticles();
             displayEvents();
         }
-        
+        // Ensures whoever is using the page is a legitimate admin and logged in
         checkLoginStatus();
     }
 
@@ -92,9 +92,8 @@
         }
     }
     
-    //
-    protected void addNewsEntry(Object src, EventArgs args) {        
-        
+    // Handles adding a news article
+    protected void addNewsEntry(Object src, EventArgs args) {          
         if ((txtNewsTitle.Text == "") || (txtNewsContent.Text == "")) {
             lblNewsError.Text = "Error: Fields must not be blank";
         } else {
@@ -108,6 +107,7 @@
         
     }
 
+    // Handles adding an event
     protected void addEventEntry(Object src, EventArgs args) {
         if ((txtEventName.Text == "") || (txtEventLocation.Text == "") || (txtEventDate.Text == "") || (txtEventDescription.Text == "")) {
             lblEventError.Text = "Error: All fields have to be filled out";
@@ -121,6 +121,21 @@
         }
     }
 
+    // Handles deleting a news item
+    protected void deleteNews(Object src, EventArgs args) {
+        admin.deleteNews(lblCurrentNews.Text);
+        //Response.Write("Current News Article: " + lblCurrentNews.Text);
+        lblNewsError.Text = "Deleted news article";
+        //page_load();
+    }
+
+    // Handles deleting an event
+    protected void deleteEvent(Object src, EventArgs args) {
+        admin.deleteEvent(lblCurrentEvent.Text);
+        lblEventError.Text = "Deleted event";
+    }
+
+    // Pager to handling pagination and display of news articles
     protected void displayNewsArticles() {
         dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
         sqlString = "SELECT * FROM news WHERE id > 0 ORDER BY id DESC";
@@ -151,11 +166,16 @@
         if (!pds.IsLastPage) {
             linkNext.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage + 1);
         }
+
+        // Added to facilitate deleting news items
+        lblCurrentNews.Text = Convert.ToString(currentPage);
+        
         // Binding the data to the repeater
         repDisplay.DataSource = pds;
         repDisplay.DataBind();
     }
 
+    // Pager to handle pagination and display of events
     protected void displayEvents() {
         dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
         sqlString = "SELECT * FROM event WHERE id > 0 ORDER BY id DESC";
@@ -186,6 +206,10 @@
         if (!pds.IsLastPage) {
             linkNext1.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage + 1);
         }
+
+        // Added to facilitate deleting event item
+        lblCurrentEvent.Text = Convert.ToString(currentPage);
+        
         // Binding the data to the repeater
         repDisplayEvents.DataSource = pds;
         repDisplayEvents.DataBind();
@@ -442,6 +466,8 @@
             
         </div>
         <div class="container col-sm-4" style="text-align:right;">
+            <a href="http://localhost:57329/StaghornSite%20v2/" style=" text-decoration:none; color:white; font-weight:bold">click here</a>
+            <asp:Label ID="lblInstructions" Text=" to return to the site as an admin" runat="server" />     
             <asp:Button ID="btnLogout" Text="Logout" CssClass="btn btn-success" OnClick="userLogout" Width="75px" runat="server" /><br /><br />
         </div>
 
@@ -493,7 +519,7 @@
                     view existing events
                 </div>
 
-                <div class="container2 col-sm-12 ">
+                <div class="container2 col-sm-12 well7 ">
                     <!-- Start Display Data -->
                     <!-- Repeater to display the existing events -->
                     <asp:repeater id="repDisplayEvents" runat="server">
@@ -535,7 +561,9 @@
                         <ul class="pager">
                             <li><asp:HyperLink ID="linkPrev1" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server"><<</asp:HyperLink></li>
                             <li><asp:Label ID="lblPageInfo1" ForeColor="white" BackColor="darkolivegreen" runat="server" /></li>
-                            <li><asp:HyperLink ID="linkNext1" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li>
+                            <li><asp:HyperLink ID="linkNext1" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li><br />
+                            <asp:Button ID="BtnDeleteEvent" Text="Delete" CssClass="btn btn-success deleteButton" OnClick="deleteEvent" runat="server" /><br />
+                            <asp:Label ID="lblCurrentEvent" Text="" ForeColor="darkseagreen" runat="server" />
                         </ul><br />
 
                         <br /><br /><br /><br /><br /><br /><br /><br />
@@ -573,7 +601,7 @@
                     view existing news articles
                 </div>
 
-                <div class="container col-sm-12">
+                <div class="container col-sm-12 well6">
                     <!-- Start Display Data -->
                     <!-- Repeater to display the news articles -->
                     <asp:repeater id="repDisplay" runat="server">
@@ -604,11 +632,14 @@
                         <ul class="pager">
                             <li><asp:HyperLink ID="linkPrev" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server"><<</asp:HyperLink></li>
                             <li><asp:Label ID="lblPageInfo" ForeColor="white" BackColor="darkolivegreen" runat="server" /></li>
-                            <li><asp:HyperLink ID="linkNext" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li>
+                            <li><asp:HyperLink ID="linkNext" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li><br />
+                            <asp:Button ID="btnDeleteNews" Text="Delete" CssClass="btn btn-success deleteButton" OnClick="deleteNews" runat="server" /><br />
+                            <asp:Label ID="lblCurrentNews" Text="" ForeColor="darkseagreen" runat="server" />
                         </ul><br />
                     </div> 
                     <!-- End Display Data -->
-                </div>  
+                </div> 
+                
             </div>
         </div>
 
@@ -624,8 +655,8 @@
                 <asp:Button ID="btnSubmitAbout" OnClick="updateAboutUs" Text="Edit" CssClass="btn btn-success" runat="server" />
                 <asp:Label ID="lblEditError" Text="" Font-Size="XX-Small" CssClass="text text-danger" runat="server" />    
             </div>
-            <div class="container2 col-sm-6 well">
-                edit about page info
+            <div class="container2 col-sm-6 well8">
+                <asp:Label ID="lblEditInfoTitle" CssClass="positioning" Text="To edit the about me change the text and click edit" runat="server" />
                 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
             </div>
 
