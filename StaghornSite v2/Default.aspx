@@ -143,7 +143,6 @@
         repDisplayNews.DataBind();
     }
     
-    
     // Sets up the loading and paging for events
     protected void displayEvents() {
         dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
@@ -836,7 +835,7 @@
                 <asp:Label ID="lblPhoneTitle" Text="Phone: (902) 331-0548" CssClass="instructions" runat="server" /><br />
 
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
-                <asp:Label ID="lblAddressTitle" Text="Address: 239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" /><br />
+                <asp:Label ID="lblAddressTitle" Text="Mailing Address: 239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" /><br />
 
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">mail</i>
                 <asp:Label ID="lblMsgTitle" Text="Send us a message below!" CssClass="instructions" runat="server" /><br /><br />

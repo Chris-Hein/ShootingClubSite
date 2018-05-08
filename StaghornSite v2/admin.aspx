@@ -471,15 +471,11 @@
             <asp:Button ID="btnLogout" Text="Logout" CssClass="btn btn-success" OnClick="userLogout" Width="75px" runat="server" /><br /><br />
         </div>
 
-        
-
         <div class="container2 col-sm-12 well btn-group btn-group-justified" style="text-align:center;">
             <asp:Button ID="btnNews" OnClientClick="return false" Text="News" CssClass="btn btn-success" Width="75px" runat="server" />
             <asp:Button ID="btnEvents" OnClientClick="return false" Text="Events" CssClass="btn btn-success" Width="75px" runat="server" />
             <asp:Button ID="btnAbout" OnClientClick="return false" Text="About" CssClass="btn btn-success" Width="75px" runat="server" />
         </div>
-
-        
 
         <!-- Events -->
         <div id="eventsPanel" class="container2 col-sm-12 " style="display:none" runat="server">
@@ -574,7 +570,7 @@
         </div>
 
         <!-- News -->
-        <div id="newsPanel" class="container2 col-sm-12 " style="display:none;" runat="server">
+        <div id="newsPanel" class="container2 col-sm-12 " style="display:block;" runat="server">
             <div class="container2 col-sm-6 well">
                 <div class="container1 col-sm-12 well" style="text-align:center;">
                     add new news article
