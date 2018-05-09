@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" Debug="true" ClientTarget="uplevel" EnableEventValidation="false" validateRequest="false" EnableViewState="true" %>
+﻿<%@ Page Language="C#" Debug="true" MaintainScrollPositionOnPostback="true" ClientTarget="uplevel" EnableEventValidation="false" validateRequest="false" EnableViewState="true" %>
 <%@ Import Namespace="MySql.Data.MySqlClient" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Net.Mail" %>
@@ -21,12 +21,67 @@
     // Page load
     protected void page_load() {
         admin = new Admin();
+
+        
+        //Session["homeVisibility"] = "block";
+
+        //Session.Remove("homeVisibility");
+        //Session.Remove("newsVisibility");
+        
+        // testing
+        //string test = Session["homeVisibility"].ToString();
+        //Console.Write(test);
+        //Session["homeVisibility"] = "none";
+        //Console.Write("home visibility: " + Session["homeVisibility"].ToString());
+
+       
+        // Checks the visibility state stored in the session
+        // Handles home page visibility
+        if (Session["homeVisibility"] == null) {
+            // if its null it defaults to block (because its the default page to display)
+            Session["homeVisibility"] = "block";
+            // then it sets the display based on the block/none stored in the session
+            // which in this case is block
+            homePanel.Style.Add("display", Session["homeVisibility"].ToString());
+            Console.Write("home visibility: " + Session["homeVisibility"].ToString());
+        } else {
+            // if the session is not null the display is set based on the stored state in the session
+            homePanel.Style.Add("display", Session["homeVisibility"].ToString());
+            Console.Write("home visibility: " + Session["homeVisibility"].ToString());
+        }
+
+        // Handles news page visibility
+        // Exists to preserve the display state of the page when browsing news articles
+        // otherwise the page query would reload the home page during postback
+        if (Session["newsVisibility"] == null) {
+            // if its null it defaults to block (because its the default page to display)
+            Session["newsVisibility"] = "none";
+            // then it sets the display based on the block/none stored in the session
+            // which in this case is block
+            newsPanel.Style.Add("display", Session["newsVisibility"].ToString());
+            Console.Write("home visibility: " + Session["newsVisibility"].ToString());
+        } else {
+            // if the session is not null the display is set based on the stored state in the session
+            newsPanel.Style.Add("display", Session["newsVisibility"].ToString());
+            Console.Write("news visibility: " + Session["newsVisibility"].ToString());
+        }
         
         generateLogin();
         setLoginState();
 
         if (!Page.IsPostBack) {
             loadData();
+
+            Console.Write("home visibility: " + Session["homeVisibility"].ToString());
+
+            /*
+            if (Session["homeVisibility"] == null) {
+                Session["homeVisibility"] = "block";
+            } else {
+                homePanel.Style.Add("display", Session["homeVisibility"].ToString());
+            }
+             * */
+            
         }
         
         //loadData();
@@ -178,24 +233,36 @@
         repDisplayEvents.DataSource = pds;
         repDisplayEvents.DataBind();
     }
-
-    protected void selectHome(Object src, EventArgs args) {
+    
+    protected void selectHome(Object src, EventArgs args) {        
         if (homePanel.Style["display"] == "none") {
             homePanel.Style.Add("display", "block");
             btnHome.CssClass = "btn btn-warning";
+            // Sets the session to block
+            Session["homeVisibility"] = "block";
+            Console.Write(Session["homeVisibility"].ToString());
         } else {
             homePanel.Style.Add("display", "none");
             btnHome.CssClass = "btn btn-success";
+            // sets the session to none
+            Session["homeVisibility"] = "none";
+            Console.Write(Session["homeVisibility"].ToString());
         }
+        Console.Write("homeVisibility: " + Session["homeVisibility"].ToString());
     }
 
     protected void selectNews(Object src, EventArgs args) {
         if (newsPanel.Style["display"] == "none") {
             newsPanel.Style.Add("display", "block");
             btnNews.CssClass = "btn btn-warning";
+            // Sets the session to block
+            Session["newsVisibility"] = "block";
+            Console.Write(Session["newsVisibility"].ToString());
         } else {
             newsPanel.Style.Add("display", "none");
             btnNews.CssClass = "btn btn-success";
+            Session["newsVisibility"] = "none";
+            Console.Write(Session["newsVisibility"].ToString());
         }
     }
 
@@ -291,6 +358,15 @@
         }
     }
 
+    protected void selectBooking(Object src, EventArgs args) {
+        if (calendarPanel.Style["display"] == "none") {
+            calendarPanel.Style.Add("display", "block");
+        } else {
+            calendarPanel.Style.Add("display", "none");
+        }
+    }
+
+    
 
 </script>
 
@@ -311,6 +387,9 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXaxu38FBkmm3_ekVqu6IpCDIWY6yOyxI&callback=initMap"></script>
     <!-- site stylesheet -->
     <link rel="stylesheet" href="styles.css" />
+    <!-- Adds logo icon to the browser tab -->
+    <link rel="shortcut icon" type="image/x-icon" href="~/images/stagtitle.jpg" />
+
     <script type="text/javascript">
         $(document).ready(function () {
             // Toggles sliding the home panel open and closed
@@ -367,6 +446,10 @@
 
             $("#imgCourses4").click(function () {
                 $("#coursesPanel4").slideToggle("fast");
+            });
+
+            $("#btnBook").click(function () {
+                $("#calendarPanel").slideToggle("fast");
             });
 
             // Handles button enabling/disabling
@@ -587,7 +670,7 @@
                 </div>
                 
                 <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />-->
-                <asp:Button ID="btnBook" Text="Book"  CssClass="btn btn-success" runat="server" /><br />
+                <asp:Button ID="btnBook" Text="Book" OnClick="selectBooking" OnClientClick="return false" CssClass="btn btn-success" runat="server" /><br />
             </div>
 
             <div class="container1 col-sm-4 well equal-test">

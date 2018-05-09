@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" Debug="true" ClientTarget="uplevel" EnableEventValidation="false" validateRequest="false" EnableViewState="true" %>
+﻿<%@ Page Language="C#" Debug="true" MaintainScrollPositionOnPostback="true" ClientTarget="uplevel" EnableEventValidation="false" validateRequest="false" EnableViewState="true" %>
 <%@ Import Namespace="MySql.Data.MySqlClient" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Net.Mail" %>
@@ -21,10 +21,70 @@
     // Page load
     protected void page_load() {
         admin = new Admin();
+
+        
+        //Session["homeVisibility"] = "block";
+
+        //Session.Remove("homeVisibility");
+        //Session.Remove("newsVisibility");
+        
+        // testing
+        //string test = Session["homeVisibility"].ToString();
+        //Console.Write(test);
+        //Session["homeVisibility"] = "none";
+        //Console.Write("home visibility: " + Session["homeVisibility"].ToString());
+
+       
+        // Checks the visibility state stored in the session
+        // Handles home page visibility
+        if (Session["homeVisibility"] == null) {
+            // if its null it defaults to block (because its the default page to display)
+            Session["homeVisibility"] = "block";
+            // then it sets the display based on the block/none stored in the session
+            // which in this case is block
+            homePanel.Style.Add("display", Session["homeVisibility"].ToString());
+            Console.Write("home visibility: " + Session["homeVisibility"].ToString());
+        } else {
+            // if the session is not null the display is set based on the stored state in the session
+            homePanel.Style.Add("display", Session["homeVisibility"].ToString());
+            Console.Write("home visibility: " + Session["homeVisibility"].ToString());
+        }
+
+        // Handles news page visibility
+        // Exists to preserve the display state of the page when browsing news articles
+        // otherwise the page query would reload the home page during postback
+        if (Session["newsVisibility"] == null) {
+            // if its null it defaults to block (because its the default page to display)
+            Session["newsVisibility"] = "none";
+            // then it sets the display based on the block/none stored in the session
+            // which in this case is block
+            newsPanel.Style.Add("display", Session["newsVisibility"].ToString());
+            Console.Write("home visibility: " + Session["newsVisibility"].ToString());
+        } else {
+            // if the session is not null the display is set based on the stored state in the session
+            newsPanel.Style.Add("display", Session["newsVisibility"].ToString());
+            Console.Write("news visibility: " + Session["newsVisibility"].ToString());
+        }
         
         generateLogin();
         setLoginState();
-        loadData();
+
+        if (!Page.IsPostBack) {
+            loadData();
+
+            Console.Write("home visibility: " + Session["homeVisibility"].ToString());
+
+            /*
+            if (Session["homeVisibility"] == null) {
+                Session["homeVisibility"] = "block";
+            } else {
+                homePanel.Style.Add("display", Session["homeVisibility"].ToString());
+            }
+             * */
+            
+        }
+        
+        //loadData();
     }
 
     protected void loadData() {
@@ -67,6 +127,10 @@
         smtpobj.EnableSsl = true;
         smtpobj.Credentials = netCred;
         smtpobj.Send(o);
+    }
+
+    protected void facebook(Object src, EventArgs args) {
+        Response.Redirect("https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/");
     }
 
     protected void userLogout(Object src, EventArgs args) {
@@ -113,8 +177,8 @@
 
         int currentPage;
 
-        if (Request.QueryString["page"] != null) {
-            currentPage = Int32.Parse(Request.QueryString["page"]);
+        if (Request.QueryString["page2"] != null) {
+            currentPage = Int32.Parse(Request.QueryString["page2"]);
         } else {
             currentPage = 1;
         }
@@ -123,17 +187,16 @@
         lblPageInfo2.Text = "Page " + currentPage + " of " + pds.PageCount;
 
         if (!pds.IsFirstPage) {
-            linkPrev2.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage - 1);
+            linkPrev2.NavigateUrl = Request.CurrentExecutionFilePath + "?page2=" + (currentPage - 1);
         }
 
         if (!pds.IsLastPage) {
-            linkNext2.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage + 1);
+            linkNext2.NavigateUrl = Request.CurrentExecutionFilePath + "?page2=" + (currentPage + 1);
         }
         // Binding the data to the repeater
         repDisplayNews.DataSource = pds;
         repDisplayNews.DataBind();
     }
-    
     
     // Sets up the loading and paging for events
     protected void displayEvents() {
@@ -170,24 +233,36 @@
         repDisplayEvents.DataSource = pds;
         repDisplayEvents.DataBind();
     }
-
-    protected void selectHome(Object src, EventArgs args) {
+    
+    protected void selectHome(Object src, EventArgs args) {        
         if (homePanel.Style["display"] == "none") {
             homePanel.Style.Add("display", "block");
             btnHome.CssClass = "btn btn-warning";
+            // Sets the session to block
+            Session["homeVisibility"] = "block";
+            Console.Write(Session["homeVisibility"].ToString());
         } else {
             homePanel.Style.Add("display", "none");
             btnHome.CssClass = "btn btn-success";
+            // sets the session to none
+            Session["homeVisibility"] = "none";
+            Console.Write(Session["homeVisibility"].ToString());
         }
+        Console.Write("homeVisibility: " + Session["homeVisibility"].ToString());
     }
 
     protected void selectNews(Object src, EventArgs args) {
         if (newsPanel.Style["display"] == "none") {
             newsPanel.Style.Add("display", "block");
             btnNews.CssClass = "btn btn-warning";
+            // Sets the session to block
+            Session["newsVisibility"] = "block";
+            Console.Write(Session["newsVisibility"].ToString());
         } else {
             newsPanel.Style.Add("display", "none");
             btnNews.CssClass = "btn btn-success";
+            Session["newsVisibility"] = "none";
+            Console.Write(Session["newsVisibility"].ToString());
         }
     }
 
@@ -251,6 +326,47 @@
         }
     }
 
+    protected void selectCourses1(Object src, EventArgs args) {
+        if (coursesPanel1.Style["display"] == "none") {
+            coursesPanel1.Style.Add("display", "block");
+        } else {
+            coursesPanel1.Style.Add("display", "none");
+        }
+    }
+
+    protected void selectCourses2(Object src, EventArgs args) {
+        if (coursesPanel2.Style["display"] == "none") {
+            coursesPanel2.Style.Add("display", "block");
+        } else {
+            coursesPanel2.Style.Add("display", "none");
+        }
+    }
+
+    protected void selectCourses3(Object src, EventArgs args) {
+        if (coursesPanel3.Style["display"] == "none") {
+            coursesPanel3.Style.Add("display", "block");
+        } else {
+            coursesPanel3.Style.Add("display", "none");
+        }
+    }
+
+    protected void selectCourses4(Object src, EventArgs args) {
+        if (coursesPanel4.Style["display"] == "none") {
+            coursesPanel4.Style.Add("display", "block");
+        } else {
+            coursesPanel4.Style.Add("display", "none");
+        }
+    }
+
+    protected void selectBooking(Object src, EventArgs args) {
+        if (calendarPanel.Style["display"] == "none") {
+            calendarPanel.Style.Add("display", "block");
+        } else {
+            calendarPanel.Style.Add("display", "none");
+        }
+    }
+
+    
 
 </script>
 
@@ -271,6 +387,9 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXaxu38FBkmm3_ekVqu6IpCDIWY6yOyxI&callback=initMap"></script>
     <!-- site stylesheet -->
     <link rel="stylesheet" href="styles.css" />
+    <!-- Adds logo icon to the browser tab -->
+    <link rel="shortcut icon" type="image/x-icon" href="~/images/stagtitle.jpg" />
+
     <script type="text/javascript">
         $(document).ready(function () {
             // Toggles sliding the home panel open and closed
@@ -311,6 +430,26 @@
             // Toggles sliding the login panel open and closed
             $("#imgTitle").click(function () {
                 $("#loginPanel").slideToggle("fast");
+            });
+
+            $("#imgCourses1").click(function () {
+                $("#coursesPanel1").slideToggle("fast");
+            });
+
+            $("#imgCourses2").click(function () {
+                $("#coursesPanel2").slideToggle("fast");
+            });
+
+            $("#imgCourses3").click(function () {
+                $("#coursesPanel3").slideToggle("fast");
+            });
+
+            $("#imgCourses4").click(function () {
+                $("#coursesPanel4").slideToggle("fast");
+            });
+
+            $("#btnBook").click(function () {
+                $("#calendarPanel").slideToggle("fast");
             });
 
             // Handles button enabling/disabling
@@ -486,7 +625,7 @@
         <div id="homePanel" class="container2 col-sm-12 well" runat="server">
         <div class="container col-sm-12">
             <div class="container col-sm-3 blackText" style="text-align:center;">
-                <asp:Image class="img-rounded img-responsive" ID="imgRange" ImageUrl="images/range.jpg" Height="200px" Width="610px" runat="server" AlternateText="range" />
+                <asp:Image class="img-rounded img-responsive" ID="imgRange" ImageUrl="images/rangenew.jpg" Height="200px" Width="610px" runat="server" AlternateText="range" />
                 Established 1976
             </div>
             <div class="container1 col-sm-6 well">
@@ -495,12 +634,25 @@
                 <br /><br /><br />
             </div>
             <div class="container col-sm-3 ">
-                <asp:Image class="img-rounded img-responsive" ID="imgCourses" ImageUrl="images/coursesplaceholder2.jpg" Height="200px" Width="610px" runat="server" AlternateText="range" />
+                <asp:Image class="img-rounded img-responsive" ID="imgCourses1" ImageUrl="images/coursesplaceholder2.jpg" Height="200px" Width="610px" runat="server" AlternateText="range" />
             </div>
             <div class="container col-sm-12" style="text-align:left; color:black">
                 <!-- Established 1976 -->
             </div>
         </div>
+
+            <div id="coursesPanel1" class="container2 col-sm-12" style="display:none;" runat="server">
+                <div class="container2 col-sm-8">
+
+                </div>
+                <div class="container1 col-sm-4 well">
+                    <asp:Label ID="lblCoursesTitle1" Text="These are the courses the club offers: " runat="server" /><br /><br />
+                    <a href="https://novascotia.ca/natr/hunt/firearms.asp" style=" text-decoration:none; color:white; font-weight:bold">Canadian Firearms Safety Course</a><br />
+                    <a href="http://www.safetyservicesns.ca/restricted-firearms-safety/" style=" text-decoration:none; color:white; font-weight:bold">Restricted Firearms Safety Course</a><br />
+                    <a href="https://www.huntercourse.com/canada/novascotia/?gclid=EAIaIQobChMIro384d7a2gIVDP5kCh24-ww8EAEYASAAEgJ8o_D_BwE" style=" text-decoration:none; color:white; font-weight:bold">Hunting and Crossbow Safety Course</a><br />
+                </div>
+            </div>
+
             <div class="container col-sm-2 header" style="text-align:center; color:black">
                 Book a session
             </div>
@@ -511,14 +663,14 @@
                 Location
             </div>
  <!-- --><div class="container col-sm-12">
-            <div class="container1 col-sm-2 well equal-test" style="text-align:center">
-                <asp:Label ID="lblCalendarIcon" CssClass="fa fa-calendar" ForeColor="black" Font-Size="90px" runat="server" /><br /><br />
+            <div class="container1 col-sm-2 well1 equal-test" style="text-align:center">
+                <asp:Label ID="lblCalendarIcon" CssClass="fa fa-calendar positioning" ForeColor="black" Font-Size="90px" runat="server" /><br /><br />
                 <div class="container1 col-sm-12 well">
                     <asp:Label ID="lblCalendarInfo" Text="Click the button below to book a session at one of our shooting ranges" runat="server" />
                 </div>
                 
                 <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />-->
-                <asp:Button ID="btnBook" Text="Book"  CssClass="btn btn-success" runat="server" /><br />
+                <asp:Button ID="btnBook" Text="Book" OnClick="selectBooking" OnClientClick="return false" CssClass="btn btn-success" runat="server" /><br />
             </div>
 
             <div class="container1 col-sm-4 well equal-test">
@@ -531,7 +683,7 @@
                               <tbody>
                             </HeaderTemplate>
                             <ItemTemplate>  
-                                <div id="displayEvents" class="news well" style="text-align:center; padding:2px; color:black;">
+                                <div id="displayEvents" class="news well2" style="text-align:center; padding:2px; color:black;">
                                     <td>
                                         <asp:Label ID="lblEventNameTitle" Text="Name of Event: " ForeColor="white" Font-Bold="true" runat="server" />
                                         <asp:Label ID="lblEventName" Text='<%# Eval("name") %>' ForeColor="white" runat="server" /> <br /><br />
@@ -633,13 +785,26 @@
         </div>
         <div id="aboutPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <div class="container col-sm-8">
-                <asp:Image class="img-rounded img-responsive" ID="imgAbout" ImageUrl="images/aboutustemp.jpg" Height="200px" Width="1200px" runat="server" AlternateText="about us" />
+                <asp:Image class="img-rounded img-responsive" ID="imgAbout" ImageUrl="images/about.jpg" Height="200px" Width="1200px" runat="server" AlternateText="about us" />
                 <br /><br /><br /><br />
             </div>
             <div class="container col-sm-4">
-                <asp:Image class="img-rounded img-responsive" ID="imgFacebook1" ImageUrl="images/fbook.jpg" Height="90px" Width="610px" runat="server" AlternateText="courses" />
+                <asp:ImageButton class="img-rounded img-responsive" OnClick="facebook" ID="imgFacebook1" ImageUrl="images/facebook.jpg" Height="90px" Width="610px" runat="server" AlternateText="facebook" />
       
                 <asp:Image class="img-rounded img-responsive" ID="imgCourses2" ImageUrl="images/coursesplaceholder2.jpg" Height="200px" Width="610px" runat="server" AlternateText="courses" />
+                <br />
+            </div>
+
+            <div id="coursesPanel2" class="container2 col-sm-12" style="display:none;" runat="server">
+                <div class="container2 col-sm-8">
+
+                </div>
+                <div class="container1 col-sm-4 well">
+                    <asp:Label ID="Label10" Text="These are the courses the club offers: " runat="server" /><br /><br />
+                    <a href="https://novascotia.ca/natr/hunt/firearms.asp" style=" text-decoration:none; color:white; font-weight:bold">Canadian Firearms Safety Course</a><br />
+                    <a href="http://www.safetyservicesns.ca/restricted-firearms-safety/" style=" text-decoration:none; color:white; font-weight:bold">Restricted Firearms Safety Course</a><br />
+                    <a href="https://www.huntercourse.com/canada/novascotia/?gclid=EAIaIQobChMIro384d7a2gIVDP5kCh24-ww8EAEYASAAEgJ8o_D_BwE" style=" text-decoration:none; color:white; font-weight:bold">Hunting and Crossbow Safety Course</a><br />
+                </div>
             </div>
 
             <div class="container col-sm-10" style="text-align:right">
@@ -649,14 +814,14 @@
                 <br />
             </div>
 
-            <div class="container1 col-sm-6 well">
-                <asp:Label ID="lblAboutUs" Text="" runat="server" />
+            <div class="container1 col-sm-6 well3">
+                <asp:Label ID="lblAboutUs" Text="" CssClass="positioning" runat="server" />
                 
-                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+               <!-- <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /> -->
             </div>
 
-            <div class="container1 col-sm-6 well">
-                <table class="table">
+            <div class="container1 col-sm-6 well3">
+                <table class="table positioning">
                     <tr>
                         <th>Name</th>
                         <th>Title</th>
@@ -681,6 +846,11 @@
                 <br /><br /><br />
             </div>
 
+            <!-- its a hack to add a space between the content and the page footer but it works -->
+            <div class="container col-sm-12">
+                <asp:Label ID="lblBlank" Text="a" ForeColor="darkseagreen" runat="server" />
+            </div>
+
             <div class="container1 col-sm-8 well equal-test1">
                 <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
@@ -692,13 +862,20 @@
                     <br /><br />
                 </div>
             </div>
-        <div id="calendarPanel" class="container col-sm-12 well" style="display:none;" runat="server">
+        <div id="calendarPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             page content -- booking
         </div>
         <div id="linksPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <asp:Label ID="lblLinksTitle" Text="You can visit our facebook page by clicking " runat="server" />
             <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" style=" text-decoration:none; color:white; font-weight:bold"> here</a>
-            <asp:Label ID="Label5" Text="or by clicking one of the facebook links in the page footer." runat="server" />
+            <asp:Label ID="lblLinksTitle2" Text="or by clicking one of the facebook links in the page footer." runat="server" /><br />
+            <br />
+            <asp:Label ID="lbl" Text="You can download a copy of the clubs bylaws by clicking " runat="server" />
+            <a href="C:\Users\itstudents\Desktop\StaghornSite v2\files\bylaws.pdf" style=" text-decoration:none; color:white; font-weight:bold"> here</a><br /><br />
+
+            <asp:Label ID="Label5" Text="You can download a copy of the clubs ethics by clicking " runat="server" />
+            <a href="C:\Users\itstudents\Desktop\StaghornSite v2\files\ethics.docx" style=" text-decoration:none; color:white; font-weight:bold"> here</a><br />
+
             <br /><br /><br /><br /><br />
 
 
@@ -715,43 +892,61 @@
         </div>
         <div id="contactPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <div class="container col-sm-8 ">
-                <asp:Image class="img-rounded img-responsive" ID="Image1" ImageUrl="images/contactustemp.png" Height="200px" Width="1200px" runat="server" AlternateText="contact us" />
+                <asp:Image class="img-rounded img-responsive" ID="Image1" ImageUrl="images/contactusnew.jpeg" Height="200px" Width="1200px" runat="server" AlternateText="contact us" />
                 <br /><br /><br /><br />
             </div>
             <div class="container col-sm-4 ">
-                <asp:Image class="img-rounded img-responsive" ID="imgFacebook2" ImageUrl="images/fbook.jpg" Height="90px" Width="610px" runat="server" AlternateText="facebook" />
+                <asp:ImageButton class="img-rounded img-responsive" OnClick="facebook" ID="imgFacebook2" ImageUrl="images/facebook.jpg" Height="90px" Width="610px" runat="server" AlternateText="facebook" />
       
                 <asp:Image class="img-rounded img-responsive" ID="imgCourses3" ImageUrl="images/coursesplaceholder2.jpg" Height="200px" Width="610px" runat="server" AlternateText="courses" />
+                <br />
             </div>
-            <br />
+            <div id="coursesPanel3" class="container2 col-sm-12" style="display:none;" runat="server">
+                <div class="container2 col-sm-8">
+
+                </div>
+                <div class="container1 col-sm-4 well">
+                    <asp:Label ID="Label11" Text="These are the courses the club offers: " runat="server" /><br /><br />
+                    <a href="https://novascotia.ca/natr/hunt/firearms.asp" style=" text-decoration:none; color:white; font-weight:bold">Canadian Firearms Safety Course</a><br />
+                    <a href="http://www.safetyservicesns.ca/restricted-firearms-safety/" style=" text-decoration:none; color:white; font-weight:bold">Restricted Firearms Safety Course</a><br />
+                    <a href="https://www.huntercourse.com/canada/novascotia/?gclid=EAIaIQobChMIro384d7a2gIVDP5kCh24-ww8EAEYASAAEgJ8o_D_BwE" style=" text-decoration:none; color:white; font-weight:bold">Hunting and Crossbow Safety Course</a><br />
+                </div>
+            </div>
 
             <div class="container1 col-sm-6 well">
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">phone</i>
                 <asp:Label ID="lblPhoneTitle" Text="Phone: (902) 331-0548" CssClass="instructions" runat="server" /><br />
 
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
-                <asp:Label ID="lblAddressTitle" Text="Address: 239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" /><br />
+                <asp:Label ID="lblAddressTitle" Text="Mailing Address: 239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" /><br />
 
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">mail</i>
                 <asp:Label ID="lblMsgTitle" Text="Send us a message below!" CssClass="instructions" runat="server" /><br /><br />
+                
+               <!-- <form action="mailto:mail@mail.com" method="post" enctype="text/plain"> -->
+                    <asp:Label ID="lblContactName" Text="Full Name" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <input type="text" name="txtContactName" value="name" class="form-control" />
+                    <!--<asp:TextBox ID="txtContactName" Text="Enter your name" CssClass="form-control" MaxLength="25" runat="server" Class="contact" />-->
+                    <br />
+                    <asp:Label ID="lblContactEmail" Text="Email" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <input type="text" name="txtContactEmail" value="email" class="form-control" />
+                    <!--<asp:TextBox ID="txtContactEmail" Text="Enter your email" CssClass="form-control" MaxLength="25" runat="server" Class="contact" />-->
+                    <br />
+                    <asp:Label ID="lblContactMessage" Text="Message" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <input type="text" name="txtMessage" value="message" class="form-control" />
+                    <!--<asp:TextBox ID="txtContactMessage" Text="Enter your message" CssClass="form-control" TextMode="Multiline" MaxLength="25" runat="server" Class="contact" />-->
+                    <br />
+                    <input type="submit" value="Submit" class="btn btn-success" />
+                    <!--<asp:Button ID="btnContactSend" Text="Submit" CssClass="btn btn-success" runat="server" />-->
+                    <asp:Label ID="lblContactWarning" Text="*Red outlines indicate required fields" CssClass="text text-danger" Font-Size="XX-Small" runat="server" />
+                    <br /><br /><br />
+               <!-- </form> -->
 
-                <asp:Label ID="lblContactName" Text="Full Name" CssClass="label label-success" Font-Size="Small" runat="server" />
-                <asp:TextBox ID="txtContactName" Text="Enter your name" CssClass="form-control" MaxLength="25" runat="server" Class="contact" />
-                <br />
-                <asp:Label ID="lblContactEmail" Text="Email" CssClass="label label-success" Font-Size="Small" runat="server" />
-                <asp:TextBox ID="txtContactEmail" Text="Enter your email" CssClass="form-control" MaxLength="25" runat="server" Class="contact" />
-                <br />
-                <asp:Label ID="lblContactMessage" Text="Message" CssClass="label label-success" Font-Size="Small" runat="server" />
-                <asp:TextBox ID="txtContactMessage" Text="Enter your message" CssClass="form-control" TextMode="Multiline" MaxLength="25" runat="server" Class="contact" />
-                <br />
-                <asp:Button ID="btnContactSend" Text="Submit" CssClass="btn btn-success" runat="server" />
-                <asp:Label ID="lblContactWarning" Text="*Red outlines indicate required fields" CssClass="text text-danger" Font-Size="XX-Small" runat="server" />
-                <br /><br /><br />
                 <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                 <br /><br /><br />-->
             </div>
-            <div class="container1 col-sm-6 well">
-                <div id="contactMap" style="width:100%;height:459px;background-color:gray;" class="container1 col-sm-12 well">
+            <div class="container1 col-sm-6 well4">
+                <div id="contactMap" style="width:100%;height:459px;background-color:gray;" class="container1 col-sm-12 well positioning">
                     Error: Google Map API cannot be loaded
                 </div>
             </div>
@@ -776,13 +971,26 @@
         <div id="membershipPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
            
             <div class="container col-sm-8">
-                <asp:Image class="img-rounded img-responsive" ID="Image2" ImageUrl="images/becomemembertemp.jpg" Height="200px" Width="1200px" runat="server" AlternateText="become a member" />
+                <asp:Image class="img-rounded img-responsive" ID="Image2" ImageUrl="images/member.jpeg" Height="200px" Width="1200px" runat="server" AlternateText="become a member" />
                 <br /><br /><br /><br />
             </div>
             <div class="container col-sm-4">
-                <asp:Image class="img-rounded img-responsive" ID="Image3" ImageUrl="images/fbook.jpg" Height="90px" Width="610px" runat="server" AlternateText="facebook" />
+                <asp:ImageButton class="img-rounded img-responsive" OnClick="facebook" ID="Image3" ImageUrl="images/facebook.jpg" Height="90px" Width="610px" runat="server" AlternateText="facebook" />
       
-                <asp:Image class="img-rounded img-responsive" ID="Image4" ImageUrl="images/coursesplaceholder2.jpg" Height="200px" Width="610px" runat="server" AlternateText="courses" />
+                <asp:Image class="img-rounded img-responsive" ID="imgCourses4" ImageUrl="images/coursesplaceholder2.jpg" Height="200px" Width="610px" runat="server" AlternateText="courses" />
+                <br />
+            </div>
+
+            <div id="coursesPanel4" class="container2 col-sm-12" style="display:none;" runat="server">
+                <div class="container2 col-sm-8">
+
+                </div>
+                <div class="container1 col-sm-4 well">
+                    <asp:Label ID="Label12" Text="These are the courses the club offers: " runat="server" /><br /><br />
+                    <a href="https://novascotia.ca/natr/hunt/firearms.asp" style=" text-decoration:none; color:white; font-weight:bold">Canadian Firearms Safety Course</a><br />
+                    <a href="http://www.safetyservicesns.ca/restricted-firearms-safety/" style=" text-decoration:none; color:white; font-weight:bold">Restricted Firearms Safety Course</a><br />
+                    <a href="https://www.huntercourse.com/canada/novascotia/?gclid=EAIaIQobChMIro384d7a2gIVDP5kCh24-ww8EAEYASAAEgJ8o_D_BwE" style=" text-decoration:none; color:white; font-weight:bold">Hunting and Crossbow Safety Course</a><br />
+                </div>
             </div>
 
             <div class="container1 col-sm-6 well">
@@ -876,7 +1084,7 @@
                     <input type="hidden" name="tax" id="tax" value="0" />
                 </form>
             </div>
-            <div class="container2 col-sm-6 well">
+            <div class="container2 col-sm-6 well5">
                 <asp:Label ID="lblBenefits" Text="Benefits of Membership" Font-Size="Small" CssClass="instructions" runat="server" /><br />
                 <div class="container1 col-sm-12 well whiteText">
                     These are the benefits of membership

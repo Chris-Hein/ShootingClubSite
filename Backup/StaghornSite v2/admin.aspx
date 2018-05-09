@@ -21,14 +21,36 @@
     protected void page_load() {
         admin = new Admin();
         
+        // test - works
+        //Session["newsVisibility"] = "block";
+        //Session.Remove("newsVisibility");
+
+        // Checks the visibility state stored in the session
+        if (Session["newsVisibility"] == null) {
+            // if its null it defaults to block (because its the default page to display)
+            Session["newsVisibility"] = "block";
+            // then it sets the display based on the block/none stored in the session
+            // which in this case is block
+            newsPanel.Style.Add("display", Session["newsVisibility"].ToString());
+            Console.Write("news visibility: " + Session["newsVisibility"].ToString());
+        } else {
+            // if the session is not null the display is set based on the stored state in the session
+            newsPanel.Style.Add("display", Session["newsVisibility"].ToString());
+            Console.Write("news visibility: " + Session["newsVisibility"].ToString());
+        }
+        
+        
         if (!Page.IsPostBack) {
             // Populates the about us field with the existing info
             txtAboutUs.Text = Convert.ToString(admin.getAboutUsData());
             //
             displayNewsArticles();
             displayEvents();
+
+            eventsPanel.Style.Add("display", "none");
+            newsPanel.Style.Add("display", "block");
         }
-        
+        // Ensures whoever is using the page is a legitimate admin and logged in
         checkLoginStatus();
     }
 
@@ -50,12 +72,21 @@
     }
 
     protected void selectEditNews(Object src, EventArgs args) {
+        // test
+        Console.Write("news button clicked");
+        
         if (newsPanel.Style["display"] == "none") {
             newsPanel.Style.Add("display", "block");
             btnNews.CssClass = "btn btn-warning";
+            // Sets the visibility session state to block
+            Session["newsVisibility"] = "block";
+            Console.Write("News Session State:" + Session["newsVisibility"].ToString());
         } else {
             newsPanel.Style.Add("display", "none");
             btnNews.CssClass = "btn btn-success";
+            // Sets the visibility session state to none
+            Session["newsVisibility"] = "none";
+            Console.Write("News Session State: " + Session["newsVisibility"].ToString());
         }
     }
 
@@ -89,12 +120,13 @@
             admin.updateAboutUs(Server.HtmlEncode(txtAboutUs.Text));
             // Then outputs a success message
             lblEditError.Text = "About Us has been successfully updated.";
+            newsPanel.Style.Add("display", "none");
+            aboutPanel.Style.Add("display", "block");
         }
     }
     
-    //
-    protected void addNewsEntry(Object src, EventArgs args) {        
-        
+    // Handles adding a news article
+    protected void addNewsEntry(Object src, EventArgs args) {          
         if ((txtNewsTitle.Text == "") || (txtNewsContent.Text == "")) {
             lblNewsError.Text = "Error: Fields must not be blank";
         } else {
@@ -108,6 +140,7 @@
         
     }
 
+    // Handles adding an event
     protected void addEventEntry(Object src, EventArgs args) {
         if ((txtEventName.Text == "") || (txtEventLocation.Text == "") || (txtEventDate.Text == "") || (txtEventDescription.Text == "")) {
             lblEventError.Text = "Error: All fields have to be filled out";
@@ -118,9 +151,26 @@
             admin.addEventEntry(txtEventName.Text, txtEventLocation.Text, txtEventDate.Text, txtEventDescription.Text, date);
             // Output a success message
             lblEventError.Text = "New event created successfully";
+            newsPanel.Style.Add("display", "none");
+            eventsPanel.Style.Add("display", "block");
         }
     }
 
+    // Handles deleting a news item
+    protected void deleteNews(Object src, EventArgs args) {
+        admin.deleteNews(lblCurrentNews.Text);
+        //Response.Write("Current News Article: " + lblCurrentNews.Text);
+        lblNewsError.Text = "Deleted news article";
+        //page_load();
+    }
+
+    // Handles deleting an event
+    protected void deleteEvent(Object src, EventArgs args) {
+        admin.deleteEvent(lblCurrentEvent.Text);
+        lblEventError.Text = "Deleted event";
+    }
+
+    // Pager to handling pagination and display of news articles
     protected void displayNewsArticles() {
         dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
         sqlString = "SELECT * FROM news WHERE id > 0 ORDER BY id DESC";
@@ -146,16 +196,25 @@
 
         if (!pds.IsFirstPage) {
             linkPrev.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage - 1);
+            newsPanel.Style.Add("display", "block");
+            eventsPanel.Style.Add("display", "none");
         }
 
         if (!pds.IsLastPage) {
             linkNext.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage + 1);
+            newsPanel.Style.Add("display", "block");
+            eventsPanel.Style.Add("display", "none");
         }
+
+        // Added to facilitate deleting news items
+        lblCurrentNews.Text = Convert.ToString(currentPage);
+        
         // Binding the data to the repeater
         repDisplay.DataSource = pds;
         repDisplay.DataBind();
     }
 
+    // Pager to handle pagination and display of events
     protected void displayEvents() {
         dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
         sqlString = "SELECT * FROM event WHERE id > 0 ORDER BY id DESC";
@@ -170,8 +229,8 @@
 
         int currentPage;
 
-        if (Request.QueryString["page"] != null) {
-            currentPage = Int32.Parse(Request.QueryString["page"]);
+        if (Request.QueryString["pagee"] != null) {
+            currentPage = Int32.Parse(Request.QueryString["pagee"]);
         } else {
             currentPage = 1;
         }
@@ -180,12 +239,20 @@
         lblPageInfo1.Text = "Event " + currentPage + " of " + pds.PageCount;
 
         if (!pds.IsFirstPage) {
-            linkPrev1.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage - 1);
+            linkPrev1.NavigateUrl = Request.CurrentExecutionFilePath + "?pagee=" + (currentPage - 1);
+            newsPanel.Style.Add("display", "none");
+            eventsPanel.Style.Add("display", "block");
         }
 
         if (!pds.IsLastPage) {
-            linkNext1.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage + 1);
+            linkNext1.NavigateUrl = Request.CurrentExecutionFilePath + "?pagee=" + (currentPage + 1);
+            newsPanel.Style.Add("display", "none");
+            eventsPanel.Style.Add("display", "block");
         }
+
+        // Added to facilitate deleting event item
+        lblCurrentEvent.Text = Convert.ToString(currentPage);
+        
         // Binding the data to the repeater
         repDisplayEvents.DataSource = pds;
         repDisplayEvents.DataBind();
@@ -442,18 +509,16 @@
             
         </div>
         <div class="container col-sm-4" style="text-align:right;">
+            <a href="http://localhost:57329/StaghornSite%20v2/" style=" text-decoration:none; color:white; font-weight:bold">click here</a>
+            <asp:Label ID="lblInstructions" Text=" to return to the site as an admin" runat="server" />     
             <asp:Button ID="btnLogout" Text="Logout" CssClass="btn btn-success" OnClick="userLogout" Width="75px" runat="server" /><br /><br />
         </div>
-
-        
 
         <div class="container2 col-sm-12 well btn-group btn-group-justified" style="text-align:center;">
             <asp:Button ID="btnNews" OnClientClick="return false" Text="News" CssClass="btn btn-success" Width="75px" runat="server" />
             <asp:Button ID="btnEvents" OnClientClick="return false" Text="Events" CssClass="btn btn-success" Width="75px" runat="server" />
             <asp:Button ID="btnAbout" OnClientClick="return false" Text="About" CssClass="btn btn-success" Width="75px" runat="server" />
         </div>
-
-        
 
         <!-- Events -->
         <div id="eventsPanel" class="container2 col-sm-12 " style="display:none" runat="server">
@@ -493,7 +558,7 @@
                     view existing events
                 </div>
 
-                <div class="container2 col-sm-12 ">
+                <div class="container2 col-sm-12 well7 ">
                     <!-- Start Display Data -->
                     <!-- Repeater to display the existing events -->
                     <asp:repeater id="repDisplayEvents" runat="server">
@@ -535,7 +600,9 @@
                         <ul class="pager">
                             <li><asp:HyperLink ID="linkPrev1" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server"><<</asp:HyperLink></li>
                             <li><asp:Label ID="lblPageInfo1" ForeColor="white" BackColor="darkolivegreen" runat="server" /></li>
-                            <li><asp:HyperLink ID="linkNext1" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li>
+                            <li><asp:HyperLink ID="linkNext1" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li><br />
+                            <asp:Button ID="BtnDeleteEvent" Text="Delete" CssClass="btn btn-success deleteButton" OnClick="deleteEvent" runat="server" /><br />
+                            <asp:Label ID="lblCurrentEvent" Text="" ForeColor="darkseagreen" runat="server" />
                         </ul><br />
 
                         <br /><br /><br /><br /><br /><br /><br /><br />
@@ -546,7 +613,7 @@
         </div>
 
         <!-- News -->
-        <div id="newsPanel" class="container2 col-sm-12 " style="display:none;" runat="server">
+        <div id="newsPanel" class="container2 col-sm-12 " style="display:block;" runat="server">
             <div class="container2 col-sm-6 well">
                 <div class="container1 col-sm-12 well" style="text-align:center;">
                     add new news article
@@ -573,7 +640,7 @@
                     view existing news articles
                 </div>
 
-                <div class="container col-sm-12">
+                <div class="container col-sm-12 well6">
                     <!-- Start Display Data -->
                     <!-- Repeater to display the news articles -->
                     <asp:repeater id="repDisplay" runat="server">
@@ -604,11 +671,14 @@
                         <ul class="pager">
                             <li><asp:HyperLink ID="linkPrev" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server"><<</asp:HyperLink></li>
                             <li><asp:Label ID="lblPageInfo" ForeColor="white" BackColor="darkolivegreen" runat="server" /></li>
-                            <li><asp:HyperLink ID="linkNext" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li>
+                            <li><asp:HyperLink ID="linkNext" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li><br />
+                            <asp:Button ID="btnDeleteNews" Text="Delete" CssClass="btn btn-success deleteButton" OnClick="deleteNews" runat="server" /><br />
+                            <asp:Label ID="lblCurrentNews" Text="" ForeColor="darkseagreen" runat="server" />
                         </ul><br />
                     </div> 
                     <!-- End Display Data -->
-                </div>  
+                </div> 
+                
             </div>
         </div>
 
@@ -624,8 +694,8 @@
                 <asp:Button ID="btnSubmitAbout" OnClick="updateAboutUs" Text="Edit" CssClass="btn btn-success" runat="server" />
                 <asp:Label ID="lblEditError" Text="" Font-Size="XX-Small" CssClass="text text-danger" runat="server" />    
             </div>
-            <div class="container2 col-sm-6 well">
-                edit about page info
+            <div class="container2 col-sm-6 well8">
+                <asp:Label ID="lblEditInfoTitle" CssClass="positioning" Text="To edit the about me change the text and click edit" runat="server" />
                 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
             </div>
 

@@ -21,12 +21,34 @@
     protected void page_load() {
         admin = new Admin();
         
+        // test - works
+        //Session["newsVisibility"] = "block";
+        //Session.Remove("newsVisibility");
+
+        // Checks the visibility state stored in the session
+        if (Session["newsVisibility"] == null) {
+            // if its null it defaults to block (because its the default page to display)
+            Session["newsVisibility"] = "block";
+            // then it sets the display based on the block/none stored in the session
+            // which in this case is block
+            newsPanel.Style.Add("display", Session["newsVisibility"].ToString());
+            Console.Write("news visibility: " + Session["newsVisibility"].ToString());
+        } else {
+            // if the session is not null the display is set based on the stored state in the session
+            newsPanel.Style.Add("display", Session["newsVisibility"].ToString());
+            Console.Write("news visibility: " + Session["newsVisibility"].ToString());
+        }
+        
+        
         if (!Page.IsPostBack) {
             // Populates the about us field with the existing info
             txtAboutUs.Text = Convert.ToString(admin.getAboutUsData());
             //
             displayNewsArticles();
             displayEvents();
+
+            eventsPanel.Style.Add("display", "none");
+            newsPanel.Style.Add("display", "block");
         }
         // Ensures whoever is using the page is a legitimate admin and logged in
         checkLoginStatus();
@@ -50,12 +72,21 @@
     }
 
     protected void selectEditNews(Object src, EventArgs args) {
+        // test
+        Console.Write("news button clicked");
+        
         if (newsPanel.Style["display"] == "none") {
             newsPanel.Style.Add("display", "block");
             btnNews.CssClass = "btn btn-warning";
+            // Sets the visibility session state to block
+            Session["newsVisibility"] = "block";
+            Console.Write("News Session State:" + Session["newsVisibility"].ToString());
         } else {
             newsPanel.Style.Add("display", "none");
             btnNews.CssClass = "btn btn-success";
+            // Sets the visibility session state to none
+            Session["newsVisibility"] = "none";
+            Console.Write("News Session State: " + Session["newsVisibility"].ToString());
         }
     }
 
@@ -89,6 +120,8 @@
             admin.updateAboutUs(Server.HtmlEncode(txtAboutUs.Text));
             // Then outputs a success message
             lblEditError.Text = "About Us has been successfully updated.";
+            newsPanel.Style.Add("display", "none");
+            aboutPanel.Style.Add("display", "block");
         }
     }
     
@@ -118,6 +151,8 @@
             admin.addEventEntry(txtEventName.Text, txtEventLocation.Text, txtEventDate.Text, txtEventDescription.Text, date);
             // Output a success message
             lblEventError.Text = "New event created successfully";
+            newsPanel.Style.Add("display", "none");
+            eventsPanel.Style.Add("display", "block");
         }
     }
 
@@ -161,10 +196,14 @@
 
         if (!pds.IsFirstPage) {
             linkPrev.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage - 1);
+            newsPanel.Style.Add("display", "block");
+            eventsPanel.Style.Add("display", "none");
         }
 
         if (!pds.IsLastPage) {
             linkNext.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage + 1);
+            newsPanel.Style.Add("display", "block");
+            eventsPanel.Style.Add("display", "none");
         }
 
         // Added to facilitate deleting news items
@@ -190,8 +229,8 @@
 
         int currentPage;
 
-        if (Request.QueryString["page"] != null) {
-            currentPage = Int32.Parse(Request.QueryString["page"]);
+        if (Request.QueryString["pagee"] != null) {
+            currentPage = Int32.Parse(Request.QueryString["pagee"]);
         } else {
             currentPage = 1;
         }
@@ -200,11 +239,15 @@
         lblPageInfo1.Text = "Event " + currentPage + " of " + pds.PageCount;
 
         if (!pds.IsFirstPage) {
-            linkPrev1.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage - 1);
+            linkPrev1.NavigateUrl = Request.CurrentExecutionFilePath + "?pagee=" + (currentPage - 1);
+            newsPanel.Style.Add("display", "none");
+            eventsPanel.Style.Add("display", "block");
         }
 
         if (!pds.IsLastPage) {
-            linkNext1.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage + 1);
+            linkNext1.NavigateUrl = Request.CurrentExecutionFilePath + "?pagee=" + (currentPage + 1);
+            newsPanel.Style.Add("display", "none");
+            eventsPanel.Style.Add("display", "block");
         }
 
         // Added to facilitate deleting event item
