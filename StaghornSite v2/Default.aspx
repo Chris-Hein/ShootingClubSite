@@ -37,6 +37,7 @@
        
         // Checks the visibility state stored in the session
         // Handles home page visibility
+        /*
         if (Session["homeVisibility"] == null) {
             // if its null it defaults to block (because its the default page to display)
             Session["homeVisibility"] = "block";
@@ -49,10 +50,12 @@
             homePanel.Style.Add("display", Session["homeVisibility"].ToString());
             Console.Write("home visibility: " + Session["homeVisibility"].ToString());
         }
+         * */
 
         // Handles news page visibility
         // Exists to preserve the display state of the page when browsing news articles
         // otherwise the page query would reload the home page during postback
+        /*
         if (Session["newsVisibility"] == null) {
             // if its null it defaults to block (because its the default page to display)
             Session["newsVisibility"] = "none";
@@ -65,14 +68,17 @@
             newsPanel.Style.Add("display", Session["newsVisibility"].ToString());
             Console.Write("news visibility: " + Session["newsVisibility"].ToString());
         }
+         * */
         
         generateLogin();
         setLoginState();
 
         if (!Page.IsPostBack) {
             loadData();
+            // Defaults home button to selected color
+            btnHome.CssClass = "btn btn-warning";
 
-            Console.Write("home visibility: " + Session["homeVisibility"].ToString());
+            //Console.Write("home visibility: " + Session["homeVisibility"].ToString());
 
             /*
             if (Session["homeVisibility"] == null) {
@@ -188,6 +194,23 @@
 
         if (!pds.IsFirstPage) {
             linkPrev2.NavigateUrl = Request.CurrentExecutionFilePath + "?page2=" + (currentPage - 1);
+        } else {
+        }
+
+        // Grays out the previous navigation if the user is on the first entry
+        if (pds.IsFirstPage) {
+            linkPrev2.Style.Add("background-color", "gray");
+            linkPrev2.Style.Add("color", "darkgray");
+            linkPrev2.Style.Add("background-color", "gray");
+            linkPrev2.Style.Add("color", "darkgray");
+        }
+
+        // Grays out the next navigation if the user is on the last entry
+        if (pds.IsLastPage) {
+            linkPrev2.Style.Add("background-color", "darkolivegreen");
+            linkPrev2.Style.Add("color", "white");
+            linkNext2.Style.Add("background-color", "gray");
+            linkNext2.Style.Add("color", "darkgray");
         }
 
         if (!pds.IsLastPage) {
@@ -224,6 +247,24 @@
 
         if (!pds.IsFirstPage) {
             linkPrev1.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage - 1);
+        } else {
+            
+        }
+
+        // Grays out the previous navigation if the user is on the first entry
+        if (pds.IsFirstPage) {
+            linkPrev1.Style.Add("background-color", "gray");
+            linkPrev1.Style.Add("color", "darkgray");
+            linkPrev1.Style.Add("background-color", "gray");
+            linkPrev1.Style.Add("color", "darkgray");
+        }
+
+        // Grays out the next navigation if the user is on the last entry
+        if (pds.IsLastPage) {
+            linkPrev1.Style.Add("background-color", "darkolivegreen");
+            linkPrev1.Style.Add("color", "white");
+            linkNext1.Style.Add("background-color", "gray");
+            linkNext1.Style.Add("color", "darkgray");
         }
 
         if (!pds.IsLastPage) {
@@ -234,13 +275,26 @@
         repDisplayEvents.DataBind();
     }
     
-    protected void selectHome(Object src, EventArgs args) {        
+    protected void selectHome(Object src, EventArgs args) {
         if (homePanel.Style["display"] == "none") {
             homePanel.Style.Add("display", "block");
             btnHome.CssClass = "btn btn-warning";
             // Sets the session to block
-            Session["homeVisibility"] = "block";
-            Console.Write(Session["homeVisibility"].ToString());
+          //  Session["homeVisibility"] = "block";
+         //   Console.Write(Session["homeVisibility"].ToString());
+            // Close any other panels on the page when a selection is made
+            newsPanel.Style.Add("display", "none");
+            btnNews.CssClass = "btn btn-success";
+            aboutPanel.Style.Add("display", "none");
+            btnAbout.CssClass = "btn btn-success";
+            calendarPanel.Style.Add("display", "none");
+            btnCalendar.CssClass = "btn btn-success";
+            linksPanel.Style.Add("display", "none");
+            btnLinks.CssClass = "btn btn-success";
+            contactPanel.Style.Add("display", "none");
+            btnContact.CssClass = "btn btn-success";
+            membershipPanel.Style.Add("display", "none");
+            btnMembership.CssClass = "btn btn-success";
         } else {
             homePanel.Style.Add("display", "none");
             btnHome.CssClass = "btn btn-success";
@@ -248,7 +302,7 @@
             Session["homeVisibility"] = "none";
             Console.Write(Session["homeVisibility"].ToString());
         }
-        Console.Write("homeVisibility: " + Session["homeVisibility"].ToString());
+        //Console.Write("homeVisibility: " + Session["homeVisibility"].ToString());
     }
 
     protected void selectNews(Object src, EventArgs args) {
@@ -256,8 +310,21 @@
             newsPanel.Style.Add("display", "block");
             btnNews.CssClass = "btn btn-warning";
             // Sets the session to block
-            Session["newsVisibility"] = "block";
-            Console.Write(Session["newsVisibility"].ToString());
+         //   Session["newsVisibility"] = "block";
+        //    Console.Write(Session["newsVisibility"].ToString());
+            // Close any other panels on the page when a selection is made
+            homePanel.Style.Add("display", "none");
+            btnHome.CssClass = "btn btn-success";
+            aboutPanel.Style.Add("display", "none");
+            btnAbout.CssClass = "btn btn-success";
+            calendarPanel.Style.Add("display", "none");
+            btnCalendar.CssClass = "btn btn-success";
+            linksPanel.Style.Add("display", "none");
+            btnLinks.CssClass = "btn btn-success";
+            contactPanel.Style.Add("display", "none");
+            btnContact.CssClass = "btn btn-success";
+            membershipPanel.Style.Add("display", "none");
+            btnMembership.CssClass = "btn btn-success";
         } else {
             newsPanel.Style.Add("display", "none");
             btnNews.CssClass = "btn btn-success";
@@ -270,6 +337,19 @@
         if (aboutPanel.Style["display"] == "none") {
             aboutPanel.Style.Add("display", "block");
             btnAbout.CssClass = "btn btn-warning";
+            // Close any other panels on the page when a selection is made
+            homePanel.Style.Add("display", "none");
+            btnHome.CssClass = "btn btn-success";
+            newsPanel.Style.Add("display", "none");
+            btnNews.CssClass = "btn btn-success";
+            calendarPanel.Style.Add("display", "none");
+            btnCalendar.CssClass = "btn btn-success";
+            linksPanel.Style.Add("display", "none");
+            btnLinks.CssClass = "btn btn-success";
+            contactPanel.Style.Add("display", "none");
+            btnContact.CssClass = "btn btn-success";
+            membershipPanel.Style.Add("display", "none");
+            btnMembership.CssClass = "btn btn-success";
         } else {
             aboutPanel.Style.Add("display", "none");
             btnAbout.CssClass = "btn btn-success";
@@ -280,6 +360,19 @@
         if (calendarPanel.Style["display"] == "none") {
             calendarPanel.Style.Add("display", "block");
             btnCalendar.CssClass = "btn btn-warning";
+            // Close any other panels on the page when a selection is made
+            newsPanel.Style.Add("display", "none");
+            btnNews.CssClass = "btn btn-success";
+            aboutPanel.Style.Add("display", "none");
+            btnAbout.CssClass = "btn btn-success";
+            homePanel.Style.Add("display", "none");
+            btnHome.CssClass = "btn btn-success";
+            linksPanel.Style.Add("display", "none");
+            btnLinks.CssClass = "btn btn-success";
+            contactPanel.Style.Add("display", "none");
+            btnContact.CssClass = "btn btn-success";
+            membershipPanel.Style.Add("display", "none");
+            btnMembership.CssClass = "btn btn-success";
         } else {
             calendarPanel.Style.Add("display", "none");
             btnCalendar.CssClass = "btn btn-success";
@@ -290,6 +383,19 @@
         if (linksPanel.Style["display"] == "none") {
             linksPanel.Style.Add("display", "block");
             btnLinks.CssClass = "btn btn-warning";
+            // Close any other panels on the page when a selection is made
+            newsPanel.Style.Add("display", "none");
+            btnNews.CssClass = "btn btn-success";
+            aboutPanel.Style.Add("display", "none");
+            btnAbout.CssClass = "btn btn-success";
+            calendarPanel.Style.Add("display", "none");
+            btnCalendar.CssClass = "btn btn-success";
+            homePanel.Style.Add("display", "none");
+            btnHome.CssClass = "btn btn-success";
+            contactPanel.Style.Add("display", "none");
+            btnContact.CssClass = "btn btn-success";
+            membershipPanel.Style.Add("display", "none");
+            btnMembership.CssClass = "btn btn-success";
         } else {
             linksPanel.Style.Add("display", "none");
             btnLinks.CssClass = "btn btn-success";
@@ -300,6 +406,19 @@
         if (contactPanel.Style["display"] == "none") {
             contactPanel.Style.Add("display", "block");
             btnContact.CssClass = "btn btn-warning";
+            // Close any other panels on the page when a selection is made
+            newsPanel.Style.Add("display", "none");
+            btnNews.CssClass = "btn btn-success";
+            aboutPanel.Style.Add("display", "none");
+            btnAbout.CssClass = "btn btn-success";
+            calendarPanel.Style.Add("display", "none");
+            btnCalendar.CssClass = "btn btn-success";
+            linksPanel.Style.Add("display", "none");
+            btnLinks.CssClass = "btn btn-success";
+            homePanel.Style.Add("display", "none");
+            btnHome.CssClass = "btn btn-success";
+            membershipPanel.Style.Add("display", "none");
+            btnMembership.CssClass = "btn btn-success";
         } else {
             contactPanel.Style.Add("display", "none");
             btnContact.CssClass = "btn btn-success";
@@ -310,6 +429,19 @@
         if (membershipPanel.Style["display"] == "none") {
             membershipPanel.Style.Add("display", "block");
             btnMembership.CssClass = "btn btn-warning";
+            // Close any other panels on the page when a selection is made
+            newsPanel.Style.Add("display", "none");
+            btnNews.CssClass = "btn btn-success";
+            aboutPanel.Style.Add("display", "none");
+            btnAbout.CssClass = "btn btn-success";
+            calendarPanel.Style.Add("display", "none");
+            btnCalendar.CssClass = "btn btn-success";
+            linksPanel.Style.Add("display", "none");
+            btnLinks.CssClass = "btn btn-success";
+            contactPanel.Style.Add("display", "none");
+            btnContact.CssClass = "btn btn-success";
+            homePanel.Style.Add("display", "none");
+            btnHome.CssClass = "btn btn-success";
         } else {
             membershipPanel.Style.Add("display", "none");
             btnMembership.CssClass = "btn btn-success";
@@ -480,7 +612,7 @@
                         $(this).css("border", "1px solid red");
                     } else {
                         // Otherwise sets the border color to green to show they are
-                        $(this).css("border", "1px solid green");
+                        $(this).css("border", "1px solid #39FF14");
                     }
                 });
                 // Ternary operator to handle enabling and disabling button
@@ -512,6 +644,11 @@
                 var shootingRanges2 = new google.maps.Map(document.getElementById('contactMap'), {
                     zoom: 12,
                     center: range1
+                });
+
+                var shootingRanges3 = new google.maps.Map(document.getElementById('bookMap'), {
+                    zoom: 12,
+                    center: range2
                 });
 
                 var shootingRanges = new google.maps.Map(document.getElementById('locMap'), {
@@ -576,6 +713,20 @@
                     map: shootingRanges,
                     label: { text: '40 Foster Ave, Stellarton', color: '#5fd615' }
                 });
+
+                //------------------------------------------------------------ Markers - Range Locations
+
+                var marker = new google.maps.Marker({
+                    position: range1,
+                    map: shootingRanges3,
+                    label: { text: '24 Reeves Rd, New Glasgow', color: '#5fd615' },
+                });
+
+                var marker = new google.maps.Marker({
+                    position: range2,
+                    map: shootingRanges3,
+                    label: { text: '40 Foster Ave, Stellarton', color: '#5fd615' }
+                });
             }
 
         });
@@ -622,7 +773,7 @@
             <asp:Button type="button" ID="btnMembership" OnClientClick="return false" Text="Buy Membership"  CssClass="btn btn-success" Width="150px" OnClick="selectMembership" runat="server" />
         </div>
 
-        <div id="homePanel" class="container2 col-sm-12 well" runat="server">
+        <div id="homePanel" class="container2 col-sm-12 well" style="display:block" runat="server">
         <div class="container col-sm-12">
             <div class="container col-sm-3 blackText" style="text-align:center;">
                 <asp:Image class="img-rounded img-responsive" ID="imgRange" ImageUrl="images/rangenew.jpg" Height="200px" Width="610px" runat="server" AlternateText="range" />
@@ -774,9 +925,9 @@
                         </FooterTemplate>
                       </asp:repeater>
                     <!-- Navigation -->
-                    <div class="col-sm-12" style="text-align:center; color:black;">
+                    <div id="divNewsPager" class="col-sm-12" style="text-align:center; color:black;" runat="server">
                         <ul class="pager">
-                            <li><asp:HyperLink ID="linkPrev2" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server"><<</asp:HyperLink></li>
+                            <li><asp:HyperLink ID="linkPrev2"   Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server"><<</asp:HyperLink></li>
                             <li><asp:Label ID="lblPageInfo2" ForeColor="white" BackColor="darkolivegreen" runat="server" /></li>
                             <li><asp:HyperLink ID="linkNext2" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li>
                         </ul><br />
@@ -863,7 +1014,53 @@
                 </div>
             </div>
         <div id="calendarPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
-            page content -- booking
+            <div class="container2 col-sm-12 well">
+                Use the form below to send a booking request to the club at either of our ranges
+            </div>
+            <!-- BUG: this seems to be breaking the button functionality for the site. Might have to port this over from a mailto to an auto emailer -->
+            <div class="container1 col-sm-6 well">
+                <form action="mailto:mail@mail.com" method="post" enctype="text/plain">
+                    <asp:Label ID="Label13" Text="Full Name" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <input type="text" name="txtBookName" value="name" class="form-control" />
+                    <br />
+                    <asp:Label ID="Label18" Text="Select Range" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <select name="location" class="form-control">
+                        <option value="NewGlasgowRange">New Glasgow Range</option>
+                        <option value="StellartonRange">Stellarton Range</option>
+                    </select>   
+                    <br />
+                    <asp:Label ID="Label14" Text="Email Address" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <input type="text" name="txtBookEmail" value="email" class="form-control" />
+                    <br />
+                    <asp:Label ID="Label15" Text="Phone" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <input type="text" name="txtBookPhone" value="phone" class="form-control" />
+                    <br />
+                    <asp:Label ID="Label16" Text="Date" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <input type="text" name="txtBookDate" value="date" class="form-control" />
+                    <br />
+                    <asp:Label ID="Label17" Text="Time" CssClass="label label-success" Font-Size="Small" runat="server" />
+                    <input type="text" name="txtBookTime" value="time" class="form-control" />
+                    <br />
+                    <input type="submit" value="Book Range" class="btn btn-success" />
+               </form>
+            </div>
+            <div class="container1 col-sm-6 well">
+                <div id="bookMap" class="container2 col-sm-6 well9" style="width:100%;height:370px;background-color:gray;">
+                    Error: Google Maps API failed to load
+                </div>
+            </div>
+
+            <div class="container1 col-sm-8 well equal-test1">
+                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
+                <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
+                <asp:Label ID="Label19" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
+            </div>
+                <div class="container1 col-sm-4 well equal-test1" style="text-align:center;">
+                    <br />
+                    <asp:Label ID="Label20" Text="Copyright 2018 Staghorn Shooting Club" CssClass="instructions" runat="server" />
+                    <br /><br />
+                </div>
+            </div>
         </div>
         <div id="linksPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <asp:Label ID="lblLinksTitle" Text="You can visit our facebook page by clicking " runat="server" />
@@ -877,7 +1074,6 @@
             <a href="C:\Users\itstudents\Desktop\StaghornSite v2\files\ethics.docx" style=" text-decoration:none; color:white; font-weight:bold"> here</a><br />
 
             <br /><br /><br /><br /><br />
-
 
             <div class="container1 col-sm-8 well equal-test1">
                 <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
@@ -938,7 +1134,7 @@
                     <br />
                     <input type="submit" value="Submit" class="btn btn-success" />
                     <!--<asp:Button ID="btnContactSend" Text="Submit" CssClass="btn btn-success" runat="server" />-->
-                    <asp:Label ID="lblContactWarning" Text="*Red outlines indicate required fields" CssClass="text text-danger" Font-Size="XX-Small" runat="server" />
+                    <asp:Label ID="lblContactWarning" Text="*Red outlines indicate required fields" CssClass="errorColor" Font-Size="XX-Small" runat="server" />
                     <br /><br /><br />
                <!-- </form> -->
 
@@ -1006,14 +1202,14 @@
                     <asp:Label ID="lblName" Text="Name" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os0" Text=" Enter name" CssClass="form-control" MaxLength="25" runat="server" Class="input" />
                     <input type="hidden" name="on0" value="Name" />
-                    <asp:RequiredFieldValidator ID="valName" ControlToValidate="os0" runat="server" CssClass="text text-danger" Text="*Name is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
+                    <asp:RequiredFieldValidator ID="valName" ControlToValidate="os0" runat="server" CssClass="errorColor" Text="*Name is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
                     
                     <asp:Label ID="lblCivic" Text="Civic Address" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os1" Text="Enter address" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os1" size="20" />-->
                     <input type="hidden" name="on1" value="Civic Address" />
-                    <asp:RequiredFieldValidator ID="valCivic" ControlToValidate="os1" runat="server" CssClass="text text-danger" Text="*Your civic number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
+                    <asp:RequiredFieldValidator ID="valCivic" ControlToValidate="os1" runat="server" CssClass="errorColor" Text="*Your civic number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
 
 
@@ -1021,53 +1217,53 @@
                     <asp:TextBox ID="os2" Text="Enter town" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os2" size="20" />-->
                     <input type="hidden" name="on2" value="Town" />
-                    <asp:RequiredFieldValidator ID="valTown" ControlToValidate="os2" runat="server" CssClass="text text-danger" Text="*Town is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
+                    <asp:RequiredFieldValidator ID="valTown" ControlToValidate="os2" runat="server" CssClass="errorColor" Text="*Town is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
                     
                     <asp:Label ID="lblPostal" Text="Postal Code" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os3" Text="B0K 1S0" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os3" size="20" />-->
                     <input type="hidden" name="on3" value="Postal Code" />
-                    <asp:RequiredFieldValidator ID="valPostal" ControlToValidate="os3" runat="server" CssClass="text text-danger" Text="*Your postal code is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br />
+                    <asp:RequiredFieldValidator ID="valPostal" ControlToValidate="os3" runat="server" CssClass="errorColor" Text="*Your postal code is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br />
                     <!-- MUST take proper postal code with capital letters -->
-                    <asp:RegularExpressionValidator ID="valPostal1" runat="server" ErrorMessage="*You must enter a valid postal code (V2X 7E7 format)" CssClass="text text-danger" Font-Size="XX-Small" ControlToValidate="os3" ValidationExpression="[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]"></asp:RegularExpressionValidator><br />
+                    <asp:RegularExpressionValidator ID="valPostal1" runat="server" ErrorMessage="*You must enter a valid postal code (V2X 7E7 format)" CssClass="errorColor" Font-Size="XX-Small" ControlToValidate="os3" ValidationExpression="[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]"></asp:RegularExpressionValidator><br />
 
 
                     <asp:Label ID="lblOccupation" Text="Occupation" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os4" Text="Enter occupation" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os4" size="20" />-->
                     <input type="hidden" name="on4" value="Occupation" />
-                    <asp:RequiredFieldValidator ID="valOccupation" ControlToValidate="os4" runat="server" CssClass="text text-danger" Text="*Occupation is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
+                    <asp:RequiredFieldValidator ID="valOccupation" ControlToValidate="os4" runat="server" CssClass="errorColor" Text="*Occupation is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
                     
                     <asp:Label ID="lblPhone" Text="Phone Number" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os5" Text="902-555-5555" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os5" size="20" />-->
                     <input type="hidden" name="on5" value="Phone" />
-                    <asp:RequiredFieldValidator ID="valPhone" ControlToValidate="os5" runat="server" CssClass="text text-danger" Text="*Phone number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br />
-                    <asp:RegularExpressionValidator ID="valPhone2" runat="server" ErrorMessage="*You must enter a valid phone number (902-555-5555 format)" CssClass="text text-danger" Font-Size="XX-Small" ControlToValidate="os5" ValidationExpression="\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*"></asp:RegularExpressionValidator><br />
+                    <asp:RequiredFieldValidator ID="valPhone" ControlToValidate="os5" runat="server" CssClass="errorColor" Text="*Phone number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br />
+                    <asp:RegularExpressionValidator ID="valPhone2" runat="server" ErrorMessage="*You must enter a valid phone number (902-555-5555 format)" CssClass="errorColor" Font-Size="XX-Small" ControlToValidate="os5" ValidationExpression="\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*"></asp:RegularExpressionValidator><br />
 
 
                     <asp:Label ID="lblDob" Text="Date of Birth" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os6" Text="Enter dob" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os6" size="20" />-->
                     <input type="hidden" name="on6" value="DOB" />
-                    <asp:RequiredFieldValidator ID="valDob" ControlToValidate="os6" runat="server" CssClass="text text-danger" Text="*DOB is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
+                    <asp:RequiredFieldValidator ID="valDob" ControlToValidate="os6" runat="server" CssClass="errorColor" Text="*DOB is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
                     
                     <asp:Label ID="lblLicenseNumber" Text="Firearms License Number" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os7" Text="12345678.0001" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os7" size="20" />-->
                     <input type="hidden" name="on7" value="Firearms License Number" />
-                    <asp:RequiredFieldValidator ID="valLicenseNumber" ControlToValidate="os7" runat="server" CssClass="text text-danger" Text="*Your firearms license number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /> 
-                    <asp:RegularExpressionValidator ID="valLicenseNumber1" runat="server" ErrorMessage="*You must enter a valid firearms license number (12345678.0001 format)" CssClass="text text-danger" Font-Size="XX-Small" ControlToValidate="os7" ValidationExpression="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][.][0-9][0-9][0-9][0-9]"></asp:RegularExpressionValidator><br />
+                    <asp:RequiredFieldValidator ID="valLicenseNumber" ControlToValidate="os7" runat="server" CssClass="errorColor" Text="*Your firearms license number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /> 
+                    <asp:RegularExpressionValidator ID="valLicenseNumber1" runat="server" ErrorMessage="*You must enter a valid firearms license number (12345678.0001 format)" CssClass="errorColor" Font-Size="XX-Small" ControlToValidate="os7" ValidationExpression="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][.][0-9][0-9][0-9][0-9]"></asp:RegularExpressionValidator><br />
 
 
                     <asp:Label ID="lblExpiration" Text="Expiration Date" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os8" Text="Enter expiration date" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os8" size="20" />-->
                     <input type="hidden" name="on8" value="Exp Date" />
-                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ControlToValidate="os8" runat="server" CssClass="text text-danger" Text="*Your FLN expiration date is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br /> 
+                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ControlToValidate="os8" runat="server" CssClass="errorColor" Text="*Your FLN expiration date is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br /> 
 
                     
                     <asp:Button ID="btnSubmit" Text="Order Membership" CssClass="btn btn-success" PostBackUrl="https://www.paypal.com/cgi-bin/webscr" runat="server" />
@@ -1084,7 +1280,7 @@
                     <input type="hidden" name="tax" id="tax" value="0" />
                 </form>
             </div>
-            <div class="container2 col-sm-6 well5">
+            <div class="container2 col-sm-6 well10">
                 <asp:Label ID="lblBenefits" Text="Benefits of Membership" Font-Size="Small" CssClass="instructions" runat="server" /><br />
                 <div class="container1 col-sm-12 well whiteText">
                     These are the benefits of membership

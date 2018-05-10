@@ -135,8 +135,22 @@ table tr:nth-child(odd) {
     border:1px solid white;
 }
 
+.well9 {
+    height: 460px !important;
+    border:1px solid white;
+}
+
+.well10 {
+    height: 1060px !important;
+    border:1px solid white;
+}
+
 .deleteButton {
     border-radius:20%;
+}
+
+.errorColor {
+    color:orange;
 }
 
 @media screen and (max-width:845px) {

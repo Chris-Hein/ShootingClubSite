@@ -200,6 +200,22 @@
             eventsPanel.Style.Add("display", "none");
         }
 
+        // Grays out the previous navigation if the user is on the first entry
+        if (pds.IsFirstPage) {
+            linkPrev.Style.Add("background-color", "gray");
+            linkPrev.Style.Add("color", "darkgray");
+            linkPrev.Style.Add("background-color", "gray");
+            linkPrev.Style.Add("color", "darkgray");
+        }
+
+        // Grays out the next navigation if the user is on the last entry
+        if (pds.IsLastPage) {
+            linkPrev.Style.Add("background-color", "darkolivegreen");
+            linkPrev.Style.Add("color", "white");
+            linkNext.Style.Add("background-color", "gray");
+            linkNext.Style.Add("color", "darkgray");
+        }
+
         if (!pds.IsLastPage) {
             linkNext.NavigateUrl = Request.CurrentExecutionFilePath + "?page=" + (currentPage + 1);
             newsPanel.Style.Add("display", "block");
@@ -242,6 +258,22 @@
             linkPrev1.NavigateUrl = Request.CurrentExecutionFilePath + "?pagee=" + (currentPage - 1);
             newsPanel.Style.Add("display", "none");
             eventsPanel.Style.Add("display", "block");
+        }
+
+        // Grays out the previous navigation if the user is on the first entry
+        if (pds.IsFirstPage) {
+            linkPrev1.Style.Add("background-color", "gray");
+            linkPrev1.Style.Add("color", "darkgray");
+            linkPrev1.Style.Add("background-color", "gray");
+            linkPrev1.Style.Add("color", "darkgray");
+        }
+
+        // Grays out the next navigation if the user is on the last entry
+        if (pds.IsLastPage) {
+            linkPrev1.Style.Add("background-color", "darkolivegreen");
+            linkPrev1.Style.Add("color", "white");
+            linkNext1.Style.Add("background-color", "gray");
+            linkNext1.Style.Add("color", "darkgray");
         }
 
         if (!pds.IsLastPage) {
@@ -530,27 +562,27 @@
                 <div class="container1 col-sm-12 well">
                     <asp:Label ID="lblEventName" Text="Event Name" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtEventName" Text="" CssClass="form-control" MaxLength="100" runat="server" />
-                    <asp:Label ID="lblEventNameRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
-                    <asp:Label ID="lblEventNameChars" Text="100" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
+                    <asp:Label ID="lblEventNameRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
+                    <asp:Label ID="lblEventNameChars" Text="100" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br />
                     <asp:Label ID="lblEventLocationTitle" Text="Event Location" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtEventLocation" Text="" CssClass="form-control" MaxLength="100" runat="server" />
-                    <asp:Label ID="lblEventLocationRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
-                    <asp:Label ID="lblEventLocationChars" Text="100" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
+                    <asp:Label ID="lblEventLocationRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
+                    <asp:Label ID="lblEventLocationChars" Text="100" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br />
                     <asp:Label ID="lblEventDateTitle" Text="Event Date" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtEventDate" Text="" CssClass="form-control" MaxLength="50" runat="server" />
-                    <asp:Label ID="lblEventDateRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
-                    <asp:Label ID="lblEventDateChars" Text="50" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
+                    <asp:Label ID="lblEventDateRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
+                    <asp:Label ID="lblEventDateChars" Text="50" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br />
                     <asp:Label ID="lblEventDescriptionTitle" Text="Event Description" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtEventDescription" TextMode="MultiLine" Text="" CssClass="form-control" MaxLength="500" Height="125px" runat="server" />
 
-                    <asp:Label ID="lblEventDescriptionRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
-                    <asp:Label ID="lblEventDescriptionChars" Text="500" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
+                    <asp:Label ID="lblEventDescriptionRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
+                    <asp:Label ID="lblEventDescriptionChars" Text="500" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br /><br />
                     <asp:Button ID="btnSubmitEvent" OnClick="addEventEntry" Text="Post Event" CssClass="btn btn-success" runat="server" />
-                    <asp:Label ID="lblEventError" Text="" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
+                    <asp:Label ID="lblEventError" Text="" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                 </div>  
             </div>
             <div class="container2 col-sm-6 well">
@@ -622,17 +654,17 @@
                 <div class="container1 col-sm-12 well">
                     <asp:Label ID="lblNewsTitle" Text="Article Title" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtNewsTitle" Text="" CssClass="form-control" MaxLength="100" runat="server" />
-                    <asp:Label ID="lblNewsTitleCharsTitle" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
-                    <asp:Label ID="lblNewsTitleChars" Text="100" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
+                    <asp:Label ID="lblNewsTitleCharsTitle" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
+                    <asp:Label ID="lblNewsTitleChars" Text="100" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br />
                     <asp:Label ID="lblNewsContent" Text="Article Content" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtNewsContent" TextMode="MultiLine" Text="" CssClass="form-control" MaxLength="500" Height="125px" runat="server" />
 
-                    <asp:Label ID="lblNewsContentCharsTitle" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
-                    <asp:Label ID="lblNewsContentChars" Text="500" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
+                    <asp:Label ID="lblNewsContentCharsTitle" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
+                    <asp:Label ID="lblNewsContentChars" Text="500" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br /><br />
                     <asp:Button ID="btnSubmitNews" Text="Post" CssClass="btn btn-success" OnClick="addNewsEntry" runat="server" />
-                    <asp:Label ID="lblNewsError" Text="" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
+                    <asp:Label ID="lblNewsError" Text="" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                 </div>  
             </div>
             <div class="container2 col-sm-6 well">
@@ -688,11 +720,11 @@
             <div class="container1 col-sm-6 well">
                 <asp:TextBox ID="txtAboutUs" TextMode="MultiLine" CssClass="form-control" MaxLength="200" Height="300px" runat="server" />
                 
-                <asp:Label ID="lblAboutCharsTitle" Text="Characters Remaining: " Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
-                <asp:Label ID="lblAboutChars" Text="500" Font-Size="XX-Small" CssClass="text text-danger" runat="server" /> 
+                <asp:Label ID="lblAboutCharsTitle" Text="Characters Remaining: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
+                <asp:Label ID="lblAboutChars" Text="500" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                 <br /><br />
                 <asp:Button ID="btnSubmitAbout" OnClick="updateAboutUs" Text="Edit" CssClass="btn btn-success" runat="server" />
-                <asp:Label ID="lblEditError" Text="" Font-Size="XX-Small" CssClass="text text-danger" runat="server" />    
+                <asp:Label ID="lblEditError" Text="" Font-Size="XX-Small" CssClass="errorColor" runat="server" />    
             </div>
             <div class="container2 col-sm-6 well8">
                 <asp:Label ID="lblEditInfoTitle" CssClass="positioning" Text="To edit the about me change the text and click edit" runat="server" />
