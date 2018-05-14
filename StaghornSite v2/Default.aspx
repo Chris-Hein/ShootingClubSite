@@ -18,9 +18,11 @@
     MySqlDataReader dbReader;
     string sqlString;
 
-    // Page load
+    /// Page load
     protected void page_load() {
         admin = new Admin();
+        //testing
+        Session.RemoveAll();
 
         
         //Session["homeVisibility"] = "block";
@@ -75,8 +77,17 @@
 
         if (!Page.IsPostBack) {
             loadData();
+            
+            // Populates booking dropdown
+            ListItem rangeItem1;
+            ListItem rangeItem2;
+            rangeItem1 = new ListItem("Stellarton Range");
+            rangeItem2 = new ListItem("New Glasgow Range");
+            drpRanges.Items.Add(rangeItem1);
+            drpRanges.Items.Add(rangeItem2);
+            
             // Defaults home button to selected color
-            btnHome.CssClass = "btn btn-warning";
+            //btnHome.CssClass = "btn btn-warning";
 
             //Console.Write("home visibility: " + Session["homeVisibility"].ToString());
 
@@ -98,6 +109,7 @@
         lblAboutUs.Text = Convert.ToString(admin.getAboutUsData());
         displayEvents();
         displayNews();
+        displayImages();
     }
 
     protected void setLoginState() {
@@ -112,11 +124,40 @@
         }
     }
 
+    // Method to handle email generation for bookings
+    protected string bookingMessageText() {
+        // Variables
+        string name = Server.HtmlEncode(txtBookName.Text);
+        string range = Convert.ToString(drpRanges.SelectedValue);
+        string email = Server.HtmlEncode(txtBookEmail.Text);
+        string phone = Server.HtmlEncode(txtBookPhone.Text);
+        string date = Server.HtmlEncode(txtBookDate.Text);
+        string time = Server.HtmlEncode(txtBookTime.Text);
+        string message;
+        // Generates the email text
+        message = "This is an automated booking message from the staghorn shooting club website." + name + " would like to book the " + range + " range, on " + date + " at " + time + ". Their contact information is: " + phone + " (phone), " + email + " (email).";
+
+        return message;
+    }
+
+    // Method to handle generating the emails for booking a range
+    protected void bookingMailer(Object src, EventArgs args) {
+        //MailMessage o = new MailMessage("From", "To","Subject", "Body");
+        MailMessage o = new MailMessage("Automated Booking", "shootingclub@shootingclubemail.com", "Automated booking message from Staghorn Shooting Club Website", bookingMessageText());
+        //NetworkCredential netCred= new NetworkCredential("Sender Email","Sender Password");
+        NetworkCredential netCred = new NetworkCredential("mail@hotmail.com", "password");
+        // Can be setup for gmail by using smtp.google.com
+        SmtpClient smtpobj = new SmtpClient("smtp.live.com", 587);
+        smtpobj.EnableSsl = true;
+        smtpobj.Credentials = netCred;
+        smtpobj.Send(o);
+    }
+
     // Method to generate the body text of automated messages
     protected string messagetext() {
         string message;
 
-        message = txtContactMessage.Text.ToString();
+        message = Server.HtmlEncode(txtContactMessage.Text.ToString());
 
         return message;
     }
@@ -124,11 +165,12 @@
     // Method to handle sending messages to the club via the website contact us form
     // Note this is not set up to function properly yet, actual account data needs to 
     // be entered for the form to function
-    protected void automatedMailer() {
+    protected void automatedMailer(Object src, EventArgs args) {
         //MailMessage o = new MailMessage("From", "To","Subject", "Body");
         MailMessage o = new MailMessage(txtContactName.Text.ToString(), "shootingclub@shootingclubemail.com", "Automated message from Staghorn Shooting Club Website", messagetext());
         //NetworkCredential netCred= new NetworkCredential("Sender Email","Sender Password");
         NetworkCredential netCred = new NetworkCredential("mail@hotmail.com", "password");
+        // Can be setup for gmail by using smtp.google.com
         SmtpClient smtpobj = new SmtpClient("smtp.live.com", 587);
         smtpobj.EnableSsl = true;
         smtpobj.Credentials = netCred;
@@ -273,6 +315,66 @@
         // Binding the data to the repeater
         repDisplayEvents.DataSource = pds;
         repDisplayEvents.DataBind();
+    }
+
+    protected void displayImages() {
+        dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
+        sqlString = "SELECT * FROM images WHERE id > 0 ORDER BY id DESC";
+        dbAdapter = new MySqlDataAdapter(sqlString, dbConnection);
+        DataTable table = new DataTable();
+        dbAdapter.Fill(table);
+
+        PagedDataSource pds = new PagedDataSource();
+        pds.DataSource = table.DefaultView;
+        pds.AllowPaging = true;
+        // Displays 9 images per page
+        pds.PageSize = 9;
+
+        int currentPage;
+
+        if (Request.QueryString["pageee"] != null) {
+            currentPage = Int32.Parse(Request.QueryString["pageee"]);
+        } else {
+            currentPage = 1;
+        }
+
+        pds.CurrentPageIndex = currentPage - 1;
+        lblPageInfoImage.Text = "Page " + currentPage + " of " + pds.PageCount;
+
+        if (!pds.IsFirstPage) {
+            linkPrevImage.NavigateUrl = Request.CurrentExecutionFilePath + "?pageee=" + (currentPage - 1);
+            //homePanel.Style.Add("display", "none");
+            //galleryPanel.Style.Add("display", "block");
+        }
+
+        // Grays out the previous navigation if the user is on the first entry
+        if (pds.IsFirstPage) {
+            linkPrevImage.Style.Add("background-color", "gray");
+            linkPrevImage.Style.Add("color", "darkgray");
+            linkPrevImage.Style.Add("background-color", "gray");
+            linkPrevImage.Style.Add("color", "darkgray");
+        }
+
+        // Grays out the next navigation if the user is on the last entry
+        if (pds.IsLastPage) {
+            linkPrevImage.Style.Add("background-color", "darkolivegreen");
+            linkPrevImage.Style.Add("color", "white");
+            linkNextImage.Style.Add("background-color", "gray");
+            linkNextImage.Style.Add("color", "darkgray");
+        }
+
+        if (!pds.IsLastPage) {
+            linkNextImage.NavigateUrl = Request.CurrentExecutionFilePath + "?pageee=" + (currentPage + 1);
+            //homePanel.Style.Add("display", "none");
+            //galleryPanel.Style.Add("display", "block");
+        }
+
+        // Added to facilitate deleting images
+        //lblCurrentImage.Text = Convert.ToString(currentPage);
+
+        // Binding the data to the repeater
+        repDisplayImages.DataSource = pds;
+        repDisplayImages.DataBind();
     }
     
     protected void selectHome(Object src, EventArgs args) {
@@ -448,6 +550,31 @@
         }
     }
 
+    protected void selectGallery(Object src, EventArgs args) {
+        if (galleryPanel.Style["display"] == "none") {
+            galleryPanel.Style.Add("display", "block");
+            btnGallery.CssClass = "btn btn-warning";
+            // Close any other panels on the page when a selection is made
+            newsPanel.Style.Add("display", "none");
+            btnNews.CssClass = "btn btn-success";
+            aboutPanel.Style.Add("display", "none");
+            btnAbout.CssClass = "btn btn-success";
+            calendarPanel.Style.Add("display", "none");
+            btnCalendar.CssClass = "btn btn-success";
+            linksPanel.Style.Add("display", "none");
+            btnLinks.CssClass = "btn btn-success";
+            contactPanel.Style.Add("display", "none");
+            btnContact.CssClass = "btn btn-success";
+            homePanel.Style.Add("display", "none");
+            btnHome.CssClass = "btn btn-success";
+            membershipPanel.Style.Add("display", "none");
+            btnMembership.CssClass = "btn btn-success";
+        } else {
+            membershipPanel.Style.Add("display", "none");
+            btnMembership.CssClass = "btn btn-success";
+        }
+    }
+
     protected void selectLogin(Object src, EventArgs args) {
         if (loginPanel.Style["display"] == "none") {
             loginPanel.Style.Add("display", "block");
@@ -582,6 +709,10 @@
 
             $("#btnBook").click(function () {
                 $("#calendarPanel").slideToggle("fast");
+            });
+
+            $("#btnGallery").click(function () {
+                $("#galleryPanel").slideToggle("fast");
             });
 
             // Handles button enabling/disabling
@@ -750,8 +881,8 @@
         <div id="loginPanel" class="container col-sm-3" runat="server" style="display:none">
             
             <div class="container1 col-sm-10 well btn-group " style="text-align:center;">
-                <asp:TextBox ID="txtUsername" Text="username" CssClass="form-control" MaxLength="12" runat="server" />
-                <asp:TextBox ID="txtPassword" Text="password" CssClass="form-control" MaxLength="12" runat="server" />
+                <asp:TextBox ID="txtUsername" placeholder="username" Text="username" CssClass="form-control" MaxLength="12" runat="server" />
+                <asp:TextBox ID="txtPassword" placeholder="password" Text="password" CssClass="form-control" MaxLength="12" runat="server" />
                 <br />
                 <asp:Button ID="btnLogin" Text="Login" CssClass="btn btn-success" OnClick="userLogin" runat="server" />
                 <asp:Button ID="btnLogout" Text="Logout" CssClass="btn btn-success" OnClick="userLogout" runat="server" />
@@ -769,6 +900,7 @@
             <asp:Button type="button" ID="btnAbout" OnClientClick="return false" Text="About" CssClass="btn btn-success" Width="150px" OnClick="selectAbout" runat="server" />
             <asp:Button type="button" ID="btnCalendar" OnClientClick="return false" Text="Book"  CssClass="btn btn-success" Width="150px" OnClick="selectCalendar" runat="server" />
             <asp:Button type="button" ID="btnLinks" OnClientClick="return false" Text="Links"  CssClass="btn btn-success" Width="150px" OnClick="selectLinks" runat="server" />
+            <asp:Button type="button" ID="btnGallery" OnClientClick="return false" Text="Gallery"  CssClass="btn btn-success" Width="150px" OnClick="selectGallery" runat="server" />
             <asp:Button type="button" ID="btnContact" OnClientClick="return false" Text="Contact Us"  CssClass="btn btn-success" Width="150px" OnClick="selectContactUs" runat="server" />
             <asp:Button type="button" ID="btnMembership" OnClientClick="return false" Text="Buy Membership"  CssClass="btn btn-success" Width="150px" OnClick="selectMembership" runat="server" />
         </div>
@@ -1019,30 +1151,37 @@
             </div>
             <!-- BUG: this seems to be breaking the button functionality for the site. Might have to port this over from a mailto to an auto emailer -->
             <div class="container1 col-sm-6 well">
-                <form action="mailto:mail@mail.com" method="post" enctype="text/plain">
+                <!-- <form action="mailto:mail@mail.com" method="post" enctype="text/plain"> -->
                     <asp:Label ID="Label13" Text="Full Name" CssClass="label label-success" Font-Size="Small" runat="server" />
-                    <input type="text" name="txtBookName" value="name" class="form-control" />
+                    <asp:TextBox ID="txtBookName" placeholder="enter your name" Text="name" CssClass="form-control" MaxLength="100" runat="server" />
+                    <!-- <input type="text" name="txtBookName" value="name" class="form-control" /> -->
                     <br />
                     <asp:Label ID="Label18" Text="Select Range" CssClass="label label-success" Font-Size="Small" runat="server" />
-                    <select name="location" class="form-control">
+                    <asp:DropDownList ID="drpRanges" CssClass="form-control" runat="server" />    
+                    <!--<select name="location" class="form-control">
                         <option value="NewGlasgowRange">New Glasgow Range</option>
                         <option value="StellartonRange">Stellarton Range</option>
-                    </select>   
+                    </select> -->  
                     <br />
                     <asp:Label ID="Label14" Text="Email Address" CssClass="label label-success" Font-Size="Small" runat="server" />
-                    <input type="text" name="txtBookEmail" value="email" class="form-control" />
+                    <asp:TextBox ID="txtBookEmail" placeholder="enter your email" Text="email" CssClass="form-control" MaxLength="50" runat="server" />
+                    <!-- <input type="text" name="txtBookEmail1" value="email" class="form-control" /> -->
                     <br />
                     <asp:Label ID="Label15" Text="Phone" CssClass="label label-success" Font-Size="Small" runat="server" />
-                    <input type="text" name="txtBookPhone" value="phone" class="form-control" />
+                    <asp:TextBox ID="txtBookPhone" Text="phone" placeholder="enter your phone number" CssClass="form-control" MaxLength="25" runat="server" />
+                    <!-- <input type="text" name="txtBookPhone1" value="phone" class="form-control" /> -->
                     <br />
                     <asp:Label ID="Label16" Text="Date" CssClass="label label-success" Font-Size="Small" runat="server" />
-                    <input type="text" name="txtBookDate" value="date" class="form-control" />
+                    <asp:TextBox ID="txtBookDate" Text="date" placeholder="enter your desired booking date" CssClass="form-control" MaxLength="25" runat="server" />
+                    <!--<input type="text" name="txtBookDate1" value="date" class="form-control" />-->
                     <br />
                     <asp:Label ID="Label17" Text="Time" CssClass="label label-success" Font-Size="Small" runat="server" />
-                    <input type="text" name="txtBookTime" value="time" class="form-control" />
+                    <asp:TextBox ID="txtBookTime" placeholder="enter your desired booking time" Text="time" CssClass="form-control" MaxLength="25" runat="server" />
+                    <!--<input type="text" name="txtBookTime1" value="time" class="form-control" />-->
                     <br />
-                    <input type="submit" value="Book Range" class="btn btn-success" />
-               </form>
+                    <!--<input type="submit" value="Book Range1" class="btn btn-success" />-->
+                    <asp:Button ID="btnBookSubmit" Text="Book Range" OnClick="bookingMailer" CssClass="btn btn-success" runat="server" /> 
+               <!-- </form> -->
             </div>
             <div class="container1 col-sm-6 well">
                 <div id="bookMap" class="container2 col-sm-6 well9" style="width:100%;height:370px;background-color:gray;">
@@ -1323,6 +1462,73 @@
                 </div>  
             
        </div>
+
+        <div id="galleryPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
+            <!-- Start Display Data -->
+                    <!-- Repeater to display the images -->
+                    <asp:repeater id="repDisplayImages" runat="server">
+                    <HeaderTemplate>
+                            <thead>
+                             </thead>
+                              <tbody>
+                            </HeaderTemplate>
+                            <ItemTemplate>  
+                                <div id="displayImages" class="container1 well12 col-sm-4" style="text-align:center; color:black;">
+                                    <td>
+                                        <asp:Label ID="lblImageTitle" Text='<%# Eval("title") %>' ForeColor="white" runat="server" /> <br />
+                                    </td>
+                                    <td>
+                                        <img class="gallery" data-toggle="modal" data-target="#imageModal" src="http://localhost:57329/StaghornSite v2/siteImages/<%# Eval("image")%>" alt="image" height="100%" width="100%" /><br />
+                                    </td>
+                                    <td>
+                                        <asp:Label ID="lblImageContent" Text='<%# Eval("caption") %>' ForeColor="white" runat="server" /> <br /><br />
+                                    </td>
+                                    <td>
+                                        <!--<p data-toggle="modal" data-target="#imageModal">Open Modal</p>-->
+                                    </td>
+
+                                    <td>
+
+                                    </td>
+
+                                    <div>
+                                        <!-- Modal -->
+                                    <!--
+                                    <div class="modal fade" id="imageModal" role="dialog" style="display:none">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <span class="close">&times;</span>
+                                                <h2><asp:Label ID="Label21" Text='<%# Eval("title") %>' ForeColor="white" runat="server" /></h2>
+                                            </div>
+                                            <div class="modal-body">
+                                                <img class="modal-body" id="Img1" data-toggle="modal" data-target="#imageModal" src="http://localhost:57329/StaghornSite v2/siteImages/<%# Eval("image")%>" alt="image" height="150" width="150" />
+                                            </div>
+                                            <div class="modal-footer">
+                                            <h3><asp:Label ID="Label22" Text='<%# Eval("caption") %>' ForeColor="white" runat="server" /></h3>
+                                        </div>
+                                    </div>
+                                        -->
+                                    <!-- Modal -->
+                                    </div>
+                                </div>
+                            </ItemTemplate>
+                            <FooterTemplate>
+                             </tbody>
+                        </FooterTemplate>
+                      </asp:repeater>
+                    <!-- Navigation -->
+                    <div class="col-sm-12" style="text-align:center; color:black;">
+                        <ul class="pager">
+                            <li><asp:HyperLink ID="linkPrevImage" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server"><<</asp:HyperLink></li>
+                            <li><asp:Label ID="lblPageInfoImage" ForeColor="white" BackColor="darkolivegreen" runat="server" /></li>
+                            <li><asp:HyperLink ID="linkNextImage" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li><br /><br />
+                            <asp:Label ID="lblCurrentImage" Text="" ForeColor="darkseagreen" runat="server" />
+                        </ul><br />
+                    </div> 
+                    <!-- End Display Data -->
+            </div>
+        </div>
+
         </div>
     </form>
 </body>

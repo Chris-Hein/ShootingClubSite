@@ -108,4 +108,34 @@ public class Admin {
             dbConnection.Close();
         }
     }
+
+    // Method to delete an image
+    public void deleteImage(string imageid) {
+        try {
+            dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
+            dbConnection.Open();
+            sqlString = "DELETE FROM images WHERE id=" + imageid;
+            dbCommand = new MySqlCommand(sqlString, dbConnection);
+            dbCommand.ExecuteNonQuery();
+        } finally {
+            dbConnection.Close();
+        }
+    }
+
+    // Method to handle uploading an image
+    public void uploadImage(string image, string title, string caption) {
+        try {
+            dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
+            dbConnection.Open();
+            sqlString = sqlString = "INSERT INTO images (image,title,caption) VALUES(@image, @title, @caption)";
+            dbCommand = new MySqlCommand(sqlString, dbConnection);
+            dbCommand.Parameters.AddWithValue("@image", image);
+            dbCommand.Parameters.AddWithValue("@title", title);
+            dbCommand.Parameters.AddWithValue("@caption", caption);
+            dbCommand.ExecuteNonQuery();
+        }
+        finally {
+            dbConnection.Close();
+        }
+    }
 }

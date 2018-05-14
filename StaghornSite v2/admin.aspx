@@ -3,6 +3,7 @@
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Net.Mail" %>
 <%@ Import Namespace="System.Net" %>
+<%@ Import Namespace="System.IO" %>
 
 <!DOCTYPE html>
 
@@ -46,6 +47,7 @@
             //
             displayNewsArticles();
             displayEvents();
+            displayImages();
 
             eventsPanel.Style.Add("display", "none");
             newsPanel.Style.Add("display", "block");
@@ -110,6 +112,16 @@
         }
     }
 
+    protected void selectImages() {
+        if (imagePanel.Style["display"] == "none") {
+            imagePanel.Style.Add("display", "block");
+            btnImages.CssClass = "btn btn-warning";
+        } else {
+            imagePanel.Style.Add("display", "none");
+            btnImages.CssClass = "btn btn-success";
+        }
+    }
+
     // Handles updating of the about us info
     protected void updateAboutUs(Object src, EventArgs args) {
         // Checks for blank input
@@ -168,6 +180,12 @@
     protected void deleteEvent(Object src, EventArgs args) {
         admin.deleteEvent(lblCurrentEvent.Text);
         lblEventError.Text = "Deleted event";
+    }
+    
+    // Handles deleting an image
+    protected void deleteImage(Object src, EventArgs args) {
+        admin.deleteImage(lblCurrentImage.Text);
+        lblUploadError.Text = "Deleted image";
     }
 
     // Pager to handling pagination and display of news articles
@@ -289,6 +307,105 @@
         repDisplayEvents.DataSource = pds;
         repDisplayEvents.DataBind();
     }
+
+    protected void displayImages() {
+        dbConnection = new MySqlConnection("Database=staghorn;Data Source=localhost;User Id=root;Password=");
+        sqlString = "SELECT * FROM images WHERE id > 0 ORDER BY id DESC";
+        dbAdapter = new MySqlDataAdapter(sqlString, dbConnection);
+        DataTable table = new DataTable();
+        dbAdapter.Fill(table);
+
+        PagedDataSource pds = new PagedDataSource();
+        pds.DataSource = table.DefaultView;
+        pds.AllowPaging = true;
+        pds.PageSize = 1;
+
+        int currentPage;
+
+        if (Request.QueryString["pageee"] != null) {
+            currentPage = Int32.Parse(Request.QueryString["pageee"]);
+        } else {
+            currentPage = 1;
+        }
+
+        pds.CurrentPageIndex = currentPage - 1;
+        lblPageInfoImage.Text = "Image " + currentPage + " of " + pds.PageCount;
+
+        if (!pds.IsFirstPage) {
+            linkPrevImage.NavigateUrl = Request.CurrentExecutionFilePath + "?pageee=" + (currentPage - 1);
+            newsPanel.Style.Add("display", "none");
+            imagePanel.Style.Add("display", "block");
+        }
+
+        // Grays out the previous navigation if the user is on the first entry
+        if (pds.IsFirstPage) {
+            linkPrevImage.Style.Add("background-color", "gray");
+            linkPrevImage.Style.Add("color", "darkgray");
+            linkPrevImage.Style.Add("background-color", "gray");
+            linkPrevImage.Style.Add("color", "darkgray");
+        }
+
+        // Grays out the next navigation if the user is on the last entry
+        if (pds.IsLastPage) {
+            linkPrevImage.Style.Add("background-color", "darkolivegreen");
+            linkPrevImage.Style.Add("color", "white");
+            linkNextImage.Style.Add("background-color", "gray");
+            linkNextImage.Style.Add("color", "darkgray");
+        }
+
+        if (!pds.IsLastPage) {
+            linkNextImage.NavigateUrl = Request.CurrentExecutionFilePath + "?pageee=" + (currentPage + 1);
+            newsPanel.Style.Add("display", "none");
+            imagePanel.Style.Add("display", "block");
+        }
+
+        // Added to facilitate deleting images
+        lblCurrentImage.Text = Convert.ToString(currentPage);
+
+        // Binding the data to the repeater
+        repDisplayImages.DataSource = pds;
+        repDisplayImages.DataBind();
+    }
+
+    protected void uploadImage(Object src, EventArgs args) {
+        string filename;
+        int filesize;
+        
+        // Checks to see whether a file has actually been chosen first
+        if (!upFileImage.HasFile) {
+            // If there is no selected file, an error is displayed
+            lblUploadError.Text = "Error: No file selected";
+        } else {
+            // Sets the filename of the image
+            filename = upFileImage.FileName;
+            // Checks to see if the file is too large (> 50 characters)
+            if (filename.Length >= 50) {
+                lblUploadError.Text = "Error: Filename must be under 50 characters";
+            } else {
+                // Its under 50 characters so it moves on to checking for the appropriate file type (jpeg)
+                // The filename has its case lowered to avoid any issues later
+                if (Path.GetExtension(filename).ToLower() != ".jpg") {
+                    lblUploadError.Text = "Error: Images must be in .jpg format only";
+                } else {
+                    // If its the correct filetype it now moves on to checking its size
+                    filesize = upFileImage.PostedFile.ContentLength;
+                    // Checks to see if the file is greater than 3mb
+                    if (filesize > 3000000) {
+                        lblUploadError.Text = "Error: Images must be under 3mb in size";
+                    } else {
+                        // The file has passed all the checks and is ready to be uploaded
+                        // Updates the image field to use the new image
+                        admin.uploadImage(Convert.ToString(Server.HtmlEncode(filename)), Server.HtmlEncode(Convert.ToString(txtImageName.Text)), Server.HtmlEncode(Convert.ToString(txtImageCaption.Text)));
+                        // Then uploads the image file itself
+                        upFileImage.PostedFile.SaveAs(Server.MapPath("siteImages/") + filename);
+                        lblUploadError.Text = "Image uploaded successfully";
+                        // Refreshes the page
+                        page_load();
+                    }
+                }
+            }
+        }
+    }
     
 </script>
 
@@ -324,6 +441,11 @@
             // Toggles sliding the about panel open and closed
             $("#btnAbout").click(function () {
                 $("#aboutPanel").slideToggle("fast");
+            });
+
+            // Toggles sliding the image panel open and closed
+            $("#btnImages").click(function () {
+                $("#imagePanel").slideToggle("fast");
             });
 
             //---------------------------------------------------------------
@@ -550,6 +672,7 @@
             <asp:Button ID="btnNews" OnClientClick="return false" Text="News" CssClass="btn btn-success" Width="75px" runat="server" />
             <asp:Button ID="btnEvents" OnClientClick="return false" Text="Events" CssClass="btn btn-success" Width="75px" runat="server" />
             <asp:Button ID="btnAbout" OnClientClick="return false" Text="About" CssClass="btn btn-success" Width="75px" runat="server" />
+            <asp:Button ID="btnImages" OnClientClick="return false" Text="Images" CssClass="btn btn-success" Width="75px" runat="server" />
         </div>
 
         <!-- Events -->
@@ -728,12 +851,71 @@
             </div>
             <div class="container2 col-sm-6 well8">
                 <asp:Label ID="lblEditInfoTitle" CssClass="positioning" Text="To edit the about me change the text and click edit" runat="server" />
-                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                  
             </div>
 
             </div>
 
         </div>
+
+        <!-- Images -->
+        <div class="container2 col-sm-12">
+        <div id="imagePanel" class="container2 col-sm-12 well" style="display:none" runat="server">
+            <div class="container1 col-sm-6 well12">
+                <asp:Label ID="lblBlock" Text="." CssClass="block" Font-Size="XX-Small" runat="server" />
+                <!-- image controls -->
+                <asp:Label ID="lblUploadTitle" Text="Choose an image file to upload" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
+                <asp:FileUpload ID="upFileImage" runat="server" /><br />
+                <asp:Label ID="Label1" Text="Enter a name for the image" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
+                <asp:TextBox ID="txtImageName" CssClass="form-control" runat="server" /><br />
+                <asp:Label ID="Label2" Text="Enter a caption for the image" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
+                <asp:TextBox ID="txtImageCaption" CssClass="form-control" runat="server" /><br />
+                <asp:Button ID="btnUpload" Text="Upload" CssClass="btn btn-success" OnClick="uploadImage" runat="server" /> 
+                <asp:Label ID="lblUploadError" Text="" CssClass="errorColor" Font-Size="XX-Small" runat="server" />
+            </div>
+            <div class="container2 col-sm-6 well8">
+                <!-- Start Display Data -->
+                    <!-- Repeater to display the images -->
+                    <asp:repeater id="repDisplayImages" runat="server">
+                    <HeaderTemplate>
+                            <thead>
+                             </thead>
+                              <tbody>
+                            </HeaderTemplate>
+                            <ItemTemplate>  
+                                <div id="displayImages" class="news well well11" style="text-align:center; padding:2px; color:black;">
+                                    <td>
+                                        <asp:Label ID="lblImageTitle" Text='<%# Eval("title") %>' ForeColor="white" runat="server" /> <br /><br />
+                                    </td>
+                                    <td>
+                                        <img src="http://localhost:57329/StaghornSite v2/siteImages/<%# Eval("image")%>" alt="image" height="150" width="150" class="gallery" /><br /><br />
+                                    </td>
+                                    <td>
+                                        <asp:Label ID="lblImageContent" Text='<%# Eval("caption") %>' ForeColor="white" runat="server" /> <br /><br />
+                                    </td>
+                                </div>
+                            </ItemTemplate>
+                            <FooterTemplate>
+                             </tbody>
+                        </FooterTemplate>
+                      </asp:repeater>
+                    <!-- Navigation -->
+                    <div class="col-sm-12" style="text-align:center; color:black;">
+                        <ul class="pager">
+                            <li><asp:HyperLink ID="linkPrevImage" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server"><<</asp:HyperLink></li>
+                            <li><asp:Label ID="lblPageInfoImage" ForeColor="white" BackColor="darkolivegreen" runat="server" /></li>
+                            <li><asp:HyperLink ID="linkNextImage" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li><br />
+                            <asp:Button ID="btnImageDelete" Text="Delete" CssClass="btn btn-success deleteButton" OnClick="deleteImage" runat="server" /><br />
+                            <asp:Label ID="lblCurrentImage" Text="" ForeColor="darkseagreen" runat="server" />
+                        </ul><br />
+                    </div> 
+                    <!-- End Display Data -->
+            </div>
+
+            </div>
+
+        </div>
+
     </div>
     </form>
 </body>

@@ -55,6 +55,11 @@ table tr:nth-child(odd) {
     background-color:darkseagreen;
 }
 
+.containerImage {
+    border-radius: 15px 15px 15px 15px;
+    background-color:darkolivegreen;
+}
+
 .button {
     color:orange;
 }
@@ -145,6 +150,19 @@ table tr:nth-child(odd) {
     border:1px solid white;
 }
 
+.well11 {
+    margin-top:20px;
+}
+
+.well12 {
+    height: 470px !important;
+    border:1px solid white;
+}
+
+.block {
+    color:darkolivegreen;
+}
+
 .deleteButton {
     border-radius:20%;
 }
@@ -173,5 +191,72 @@ table tr:nth-child(odd) {
         display:block; 
     }
     */
+}
+
+.btn-success {
+    background-color:darkolivegreen;
+    /* #33691E */
+    /*background-color:#008B8B;*/
+    color:darkseagreen;
+    border-color:darkseagreen;
+}
+
+.btn-success:hover {
+    background-color:darkseagreen;
+    color:darkolivegreen;
+    border-color:darkolivegreen;
+}
+
+.label-success {
+    background-color:darkseagreen;
+}
+
+.gallery {
+    border-radius: 15px 15px 15px 15px;
+    max-height:100%;
+    max-width:100%;
+}
+
+
+
+
+
+
+
+
+/* Modal Header */
+.modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: teal;
+}
+
+/* Modal Body */
+.modal-body {padding: 2px 16px;}
+
+/* Modal Footer */
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: teal;
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
 }
 
