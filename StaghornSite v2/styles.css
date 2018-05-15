@@ -60,6 +60,20 @@ table tr:nth-child(odd) {
     background-color:darkolivegreen;
 }
 
+.positioning2 {
+    margin-top:40px;
+    height:120px;
+    text-align:center;
+}
+
+.positioning3 {
+    text-align:center;
+}
+
+.titleHeader {
+    color:black;
+}
+
 .button {
     color:orange;
 }
@@ -191,6 +205,19 @@ table tr:nth-child(odd) {
         display:block; 
     }
     */
+}
+
+@media screen and (max-width:930px) {
+    
+    #membershipImages {
+        display:none; 
+    }
+
+    #membershipImages {
+        display:none;
+    }
+
+    
 }
 
 .btn-success {

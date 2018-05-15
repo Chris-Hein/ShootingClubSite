@@ -24,6 +24,7 @@
         //testing
         Session.RemoveAll();
 
+        //Session["test"] = "asdasdas";
         
         //Session["homeVisibility"] = "block";
 
@@ -651,6 +652,16 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+
+            
+
+
+
+
+
+
+
+
             // Toggles sliding the home panel open and closed
             $("#btnHome").click(function () {
                 $("#homePanel").slideToggle("fast");
@@ -895,14 +906,14 @@
         </div>
         
         <div class="container2 col-sm-12 well btn-group btn-group-justified" style="text-align:center">
-            <asp:Button type="button" ID="btnHome" OnClientClick="return false" Text="The Club" CssClass="btn btn-success" Width="150px" OnClick="selectHome" runat="server" />
-            <asp:Button type="button" ID="btnNews" OnClientClick="return false" Text="News" CssClass="btn btn-success" Width="150px" OnClick="selectNews" runat="server" />
-            <asp:Button type="button" ID="btnAbout" OnClientClick="return false" Text="About" CssClass="btn btn-success" Width="150px" OnClick="selectAbout" runat="server" />
-            <asp:Button type="button" ID="btnCalendar" OnClientClick="return false" Text="Book"  CssClass="btn btn-success" Width="150px" OnClick="selectCalendar" runat="server" />
-            <asp:Button type="button" ID="btnLinks" OnClientClick="return false" Text="Links"  CssClass="btn btn-success" Width="150px" OnClick="selectLinks" runat="server" />
-            <asp:Button type="button" ID="btnGallery" OnClientClick="return false" Text="Gallery"  CssClass="btn btn-success" Width="150px" OnClick="selectGallery" runat="server" />
-            <asp:Button type="button" ID="btnContact" OnClientClick="return false" Text="Contact Us"  CssClass="btn btn-success" Width="150px" OnClick="selectContactUs" runat="server" />
-            <asp:Button type="button" ID="btnMembership" OnClientClick="return false" Text="Buy Membership"  CssClass="btn btn-success" Width="150px" OnClick="selectMembership" runat="server" />
+            <asp:Button type="button" ID="btnHome" OnClientClick="return false" Text="The Club" CssClass="btn btn-success" Width="130px" OnClick="selectHome" runat="server" />
+            <asp:Button type="button" ID="btnNews" OnClientClick="return false" Text="News" CssClass="btn btn-success" Width="130px" OnClick="selectNews" runat="server" />
+            <asp:Button type="button" ID="btnAbout" OnClientClick="return false" Text="About" CssClass="btn btn-success" Width="130px" OnClick="selectAbout" runat="server" />
+            <asp:Button type="button" ID="btnCalendar" OnClientClick="return false" Text="Book"  CssClass="btn btn-success" Width="130px" OnClick="selectCalendar" runat="server" />
+            <asp:Button type="button" ID="btnLinks" OnClientClick="return false" Text="Links"  CssClass="btn btn-success" Width="130px" OnClick="selectLinks" runat="server" />
+            <asp:Button type="button" ID="btnGallery" OnClientClick="return false" Text="Gallery"  CssClass="btn btn-success" Width="130px" OnClick="selectGallery" runat="server" />
+            <asp:Button type="button" ID="btnContact" OnClientClick="return false" Text="Contact Us"  CssClass="btn btn-success" Width="130px" OnClick="selectContactUs" runat="server" />
+            <asp:Button type="button" ID="btnMembership" OnClientClick="return false" Text="Buy Membership"  CssClass="btn btn-success" Width="130px" OnClick="selectMembership" runat="server" />
         </div>
 
         <div id="homePanel" class="container2 col-sm-12 well" style="display:block" runat="server">
@@ -937,13 +948,13 @@
             </div>
 
             <div class="container col-sm-2 header" style="text-align:center; color:black">
-                Book a session
+                <asp:Label ID="Label21" Text="Book a Session" CssClass="label label-success titleHeader" Font-Size="XX-Small" runat="server" />
             </div>
             <div class="container col-sm-4 header" style="text-align:center; color:black">
-                Events
+                <asp:Label ID="Label22" Text="Events" CssClass="label label-success titleHeader" Font-Size="XX-Small" runat="server" />
             </div>
             <div class="container col-sm-6 header" style="text-align:center; color:black">
-                Location
+                <asp:Label ID="Label23" Text="Location" CssClass="label label-success titleHeader" Font-Size="XX-Small" runat="server" />
             </div>
  <!-- --><div class="container col-sm-12">
             <div class="container1 col-sm-2 well1 equal-test" style="text-align:center">
@@ -1445,6 +1456,24 @@
                     </div>
                 </div>
 
+                <!-- Modal enabled images -->
+                <div id="membershipImages" class="container2 col-sm-12 well positioning2 ">
+                    <div class="container2 col-sm-3 positioning3">
+                        <asp:Image class="img-rounded img-responsive" data-toggle="modal" data-target="#imageModal" ID="Image4" ImageUrl="siteImages/stellarton1.jpg" Height="80px" Width="130px" runat="server" AlternateText="Stellarton1" />
+                    </div>
+                    <div class="container2 col-sm-3 positioning3">
+                        <asp:Image class="img-rounded img-responsive" data-toggle="modal" data-target="#imageModal2" ID="Image5" ImageUrl="siteImages/stellarton2.jpg" Height="80px" Width="130px" runat="server" AlternateText="Stellarton2" />
+                    </div>
+                    <div class="container2 col-sm-3 positioning3">
+                        <asp:Image class="img-rounded img-responsive" data-toggle="modal" data-target="#imageModal3" ID="Image6" ImageUrl="siteImages/stellarton3.jpg" Height="80px" Width="130px" runat="server" AlternateText="Stellarton3" />
+                    </div>
+                    <div class="container2 col-sm-3 positioning3">
+                        <asp:Image class="img-rounded img-responsive" data-toggle="modal" data-target="#imageModal4" ID="Image7" ImageUrl="siteImages/stellarton4.jpg" Height="80px" Width="130px" runat="server" AlternateText="Stellarton4" />
+                    </div>
+                </div>
+
+          
+
                 <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />-->
 
@@ -1478,7 +1507,7 @@
                                         <asp:Label ID="lblImageTitle" Text='<%# Eval("title") %>' ForeColor="white" runat="server" /> <br />
                                     </td>
                                     <td>
-                                        <img class="gallery" data-toggle="modal" data-target="#imageModal" src="http://localhost:57329/StaghornSite v2/siteImages/<%# Eval("image")%>" alt="image" height="100%" width="100%" /><br />
+                                        <img class="gallery"  src="http://localhost:57329/StaghornSite v2/siteImages/<%# Eval("image")%>" alt="image" height="100%" width="100%" /><br />
                                     </td>
                                     <td>
                                         <asp:Label ID="lblImageContent" Text='<%# Eval("caption") %>' ForeColor="white" runat="server" /> <br /><br />
@@ -1530,6 +1559,76 @@
         </div>
 
         </div>
+
+        <!-- Modals -->
+        <!-- Stellarton Shooting Range Image 1 -->
+        <div class="modal fade" id="imageModal" role="dialog" style="display:none">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:darkolivegreen">
+                    <span class="close">&times;</span>
+                    <h2><asp:Label ID="Label24" Text="Stellarton Shooting Range (outside)" ForeColor="white" runat="server" /></h2>
+                </div>
+            <div class="modal-body" style="background-color:darkseagreen; text-align:center">
+                <img class="modal-body" id="Img1" data-toggle="modal" data-target="#imageModal" src="siteImages/stellarton1.jpg" alt="image" height="450" width="650" />
+            </div>
+            <div class="modal-footer" style="background-color:darkolivegreen">
+                <h3><asp:Label ID="Label25" Text="The entrance to our indoor shooting range in Stellarton" ForeColor="white" runat="server" /></h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stellarton Shooting Range Image 2 -->
+        <div class="modal fade" id="imageModal2" role="dialog" style="display:none">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:darkolivegreen">
+                    <span class="close">&times;</span>
+                    <h2><asp:Label ID="Label26" Text="Stellarton Shooting Range (inside)" ForeColor="white" runat="server" /></h2>
+                </div>
+            <div class="modal-body" style="background-color:darkseagreen; text-align:center">
+                <img class="modal-body" id="Img2" data-toggle="modal" data-target="#imageModal" src="siteImages/stellarton2.jpg" alt="image" height="450" width="650" />
+            </div>
+            <div class="modal-footer" style="background-color:darkolivegreen">
+                <h3><asp:Label ID="Label27" Text="The interior of our shooting range in Stellarton" ForeColor="white" runat="server" /></h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stellarton Shooting Range Image 3 -->
+        <div class="modal fade" id="imageModal3" role="dialog" style="display:none">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:darkolivegreen">
+                    <span class="close">&times;</span>
+                    <h2><asp:Label ID="Label28" Text="Shooting Range (Stellarton)" ForeColor="white" runat="server" /></h2>
+                </div>
+            <div class="modal-body" style="background-color:darkseagreen; text-align:center">
+                <img class="modal-body" id="Img3" data-toggle="modal" data-target="#imageModal" src="siteImages/stellarton3.jpg" alt="image" height="450" width="650" />
+            </div>
+            <div class="modal-footer" style="background-color:darkolivegreen">
+                <h3><asp:Label ID="Label29" Text="This is our shooting range in Stellarton" ForeColor="white" runat="server" /></h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stellarton Shooting Range Image 4 -->
+        <div class="modal fade" id="imageModal4" role="dialog" style="display:none">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:darkolivegreen">
+                    <span class="close">&times;</span>
+                    <h2><asp:Label ID="Label30" Text="Stellarton Shooting Range (inside)" ForeColor="white" runat="server" /></h2>
+                </div>
+            <div class="modal-body" style="background-color:darkseagreen; text-align:center">
+                <img class="modal-body" id="Img4" data-toggle="modal" data-target="#imageModal" src="siteImages/stellarton4.jpg" alt="image" height="450" width="650" />
+            </div>
+            <div class="modal-footer" style="background-color:darkolivegreen">
+                <h3><asp:Label ID="Label31" Text="Another view of our shooting range in Stellarton" ForeColor="white" runat="server" /></h3>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- test-->
+        
+
     </form>
 </body>
 </html>
