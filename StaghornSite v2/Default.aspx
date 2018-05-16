@@ -652,16 +652,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-
-            
-
-
-
-
-
-
-
-
             // Toggles sliding the home panel open and closed
             $("#btnHome").click(function () {
                 $("#homePanel").slideToggle("fast");
@@ -870,6 +860,39 @@
                     label: { text: '40 Foster Ave, Stellarton', color: '#5fd615' }
                 });
             }
+
+
+            
+            // http request to pull the title of the clicked image in the gallery and use it to pull the
+            // rest of the data via a handler file
+            function getImage(title) {
+                var xhttp;
+                var title;
+
+                xhttp = new XMLHttpRequest();
+
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        this.responseText = document.getElementById("lblImageTitle").innerHTML;
+                    }
+                };
+
+                //xhttp.open("GET", "imageHandler.php", true);
+                //xhttp.open("GET", "imageHandler.php?q=" + title, true);
+                xhttp.open("GET", "imageHandler.php", title, true);
+                //xhttp.open("GET", "imageHandler.php", responseText, true);
+                xhttp.send();
+            }
+
+            // Sets up a click event on the 
+            $title = $('#lblImageTitle');
+            $title.click(function () {
+                var image = document.getElementById("lblImageTitle").innerHTML;
+                this.getImage(image);
+                $('#lblTitle').text = "TEST";
+                document.getElementById("lblTitle").innerHTML = "TEST";
+                
+            });
 
         });
     </script>
@@ -1160,7 +1183,7 @@
             <div class="container2 col-sm-12 well">
                 Use the form below to send a booking request to the club at either of our ranges
             </div>
-            <!-- BUG: this seems to be breaking the button functionality for the site. Might have to port this over from a mailto to an auto emailer -->
+            <!-- FIXED BUG (ported to autoemailer): this seems to be breaking the button functionality for the site. Might have to port this over from a mailto to an auto emailer -->
             <div class="container1 col-sm-6 well">
                 <!-- <form action="mailto:mail@mail.com" method="post" enctype="text/plain"> -->
                     <asp:Label ID="Label13" Text="Full Name" CssClass="label label-success" Font-Size="Small" runat="server" />
@@ -1213,6 +1236,7 @@
             </div>
         </div>
         <div id="linksPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
+            <div class="container1 col-sm-7 well">
             <asp:Label ID="lblLinksTitle" Text="You can visit our facebook page by clicking " runat="server" />
             <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" style=" text-decoration:none; color:white; font-weight:bold"> here</a>
             <asp:Label ID="lblLinksTitle2" Text="or by clicking one of the facebook links in the page footer." runat="server" /><br />
@@ -1222,8 +1246,28 @@
 
             <asp:Label ID="Label5" Text="You can download a copy of the clubs ethics by clicking " runat="server" />
             <a href="C:\Users\itstudents\Desktop\StaghornSite v2\files\ethics.docx" style=" text-decoration:none; color:white; font-weight:bold"> here</a><br />
+            </div>
+
+            <!-- data-toggle="modal" data-target="#imageModal2" -->
+
+            <div class="container1 col-sm-5 well13" style="text-align:center;">
+                Current Regulations
+                <div class="container col-sm-3" style="text-align:center;">
+
+                </div>
+                <div class="container col-sm-6 backgroundFix" style="text-align:center;">
+                    <asp:Image class="img-rounded img-responsive" ImageAlign="Middle" data-toggle="modal" data-target="#regulationsModal1" ID="imgRegs" ImageUrl="images/regulations.jpg" Height="200px" Width="700px" runat="server" AlternateText="reglations" />
+                </div>
+                <div class="container col-sm-3" style="text-align:center;">
+
+                </div>
+
+                
+            </div>
 
             <br /><br /><br /><br /><br />
+
+            
 
             <div class="container1 col-sm-8 well equal-test1">
                 <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
@@ -1235,7 +1279,11 @@
                     <asp:Label ID="Label7" Text="Copyright 2018 Staghorn Shooting Club" CssClass="instructions" runat="server" />
                 </div>
             </div>
+            
         </div>
+
+       
+
         <div id="contactPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <div class="container col-sm-8 ">
                 <asp:Image class="img-rounded img-responsive" ID="Image1" ImageUrl="images/contactusnew.jpeg" Height="200px" Width="1200px" runat="server" AlternateText="contact us" />
@@ -1507,7 +1555,7 @@
                                         <asp:Label ID="lblImageTitle" Text='<%# Eval("title") %>' ForeColor="white" runat="server" /> <br />
                                     </td>
                                     <td>
-                                        <img class="gallery"  src="http://localhost:57329/StaghornSite v2/siteImages/<%# Eval("image")%>" alt="image" height="100%" width="100%" /><br />
+                                        <img class="gallery" src="http://localhost:57329/StaghornSite v2/siteImages/<%# Eval("image")%>" alt="image" height="100%" width="100%" /><br />
                                     </td>
                                     <td>
                                         <asp:Label ID="lblImageContent" Text='<%# Eval("caption") %>' ForeColor="white" runat="server" /> <br /><br />
@@ -1621,6 +1669,22 @@
             </div>
             <div class="modal-footer" style="background-color:darkolivegreen">
                 <h3><asp:Label ID="Label31" Text="Another view of our shooting range in Stellarton" ForeColor="white" runat="server" /></h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Regulations Image 1 -->
+        <div class="modal fade" id="regulationsModal1" role="dialog" style="display:none">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:darkolivegreen">
+                    <span class="close">&times;</span>
+                    <h2><asp:Label ID="Label32" Text="Club Regulations" ForeColor="white" runat="server" /></h2>
+                </div>
+            <div class="modal-body" style="background-color:darkseagreen; text-align:center">
+                <img class="modal-body" id="imgRegulationModal" data-toggle="modal" data-target="#imageModal" src="images/regulations.jpg" alt="regulations" height="650" width="850" />
+            </div>
+            <div class="modal-footer" style="background-color:darkolivegreen">
+                <h3><asp:Label ID="Label33" Text="These are our updated club regulations for 2018" ForeColor="white" runat="server" /></h3>
             </div>
           </div>
         </div>

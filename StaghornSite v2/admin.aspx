@@ -867,9 +867,9 @@
                 <asp:Label ID="lblUploadTitle" Text="Choose an image file to upload" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                 <asp:FileUpload ID="upFileImage" runat="server" /><br />
                 <asp:Label ID="Label1" Text="Enter a name for the image" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
-                <asp:TextBox ID="txtImageName" CssClass="form-control" runat="server" /><br />
+                <asp:TextBox ID="txtImageName" CssClass="form-control" MaxLength="50" runat="server" /><br />
                 <asp:Label ID="Label2" Text="Enter a caption for the image" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
-                <asp:TextBox ID="txtImageCaption" CssClass="form-control" runat="server" /><br />
+                <asp:TextBox ID="txtImageCaption" CssClass="form-control" MaxLength="50" runat="server" /><br />
                 <asp:Button ID="btnUpload" Text="Upload" CssClass="btn btn-success" OnClick="uploadImage" runat="server" /> 
                 <asp:Label ID="lblUploadError" Text="" CssClass="errorColor" Font-Size="XX-Small" runat="server" />
             </div>

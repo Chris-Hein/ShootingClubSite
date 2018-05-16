@@ -173,6 +173,17 @@ table tr:nth-child(odd) {
     border:1px solid white;
 }
 
+.well13 {
+    height: 265px !important;
+    border:1px solid white;
+    image-orientation:auto;
+}
+
+.backgroundFix {
+    background-color:darkolivegreen;
+    border-color:darkolivegreen;
+}
+
 .block {
     color:darkolivegreen;
 }
@@ -245,12 +256,6 @@ table tr:nth-child(odd) {
 }
 
 
-
-
-
-
-
-
 /* Modal Header */
 .modal-header {
     padding: 2px 16px;
@@ -286,4 +291,6 @@ table tr:nth-child(odd) {
     from {top: -300px; opacity: 0}
     to {top: 0; opacity: 1}
 }
+
+
 
