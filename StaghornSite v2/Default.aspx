@@ -861,10 +861,28 @@
                 });
             }
 
+            //-----------------------------------------------------------
+
+            $("#repDisplayImages").on("click", ".lblImageTitle", function () {
+                //$("#lblImageTitle").val();
+                alert("test: title was clicked");
+                var imageTitle = $(this).closest("td").find(".lblImageTitle").val();
+                $.ajax({
+                    type: "POST",
+                    url: "imageHandler.php",
+                    data: '{image: "' + imageTitle + '"}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        alert("clicked image title");
+                    }
+                });
+            });
 
             
             // http request to pull the title of the clicked image in the gallery and use it to pull the
             // rest of the data via a handler file
+            /*
             function getImage(title) {
                 var xhttp;
                 var title;
@@ -893,6 +911,7 @@
                 document.getElementById("lblTitle").innerHTML = "TEST";
                 
             });
+            */
 
         });
     </script>
@@ -943,7 +962,7 @@
         <div class="container col-sm-12">
             <div class="container col-sm-3 blackText" style="text-align:center;">
                 <asp:Image class="img-rounded img-responsive" ID="imgRange" ImageUrl="images/rangenew.jpg" Height="200px" Width="610px" runat="server" AlternateText="range" />
-                Established 1976
+                <asp:Label ID="lblEstablished" Text="Established 1976" CssClass="label label-success titleHeader" runat="server" />
             </div>
             <div class="container1 col-sm-6 well">
                 <asp:Label ID="lblHomeTitle" Text="Welcome to Staghorn Shooting Club" runat="server" /><br /><br />
@@ -1237,7 +1256,7 @@
         </div>
         <div id="linksPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <div class="container1 col-sm-7 well">
-            <asp:Label ID="lblLinksTitle" Text="You can visit our facebook page by clicking " runat="server" />
+            <asp:Label ID="lblLinksTitle" Text="Visit our facebook page by clicking " runat="server" />
             <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" style=" text-decoration:none; color:white; font-weight:bold"> here</a>
             <asp:Label ID="lblLinksTitle2" Text="or by clicking one of the facebook links in the page footer." runat="server" /><br />
             <br />
@@ -1246,7 +1265,10 @@
 
             <asp:Label ID="Label5" Text="You can download a copy of the clubs ethics by clicking " runat="server" />
             <a href="C:\Users\itstudents\Desktop\StaghornSite v2\files\ethics.docx" style=" text-decoration:none; color:white; font-weight:bold"> here</a><br />
-            </div>
+
+            <asp:Label ID="Label34" Text="You can see a copy of our range schedule by clicking " runat="server" />
+            <asp:Label ID="lblSchedule" data-toggle="modal" data-target="#scheduleModal1" Font-Bold="true" Text="here" runat="server" />
+         </div>
 
             <!-- data-toggle="modal" data-target="#imageModal2" -->
 
@@ -1617,7 +1639,7 @@
                     <h2><asp:Label ID="Label24" Text="Stellarton Shooting Range (outside)" ForeColor="white" runat="server" /></h2>
                 </div>
             <div class="modal-body" style="background-color:darkseagreen; text-align:center">
-                <img class="modal-body" id="Img1" data-toggle="modal" data-target="#imageModal" src="siteImages/stellarton1.jpg" alt="image" height="450" width="650" />
+                <img class="modal-body" id="Img1" data-toggle="modal" src="siteImages/stellarton1.jpg" alt="image" height="450" width="650" />
             </div>
             <div class="modal-footer" style="background-color:darkolivegreen">
                 <h3><asp:Label ID="Label25" Text="The entrance to our indoor shooting range in Stellarton" ForeColor="white" runat="server" /></h3>
@@ -1633,7 +1655,7 @@
                     <h2><asp:Label ID="Label26" Text="Stellarton Shooting Range (inside)" ForeColor="white" runat="server" /></h2>
                 </div>
             <div class="modal-body" style="background-color:darkseagreen; text-align:center">
-                <img class="modal-body" id="Img2" data-toggle="modal" data-target="#imageModal" src="siteImages/stellarton2.jpg" alt="image" height="450" width="650" />
+                <img class="modal-body" id="Img2" data-toggle="modal" src="siteImages/stellarton2.jpg" alt="image" height="450" width="650" />
             </div>
             <div class="modal-footer" style="background-color:darkolivegreen">
                 <h3><asp:Label ID="Label27" Text="The interior of our shooting range in Stellarton" ForeColor="white" runat="server" /></h3>
@@ -1649,7 +1671,7 @@
                     <h2><asp:Label ID="Label28" Text="Shooting Range (Stellarton)" ForeColor="white" runat="server" /></h2>
                 </div>
             <div class="modal-body" style="background-color:darkseagreen; text-align:center">
-                <img class="modal-body" id="Img3" data-toggle="modal" data-target="#imageModal" src="siteImages/stellarton3.jpg" alt="image" height="450" width="650" />
+                <img class="modal-body" id="Img3" data-toggle="modal" src="siteImages/stellarton3.jpg" alt="image" height="450" width="650" />
             </div>
             <div class="modal-footer" style="background-color:darkolivegreen">
                 <h3><asp:Label ID="Label29" Text="This is our shooting range in Stellarton" ForeColor="white" runat="server" /></h3>
@@ -1665,7 +1687,7 @@
                     <h2><asp:Label ID="Label30" Text="Stellarton Shooting Range (inside)" ForeColor="white" runat="server" /></h2>
                 </div>
             <div class="modal-body" style="background-color:darkseagreen; text-align:center">
-                <img class="modal-body" id="Img4" data-toggle="modal" data-target="#imageModal" src="siteImages/stellarton4.jpg" alt="image" height="450" width="650" />
+                <img class="modal-body" id="Img4" data-toggle="modal" src="siteImages/stellarton4.jpg" alt="image" height="450" width="650" />
             </div>
             <div class="modal-footer" style="background-color:darkolivegreen">
                 <h3><asp:Label ID="Label31" Text="Another view of our shooting range in Stellarton" ForeColor="white" runat="server" /></h3>
@@ -1681,10 +1703,26 @@
                     <h2><asp:Label ID="Label32" Text="Club Regulations" ForeColor="white" runat="server" /></h2>
                 </div>
             <div class="modal-body" style="background-color:darkseagreen; text-align:center">
-                <img class="modal-body" id="imgRegulationModal" data-toggle="modal" data-target="#imageModal" src="images/regulations.jpg" alt="regulations" height="650" width="850" />
+                <img class="modal-body" id="imgRegulationModal" data-toggle="modal" src="images/regulations.jpg" alt="regulations" height="650" width="850" />
             </div>
             <div class="modal-footer" style="background-color:darkolivegreen">
                 <h3><asp:Label ID="Label33" Text="These are our updated club regulations for 2018" ForeColor="white" runat="server" /></h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Images Image 1 -->
+        <div class="modal fade" id="scheduleModal1" role="dialog" style="display:none">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:darkolivegreen">
+                    <span class="close">&times;</span>
+                    <h2><asp:Label ID="Label35" Text="May 2018 Schedule" ForeColor="white" runat="server" /></h2>
+                </div>
+            <div class="modal-body" style="background-color:darkseagreen; text-align:center">
+                <img class="modal-body" id="img5" data-toggle="modal"  src="images/sunsettimes.jpg" alt="regulations" height="650" width="850" />
+            </div>
+            <div class="modal-footer" style="background-color:darkolivegreen">
+                <h3><asp:Label ID="Label36" Text="This is our opening/closing schedule for May 2018" ForeColor="white" runat="server" /></h3>
             </div>
           </div>
         </div>

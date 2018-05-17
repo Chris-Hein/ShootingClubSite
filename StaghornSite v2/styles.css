@@ -17,6 +17,7 @@
 
 .fa-facebook {
     /*background: #3B5998;*/
+    color: #3B5998;
     color: teal;
 }
 
@@ -226,9 +227,7 @@ table tr:nth-child(odd) {
 
     #membershipImages {
         display:none;
-    }
-
-    
+    } 
 }
 
 .btn-success {

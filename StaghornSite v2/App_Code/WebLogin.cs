@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 
-public class WebLogin
-{
+public class WebLogin {
     // Database connectivity variables
     private MySqlConnection dbConnection;
     private string connectionString;
