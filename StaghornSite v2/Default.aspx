@@ -22,7 +22,7 @@
     protected void page_load() {
         admin = new Admin();
         //testing
-        Session.RemoveAll();
+        //Session.RemoveAll();
 
         //Session["test"] = "asdasdas";
         
@@ -77,6 +77,7 @@
         setLoginState();
 
         if (!Page.IsPostBack) {
+            // Loads the site data on the first run of the page
             loadData();
             
             // Populates booking dropdown
@@ -115,13 +116,9 @@
 
     protected void setLoginState() {
         if (Session["username"] != null) {
-            //lblLogin.Text = "Log Out";
             lblCurrentUser.Text = "You are logged in as " + Session["username"].ToString();
-            //btnLogin.Text = "Logout";
         } else {
-            //lblLogin.Text = "Log In";
             lblCurrentUser.Text = "You are not logged in";
-            //btnLogin.Text = "Login";
         }
     }
 
@@ -692,28 +689,94 @@
                 $("#loginPanel").slideToggle("fast");
             });
 
+            // Toggles sliding the courses panel open and closed
             $("#imgCourses1").click(function () {
                 $("#coursesPanel1").slideToggle("fast");
             });
 
+            // Toggles sliding the courses panel open and closed
             $("#imgCourses2").click(function () {
                 $("#coursesPanel2").slideToggle("fast");
             });
 
+            // Toggles sliding the courses panel open and closed 
             $("#imgCourses3").click(function () {
                 $("#coursesPanel3").slideToggle("fast");
             });
 
+            // Toggles sliding the courses panel open and closed
             $("#imgCourses4").click(function () {
                 $("#coursesPanel4").slideToggle("fast");
             });
 
+            // Toggles sliding the booking paage open and closed
             $("#btnBook").click(function () {
                 $("#calendarPanel").slideToggle("fast");
             });
 
+            // Toggles sliding the gallery page open and closed
             $("#btnGallery").click(function () {
                 $("#galleryPanel").slideToggle("fast");
+            });
+
+            // Opens new tab and loads facebook page
+            $("#fblink1").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
+            });
+
+            // Opens new tab and loads facebook page
+            $("#fblink2").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
+            });
+
+            // Opens new tab and loads facebook page
+            $("#fblink3").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
+            });
+
+            // Opens new tab and loads facebook page
+            $("#fblink4").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
+            });
+
+            // Opens new tab and loads facebook page
+            $("#fblink5").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
+            });
+
+            // Opens new tab and loads facebook page
+            $("#fblink6").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
+            });
+
+            // Opens new tab and loads facebook page
+            $("#fblink7").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
+            });
+
+            // Opens new tab and loads facebook page
+            $("#imgFacebook1").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
+            });
+
+            // Opens new tab and loads facebook page
+            $("#imgFacebook2").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
+            });
+
+            // Opens new tab and loads facebook page
+            $("#imgFacebook3").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
+            });
+
+            // Opens new tab and loads facebook page
+            $("#imgFacebook4").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
+            });
+
+            // Opens new tab and loads facebook page
+            $("#Image3").click(function () {
+                window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
             });
 
             // Handles button enabling/disabling
@@ -768,21 +831,27 @@
                 var woodsWaterWestville = { lat: 45.549766, lng: -62.711393 };
                 var terryPawnshop = { lat: 45.364005, lng: -63.276183 };
 
+                // Locations to buy a membership
                 var buyLocations = new google.maps.Map(document.getElementById('memberMap'), {
                     zoom: 9,
                     center: canadianTireNG
                 });
 
+                // Note: to show shooting range locations on multiple maps it requires multiple variables, if you use the same one on multiple maps
+                // it causes errors
+                // Shooting range locations
                 var shootingRanges2 = new google.maps.Map(document.getElementById('contactMap'), {
                     zoom: 12,
                     center: range1
                 });
 
+                // Shooting range locations
                 var shootingRanges3 = new google.maps.Map(document.getElementById('bookMap'), {
                     zoom: 12,
                     center: range2
                 });
 
+                // Shooting range locations
                 var shootingRanges = new google.maps.Map(document.getElementById('locMap'), {
                     zoom: 12,
                     center: range2
@@ -820,12 +889,14 @@
 
                 //------------------------------------------------------------ Markers - Range Locations
 
+                // New Glasgow shooting range
                 var marker = new google.maps.Marker({
                     position: range1,
                     map: shootingRanges2,
                     label: { text: '24 Reeves Rd, New Glasgow', color: '#5fd615' },
                 });
 
+                // Stellarton shooting range
                 var marker = new google.maps.Marker({
                     position: range2,
                     map: shootingRanges2,
@@ -834,12 +905,14 @@
 
                 //------------------------------------------------------------ Markers - Range Locations
 
+                // New Glasgow shooting range
                 var marker = new google.maps.Marker({
                     position: range1,
                     map: shootingRanges,
                     label: { text: '24 Reeves Rd, New Glasgow', color: '#5fd615' },
                 });
 
+                // Stellarton shooting range
                 var marker = new google.maps.Marker({
                     position: range2,
                     map: shootingRanges,
@@ -848,12 +921,14 @@
 
                 //------------------------------------------------------------ Markers - Range Locations
 
+                // New Glasgow shooting range
                 var marker = new google.maps.Marker({
                     position: range1,
                     map: shootingRanges3,
                     label: { text: '24 Reeves Rd, New Glasgow', color: '#5fd615' },
                 });
 
+                // Stellarton shooting range
                 var marker = new google.maps.Marker({
                     position: range2,
                     map: shootingRanges3,
@@ -862,7 +937,7 @@
             }
 
             //-----------------------------------------------------------
-
+            /*
             $("#repDisplayImages").on("click", ".lblImageTitle", function () {
                 //$("#lblImageTitle").val();
                 alert("test: title was clicked");
@@ -878,7 +953,7 @@
                     }
                 });
             });
-
+            */
             
             // http request to pull the title of the clicked image in the gallery and use it to pull the
             // rest of the data via a handler file
@@ -920,6 +995,7 @@
     <form runat="server">
     <div class="container2 col-sm-12 well">
         <div class="container col-sm-1">
+            <!-- Header image and text -->
             <asp:Image class="img-rounded img-responsive" ID="imgTitle" ImageUrl="images/stagtitle.jpg" Height="60px" Width="60px" runat="server" AlternateText="Staghorn" />
         </div>
         <div class="container col-sm-11" style="margin-top:10px;">
@@ -947,6 +1023,7 @@
             </div>
         </div>
         
+        <!-- Navigation panel -->
         <div class="container2 col-sm-12 well btn-group btn-group-justified" style="text-align:center">
             <asp:Button type="button" ID="btnHome" OnClientClick="return false" Text="The Club" CssClass="btn btn-success" Width="130px" OnClick="selectHome" runat="server" />
             <asp:Button type="button" ID="btnNews" OnClientClick="return false" Text="News" CssClass="btn btn-success" Width="130px" OnClick="selectNews" runat="server" />
@@ -958,6 +1035,7 @@
             <asp:Button type="button" ID="btnMembership" OnClientClick="return false" Text="Buy Membership"  CssClass="btn btn-success" Width="130px" OnClick="selectMembership" runat="server" />
         </div>
 
+        <!-- Home panel -->
         <div id="homePanel" class="container2 col-sm-12 well" style="display:block" runat="server">
         <div class="container col-sm-12">
             <div class="container col-sm-3 blackText" style="text-align:center;">
@@ -977,6 +1055,7 @@
             </div>
         </div>
 
+            <!-- Courses panel -->
             <div id="coursesPanel1" class="container2 col-sm-12" style="display:none;" runat="server">
                 <div class="container2 col-sm-8">
 
@@ -989,12 +1068,15 @@
                 </div>
             </div>
 
+            <!-- Book a session text -->
             <div class="container col-sm-2 header" style="text-align:center; color:black">
                 <asp:Label ID="Label21" Text="Book a Session" CssClass="label label-success titleHeader" Font-Size="XX-Small" runat="server" />
             </div>
+            <!-- Events text -->
             <div class="container col-sm-4 header" style="text-align:center; color:black">
                 <asp:Label ID="Label22" Text="Events" CssClass="label label-success titleHeader" Font-Size="XX-Small" runat="server" />
             </div>
+            <!-- Location text -->
             <div class="container col-sm-6 header" style="text-align:center; color:black">
                 <asp:Label ID="Label23" Text="Location" CssClass="label label-success titleHeader" Font-Size="XX-Small" runat="server" />
             </div>
@@ -1002,13 +1084,16 @@
             <div class="container1 col-sm-2 well1 equal-test" style="text-align:center">
                 <asp:Label ID="lblCalendarIcon" CssClass="fa fa-calendar positioning" ForeColor="black" Font-Size="90px" runat="server" /><br /><br />
                 <div class="container1 col-sm-12 well">
+                    <!-- Booking info text -->
                     <asp:Label ID="lblCalendarInfo" Text="Click the button below to book a session at one of our shooting ranges" runat="server" />
                 </div>
                 
                 <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />-->
+                <!-- Booking button -->
                 <asp:Button ID="btnBook" Text="Book" OnClick="selectBooking" OnClientClick="return false" CssClass="btn btn-success" runat="server" /><br />
             </div>
 
+            <!-- Events -->
             <div class="container1 col-sm-4 well equal-test">
                 <!-- Start Display Data -->
                     <!-- Repeater to display the existing events -->
@@ -1021,22 +1106,27 @@
                             <ItemTemplate>  
                                 <div id="displayEvents" class="news well2" style="text-align:center; padding:2px; color:black;">
                                     <td>
+                                        <!-- Event title -->
                                         <asp:Label ID="lblEventNameTitle" Text="Name of Event: " ForeColor="white" Font-Bold="true" runat="server" />
                                         <asp:Label ID="lblEventName" Text='<%# Eval("name") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- Event location -->
                                         <asp:Label ID="lblEventLocationTitle" Text="Location of Event: " ForeColor="white" Font-Bold="true" runat="server" />
                                         <asp:Label ID="lblEventLocation" Text='<%# Eval("location") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- Date of Event -->
                                         <asp:Label ID="lblEventDateTitle" Text="Date of Event: " ForeColor="white" Font-Bold="true" runat="server" />
                                         <asp:Label ID="lblEventDate" Text='<%# Eval("eventdate") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- Description of event -->
                                         <asp:Label ID="lblEventDescriptionTitle" Text="Description of Event: " ForeColor="white" Font-Bold="true" runat="server" /><br />
                                         <asp:Label ID="lblEventDescription" Text='<%# Eval("description") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- Date event was published -->
                                         <asp:Label ID="lblEventPublishedTitle" Text="This event was published: " ForeColor="white" Font-Bold="true" runat="server" />
                                         <asp:Label ID="lblEventPublished" Text='<%# Eval("publishdate") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
@@ -1059,15 +1149,17 @@
 
             <div class="container1 col-sm-6 well equal-test">
                 <div id="locMap" class="container1 col-sm-12 well" style="width:100%;height:370px;background-color:gray;">
+                    <!-- Default info for map, only visible if the map fails to load -->
                     Error: Google Maps API failed to load
                 </div>
             </div>
 
 <!-- --></div>
 
+            <!-- Copyright info -->
             <div class="container col-sm-12">
             <div class="container1 col-sm-8 well equal-test1">
-                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
+                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" id="fblink1" style="font-size:40px; text-decoration:none;"></a>
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                 <asp:Label ID="Label8" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
             </div>
@@ -1080,6 +1172,8 @@
             </div>
 
         </div>
+
+        <!-- News panel -->
         <div id="newsPanel" class="container1 col-sm-12 well" style="display:none;" runat="server">
             <!-- Start Display Data -->
                     <!-- Repeater to display the existing events -->
@@ -1092,14 +1186,17 @@
                             <ItemTemplate>  
                                 <div id="displayEvents" class="news well" style="text-align:center; padding:2px; color:black;">
                                     <td>
+                                        <!-- Date news article was published -->
                                         <asp:Label ID="lblEventNewsDateTitle" Text="Date: " ForeColor="white" Font-Bold="true" runat="server" /><br />
                                         <asp:Label ID="lblEventNewsDate" Text='<%# Eval("date") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- Title of news article -->
                                         <asp:Label ID="lblEventNewsTitle" Text="Title: " ForeColor="white" Font-Bold="true" runat="server" /><br />
                                         <asp:Label ID="lblEventNews" Text='<%# Eval("title") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- Content of news article -->
                                         <asp:Label ID="lblEventNewsArticleTitle" Text="Article: " ForeColor="white" Font-Bold="true" runat="server" /><br />
                                         <asp:Label ID="lblEventNewsArticle" Text='<%# Eval("content") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
@@ -1119,22 +1216,27 @@
                     </div> 
                     <!-- End Display Data -->
         </div>
+
+        <!-- About panel -->
         <div id="aboutPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <div class="container col-sm-8">
+                <!-- About us image -->
                 <asp:Image class="img-rounded img-responsive" ID="imgAbout" ImageUrl="images/about.jpg" Height="200px" Width="1200px" runat="server" AlternateText="about us" />
                 <br /><br /><br /><br />
             </div>
+            <!-- Facebook image -->
             <div class="container col-sm-4">
-                <asp:ImageButton class="img-rounded img-responsive" OnClick="facebook" ID="imgFacebook1" ImageUrl="images/facebook.jpg" Height="90px" Width="610px" runat="server" AlternateText="facebook" />
-      
+                <asp:ImageButton class="img-rounded img-responsive" ID="imgFacebook1" ImageUrl="images/facebook.jpg" Height="90px" Width="610px" runat="server" AlternateText="facebook" />
+                <!-- Courses image -->
                 <asp:Image class="img-rounded img-responsive" ID="imgCourses2" ImageUrl="images/coursesplaceholder2.jpg" Height="200px" Width="610px" runat="server" AlternateText="courses" />
                 <br />
             </div>
 
             <div id="coursesPanel2" class="container2 col-sm-12" style="display:none;" runat="server">
                 <div class="container2 col-sm-8">
-
+                    <!-- Empty div for spacing and layout purposes -->
                 </div>
+                <!-- Courses panel -->
                 <div class="container1 col-sm-4 well">
                     <asp:Label ID="Label10" Text="These are the courses the club offers: " runat="server" /><br /><br />
                     <a href="https://novascotia.ca/natr/hunt/firearms.asp" style=" text-decoration:none; color:white; font-weight:bold">Canadian Firearms Safety Course</a><br />
@@ -1144,18 +1246,21 @@
             </div>
 
             <div class="container col-sm-10" style="text-align:right">
+                <!-- Header for club executive text -->
                 <asp:Label ID="lblExecutivesLabel" Text="Club Executives" style="font-weight:bold" runat="server" />
             </div>
             <div class="container col-sm-2" style="text-align:right">
+                <!-- Empty div for layout and positioning -->
                 <br />
             </div>
 
             <div class="container1 col-sm-6 well3">
                 <asp:Label ID="lblAboutUs" Text="" CssClass="positioning" runat="server" />
-                
+                <!-- Empty label for positioning purposes -->
                <!-- <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /> -->
             </div>
 
+            <!-- Table for displaying current club staff -->
             <div class="container1 col-sm-6 well3">
                 <table class="table positioning">
                     <tr>
@@ -1187,8 +1292,9 @@
                 <asp:Label ID="lblBlank" Text="a" ForeColor="darkseagreen" runat="server" />
             </div>
 
+            <!-- Address and copyright footer -->
             <div class="container1 col-sm-8 well equal-test1">
-                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
+                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" id="fblink2" style="font-size:40px; text-decoration:none;"></a>
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                 <asp:Label ID="Label1" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
             </div>
@@ -1202,13 +1308,15 @@
             <div class="container2 col-sm-12 well">
                 Use the form below to send a booking request to the club at either of our ranges
             </div>
-            <!-- FIXED BUG (ported to autoemailer): this seems to be breaking the button functionality for the site. Might have to port this over from a mailto to an auto emailer -->
+            <!-- Form linked to an auto emailer to send automated email requests for booking -->
             <div class="container1 col-sm-6 well">
                 <!-- <form action="mailto:mail@mail.com" method="post" enctype="text/plain"> -->
+                    <!-- Name -->
                     <asp:Label ID="Label13" Text="Full Name" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="txtBookName" placeholder="enter your name" Text="name" CssClass="form-control" MaxLength="100" runat="server" />
                     <!-- <input type="text" name="txtBookName" value="name" class="form-control" /> -->
                     <br />
+                    <!-- Range selection -->
                     <asp:Label ID="Label18" Text="Select Range" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:DropDownList ID="drpRanges" CssClass="form-control" runat="server" />    
                     <!--<select name="location" class="form-control">
@@ -1216,34 +1324,41 @@
                         <option value="StellartonRange">Stellarton Range</option>
                     </select> -->  
                     <br />
+                    <!-- Email -->
                     <asp:Label ID="Label14" Text="Email Address" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="txtBookEmail" placeholder="enter your email" Text="email" CssClass="form-control" MaxLength="50" runat="server" />
                     <!-- <input type="text" name="txtBookEmail1" value="email" class="form-control" /> -->
                     <br />
+                    <!-- Phone -->
                     <asp:Label ID="Label15" Text="Phone" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="txtBookPhone" Text="phone" placeholder="enter your phone number" CssClass="form-control" MaxLength="25" runat="server" />
                     <!-- <input type="text" name="txtBookPhone1" value="phone" class="form-control" /> -->
                     <br />
+                    <!-- Booking date -->
                     <asp:Label ID="Label16" Text="Date" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="txtBookDate" Text="date" placeholder="enter your desired booking date" CssClass="form-control" MaxLength="25" runat="server" />
                     <!--<input type="text" name="txtBookDate1" value="date" class="form-control" />-->
                     <br />
+                    <!-- Booking time -->
                     <asp:Label ID="Label17" Text="Time" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="txtBookTime" placeholder="enter your desired booking time" Text="time" CssClass="form-control" MaxLength="25" runat="server" />
                     <!--<input type="text" name="txtBookTime1" value="time" class="form-control" />-->
                     <br />
                     <!--<input type="submit" value="Book Range1" class="btn btn-success" />-->
+                    <!-- Submit button -->
                     <asp:Button ID="btnBookSubmit" Text="Book Range" OnClick="bookingMailer" CssClass="btn btn-success" runat="server" /> 
                <!-- </form> -->
             </div>
             <div class="container1 col-sm-6 well">
                 <div id="bookMap" class="container2 col-sm-6 well9" style="width:100%;height:370px;background-color:gray;">
+                    <!-- Error display for google map api (only displays if there is a failure to load) -->
                     Error: Google Maps API failed to load
                 </div>
             </div>
 
+            <!-- Address and copyright footer -->
             <div class="container1 col-sm-8 well equal-test1">
-                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
+                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" id="fblink3" style="font-size:40px; text-decoration:none;"></a>
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                 <asp:Label ID="Label19" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
             </div>
@@ -1254,34 +1369,40 @@
                 </div>
             </div>
         </div>
+        <!-- Links panel -->
         <div id="linksPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <div class="container1 col-sm-7 well">
+            <!-- Facebook link -->
             <asp:Label ID="lblLinksTitle" Text="Visit our facebook page by clicking " runat="server" />
-            <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" style=" text-decoration:none; color:white; font-weight:bold"> here</a>
+            <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" id="fblink4" style=" text-decoration:none;  color:white; font-weight:bold"> here</a>
             <asp:Label ID="lblLinksTitle2" Text="or by clicking one of the facebook links in the page footer." runat="server" /><br />
             <br />
+            <!-- Bylaws link -->
             <asp:Label ID="lbl" Text="You can download a copy of the clubs bylaws by clicking " runat="server" />
             <a href="C:\Users\itstudents\Desktop\StaghornSite v2\files\bylaws.pdf" style=" text-decoration:none; color:white; font-weight:bold"> here</a><br /><br />
-
+            <!-- Ethics link -->
             <asp:Label ID="Label5" Text="You can download a copy of the clubs ethics by clicking " runat="server" />
             <a href="C:\Users\itstudents\Desktop\StaghornSite v2\files\ethics.docx" style=" text-decoration:none; color:white; font-weight:bold"> here</a><br />
-
+            <!-- Modal popup for screenshot of range schedule -->
             <asp:Label ID="Label34" Text="You can see a copy of our range schedule by clicking " runat="server" />
             <asp:Label ID="lblSchedule" data-toggle="modal" data-target="#scheduleModal1" Font-Bold="true" Text="here" runat="server" />
          </div>
 
             <!-- data-toggle="modal" data-target="#imageModal2" -->
 
+            <!-- Regulations div -->
             <div class="container1 col-sm-5 well13" style="text-align:center;">
+                <!-- Regulations title -->
                 Current Regulations
                 <div class="container col-sm-3" style="text-align:center;">
-
+                    <!-- Empty div for positioning and layout -->
                 </div>
+                <!-- Regulations image (click for modal popup) -->
                 <div class="container col-sm-6 backgroundFix" style="text-align:center;">
                     <asp:Image class="img-rounded img-responsive" ImageAlign="Middle" data-toggle="modal" data-target="#regulationsModal1" ID="imgRegs" ImageUrl="images/regulations.jpg" Height="200px" Width="700px" runat="server" AlternateText="reglations" />
                 </div>
                 <div class="container col-sm-3" style="text-align:center;">
-
+                    <!-- Empty div for positioning and layout -->
                 </div>
 
                 
@@ -1290,9 +1411,9 @@
             <br /><br /><br /><br /><br />
 
             
-
+            <!-- Address and copyright footer -->
             <div class="container1 col-sm-8 well equal-test1">
-                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
+                <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" id="fblink5" style="font-size:40px; text-decoration:none;"></a>
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                 <asp:Label ID="Label6" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
             </div>
@@ -1305,55 +1426,69 @@
         </div>
 
        
-
+        <!-- Contact panel -->
         <div id="contactPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <div class="container col-sm-8 ">
+                <!-- Contact us header image -->
                 <asp:Image class="img-rounded img-responsive" ID="Image1" ImageUrl="images/contactusnew.jpeg" Height="200px" Width="1200px" runat="server" AlternateText="contact us" />
                 <br /><br /><br /><br />
             </div>
             <div class="container col-sm-4 ">
-                <asp:ImageButton class="img-rounded img-responsive" OnClick="facebook" ID="imgFacebook2" ImageUrl="images/facebook.jpg" Height="90px" Width="610px" runat="server" AlternateText="facebook" />
-      
+                <!-- Facebook link -->
+                <asp:ImageButton class="img-rounded img-responsive" ID="imgFacebook2" ImageUrl="images/facebook.jpg" Height="90px" Width="610px" runat="server" AlternateText="facebook" />
+                <!-- Courses dropdown link -->
                 <asp:Image class="img-rounded img-responsive" ID="imgCourses3" ImageUrl="images/coursesplaceholder2.jpg" Height="200px" Width="610px" runat="server" AlternateText="courses" />
                 <br />
             </div>
             <div id="coursesPanel3" class="container2 col-sm-12" style="display:none;" runat="server">
                 <div class="container2 col-sm-8">
-
+                    <!-- Empty div for positioning and layout -->
                 </div>
+                <!-- Safety courses dropdown links -->
                 <div class="container1 col-sm-4 well">
+                    <!-- Title -->
                     <asp:Label ID="Label11" Text="These are the courses the club offers: " runat="server" /><br /><br />
+                    <!-- Canadian firearms safety course -->
                     <a href="https://novascotia.ca/natr/hunt/firearms.asp" style=" text-decoration:none; color:white; font-weight:bold">Canadian Firearms Safety Course</a><br />
+                    <!-- Restricted firearms safety course -->
                     <a href="http://www.safetyservicesns.ca/restricted-firearms-safety/" style=" text-decoration:none; color:white; font-weight:bold">Restricted Firearms Safety Course</a><br />
+                    <!-- Hunting and crossbow safety course -->
                     <a href="https://www.huntercourse.com/canada/novascotia/?gclid=EAIaIQobChMIro384d7a2gIVDP5kCh24-ww8EAEYASAAEgJ8o_D_BwE" style=" text-decoration:none; color:white; font-weight:bold">Hunting and Crossbow Safety Course</a><br />
                 </div>
             </div>
 
+            <!-- Contact form div -->
             <div class="container1 col-sm-6 well">
+                <!-- Phone number info -->
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">phone</i>
                 <asp:Label ID="lblPhoneTitle" Text="Phone: (902) 331-0548" CssClass="instructions" runat="server" /><br />
-
+                <!-- Mailing address info -->
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                 <asp:Label ID="lblAddressTitle" Text="Mailing Address: 239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" /><br />
-
+                <!-- Send us a message title -->
                 <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">mail</i>
                 <asp:Label ID="lblMsgTitle" Text="Send us a message below!" CssClass="instructions" runat="server" /><br /><br />
                 
                <!-- <form action="mailto:mail@mail.com" method="post" enctype="text/plain"> -->
+                    <!-- Name -->
                     <asp:Label ID="lblContactName" Text="Full Name" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <input type="text" name="txtContactName" value="name" class="form-control" />
                     <!--<asp:TextBox ID="txtContactName" Text="Enter your name" CssClass="form-control" MaxLength="25" runat="server" Class="contact" />-->
                     <br />
+                    <!-- Email -->
                     <asp:Label ID="lblContactEmail" Text="Email" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <input type="text" name="txtContactEmail" value="email" class="form-control" />
                     <!--<asp:TextBox ID="txtContactEmail" Text="Enter your email" CssClass="form-control" MaxLength="25" runat="server" Class="contact" />-->
                     <br />
+                    <!-- Message text -->
                     <asp:Label ID="lblContactMessage" Text="Message" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <input type="text" name="txtMessage" value="message" class="form-control" />
                     <!--<asp:TextBox ID="txtContactMessage" Text="Enter your message" CssClass="form-control" TextMode="Multiline" MaxLength="25" runat="server" Class="contact" />-->
                     <br />
+                    <!-- Submit button -->
                     <input type="submit" value="Submit" class="btn btn-success" />
                     <!--<asp:Button ID="btnContactSend" Text="Submit" CssClass="btn btn-success" runat="server" />-->
+                    <!-- Warning info -->
                     <asp:Label ID="lblContactWarning" Text="*Red outlines indicate required fields" CssClass="errorColor" Font-Size="XX-Small" runat="server" />
                     <br /><br /><br />
                <!-- </form> -->
@@ -1363,6 +1498,7 @@
             </div>
             <div class="container1 col-sm-6 well4">
                 <div id="contactMap" style="width:100%;height:459px;background-color:gray;" class="container1 col-sm-12 well positioning">
+                    <!-- Google map error, only displays if map fails to load -->
                     Error: Google Map API cannot be loaded
                 </div>
             </div>
@@ -1373,8 +1509,9 @@
                 4<br /><br /><br /><br /><br /><br /><br />
             </div>-->
             
+                <!-- Address and copyright info -->
                 <div class="container1 col-sm-8 well equal-test1">
-                    <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
+                    <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" id="fblink6" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
                     <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                     <asp:Label ID="Label3" Text="239 West River East Side Road, West River Station, NS, B0K 1Z0" CssClass="instructions" runat="server" />
                 </div>
@@ -1384,47 +1521,59 @@
                 </div>  
             
         </div>
+
+        <!-- Membership panel -->
         <div id="membershipPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
-           
+           <!-- Become a member header image -->
             <div class="container col-sm-8">
                 <asp:Image class="img-rounded img-responsive" ID="Image2" ImageUrl="images/member.jpeg" Height="200px" Width="1200px" runat="server" AlternateText="become a member" />
                 <br /><br /><br /><br />
             </div>
             <div class="container col-sm-4">
-                <asp:ImageButton class="img-rounded img-responsive" OnClick="facebook" ID="Image3" ImageUrl="images/facebook.jpg" Height="90px" Width="610px" runat="server" AlternateText="facebook" />
-      
+                <!-- Facebook link -->
+                <asp:ImageButton class="img-rounded img-responsive" ID="Image3" ImageUrl="images/facebook.jpg" Height="90px" Width="610px" runat="server" AlternateText="facebook" />
+                <!-- Courses dropdown link -->
                 <asp:Image class="img-rounded img-responsive" ID="imgCourses4" ImageUrl="images/coursesplaceholder2.jpg" Height="200px" Width="610px" runat="server" AlternateText="courses" />
                 <br />
             </div>
 
             <div id="coursesPanel4" class="container2 col-sm-12" style="display:none;" runat="server">
                 <div class="container2 col-sm-8">
-
+                    <!-- Empty div for layout and positioning -->
                 </div>
+                <!-- Courses dropdown -->
                 <div class="container1 col-sm-4 well">
+                    <!-- Title -->
                     <asp:Label ID="Label12" Text="These are the courses the club offers: " runat="server" /><br /><br />
+                    <!-- Canadian firearms safety course -->
                     <a href="https://novascotia.ca/natr/hunt/firearms.asp" style=" text-decoration:none; color:white; font-weight:bold">Canadian Firearms Safety Course</a><br />
+                    <!-- Restricted firearms safety course -->
                     <a href="http://www.safetyservicesns.ca/restricted-firearms-safety/" style=" text-decoration:none; color:white; font-weight:bold">Restricted Firearms Safety Course</a><br />
+                    <!-- Hunting and crossbow safety course -->
                     <a href="https://www.huntercourse.com/canada/novascotia/?gclid=EAIaIQobChMIro384d7a2gIVDP5kCh24-ww8EAEYASAAEgJ8o_D_BwE" style=" text-decoration:none; color:white; font-weight:bold">Hunting and Crossbow Safety Course</a><br />
                 </div>
             </div>
 
             <div class="container1 col-sm-6 well">
 
+            <!-- Membership rates info panel -->
             <div class="container1 col-sm-12 well">
                 <asp:Label ID="lblRatesTitle" Text="Current Membership Rates:" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /><br />
                 <asp:Label ID="lblRegularRate" Text="Regular Membership ($50)" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /><br />
                 <asp:Label ID="lblSeniorRate" Text="Seniors (65+) Membership ($40)" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /><br />
             </div>
 
+                <!-- Membership registration form -->
+                <!-- linked to paypal account - change the email address to change which account payments go to -->
                 <form method="post">
                     <!--<input type="text" name="os0" size="20" />-->
+                    <!-- Name -->
                     <asp:Label ID="lblName" Text="Name" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os0" Text=" Enter name" CssClass="form-control" MaxLength="25" runat="server" Class="input" />
                     <input type="hidden" name="on0" value="Name" />
                     <asp:RequiredFieldValidator ID="valName" ControlToValidate="os0" runat="server" CssClass="errorColor" Text="*Name is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
-                    
+                    <!-- Civic Address -->
                     <asp:Label ID="lblCivic" Text="Civic Address" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os1" Text="Enter address" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os1" size="20" />-->
@@ -1432,14 +1581,14 @@
                     <asp:RequiredFieldValidator ID="valCivic" ControlToValidate="os1" runat="server" CssClass="errorColor" Text="*Your civic number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
 
-
+                    <!-- Town -->
                     <asp:Label ID="lblTown" Text="Town" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os2" Text="Enter town" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os2" size="20" />-->
                     <input type="hidden" name="on2" value="Town" />
                     <asp:RequiredFieldValidator ID="valTown" ControlToValidate="os2" runat="server" CssClass="errorColor" Text="*Town is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
-                    
+                    <!-- Postal Code -->
                     <asp:Label ID="lblPostal" Text="Postal Code" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os3" Text="B0K 1S0" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os3" size="20" />-->
@@ -1448,14 +1597,14 @@
                     <!-- MUST take proper postal code with capital letters -->
                     <asp:RegularExpressionValidator ID="valPostal1" runat="server" ErrorMessage="*You must enter a valid postal code (V2X 7E7 format)" CssClass="errorColor" Font-Size="XX-Small" ControlToValidate="os3" ValidationExpression="[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]"></asp:RegularExpressionValidator><br />
 
-
+                    <!-- Occupation -->
                     <asp:Label ID="lblOccupation" Text="Occupation" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os4" Text="Enter occupation" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os4" size="20" />-->
                     <input type="hidden" name="on4" value="Occupation" />
                     <asp:RequiredFieldValidator ID="valOccupation" ControlToValidate="os4" runat="server" CssClass="errorColor" Text="*Occupation is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
-                    
+                    <!-- Phone Number -->
                     <asp:Label ID="lblPhone" Text="Phone Number" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os5" Text="902-555-5555" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os5" size="20" />-->
@@ -1463,14 +1612,14 @@
                     <asp:RequiredFieldValidator ID="valPhone" ControlToValidate="os5" runat="server" CssClass="errorColor" Text="*Phone number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br />
                     <asp:RegularExpressionValidator ID="valPhone2" runat="server" ErrorMessage="*You must enter a valid phone number (902-555-5555 format)" CssClass="errorColor" Font-Size="XX-Small" ControlToValidate="os5" ValidationExpression="\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*"></asp:RegularExpressionValidator><br />
 
-
+                    <!-- Date of Birth -->
                     <asp:Label ID="lblDob" Text="Date of Birth" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os6" Text="Enter dob" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os6" size="20" />-->
                     <input type="hidden" name="on6" value="DOB" />
                     <asp:RequiredFieldValidator ID="valDob" ControlToValidate="os6" runat="server" CssClass="errorColor" Text="*DOB is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
 
-                    
+                    <!-- Firearms License Number -->
                     <asp:Label ID="lblLicenseNumber" Text="Firearms License Number" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os7" Text="12345678.0001" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os7" size="20" />-->
@@ -1478,24 +1627,27 @@
                     <asp:RequiredFieldValidator ID="valLicenseNumber" ControlToValidate="os7" runat="server" CssClass="errorColor" Text="*Your firearms license number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /> 
                     <asp:RegularExpressionValidator ID="valLicenseNumber1" runat="server" ErrorMessage="*You must enter a valid firearms license number (12345678.0001 format)" CssClass="errorColor" Font-Size="XX-Small" ControlToValidate="os7" ValidationExpression="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][.][0-9][0-9][0-9][0-9]"></asp:RegularExpressionValidator><br />
 
-
+                    <!-- Firearms License Number Expiration Date -->
                     <asp:Label ID="lblExpiration" Text="Expiration Date" CssClass="label label-success" Font-Size="Small" runat="server" />
                     <asp:TextBox ID="os8" Text="Enter expiration date" CssClass="form-control" runat="server" Class="input" />
                     <!--<input type="text" class="inputTextBox" name="os8" size="20" />-->
                     <input type="hidden" name="on8" value="Exp Date" />
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ControlToValidate="os8" runat="server" CssClass="errorColor" Text="*Your FLN expiration date is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br /> 
 
-                    
+                    <!-- -->
                     <asp:Button ID="btnSubmit" Text="Order Membership" CssClass="btn btn-success" PostBackUrl="https://www.paypal.com/cgi-bin/webscr" runat="server" />
-
+                    <!-- Set up to use canadian currency -->
                     <input type="hidden" name="currency_code" value="CAD" />
                     <input type="hidden" name="charset" value="utf-8" />
-                    <!-- TODO: Change this to the clients paypal email when the site is deployed -->
-                    <input type="hidden" name="business" value="rhodes51166db@yahoo.ca" />
+                    <!-- TODO: Change this to the proper email -->
+                    <input type="hidden" name="business" value="paypalselleraccount@email.com" />
                     <input type="hidden" name="cmd" value="_xclick" />
-                    <!-- Sets the description shown in paypal -->
+                    <!-- Sets the description shown in paypal in the sale comments section -->
+                    <!-- This is also sent through to the clubs paypal account to allow the club to complete the membership process -->
                     <input type="hidden" name="item_name" value="Registration Fee: $50 Regular, $40 Seniors (65+)" />
+                    <!-- Defaults to 1 item being sold -->
                     <input type="hidden" name="item_number" value="1" />
+                    <!-- No tax on the sale -->
                     <input type="hidden" name="tax_rate" value="0" />
                     <input type="hidden" name="tax" id="tax" value="0" />
                 </form>
@@ -1503,9 +1655,13 @@
             <div class="container2 col-sm-6 well10">
                 <asp:Label ID="lblBenefits" Text="Benefits of Membership" Font-Size="Small" CssClass="instructions" runat="server" /><br />
                 <div class="container1 col-sm-12 well whiteText">
-                    These are the benefits of membership
-                    <br /><br /><br /><br /><br /><br /><br /><br /><br />
+                    <!--Benefits of membership panel info -->
+                    <!-- Dummy text because we were given no info to put in this -->
+                    These are the benefits of membership:<br />
+                    <li>Bacon ipsum dolor amet jowl ham biltong, landjaeger picanha kielbasa tail. Landjaeger chicken alcatra pancetta. Kevin venison chicken sausage. Salami ham hock ham pork chop, shankle spare ribs flank ribeye.</li>
+                    <br /><br /><br /><br /><br />
                 </div>
+                <!-- Info as to where to buy memberships -->
                 <asp:Label ID="lblWhereBecomeMember" Text="Where to Become a Member" Font-Size="Small" CssClass="instructions" runat="server" /><br />
                 <div class="container1 col-sm-12 well whiteText">
                     You can purchase a membership online, through this website or at the following retailers:<br /><br />
@@ -1522,6 +1678,7 @@
 
                 <div class="container1 col-sm-12 well">
                     <div id="memberMap" style="width:100%;height:459px;background-color:gray;" class="container1 col-sm-12 well">
+                        <!-- Error message for google maps api -->
                         Error: Google Map API cannot be loaded
                     </div>
                 </div>
@@ -1542,15 +1699,14 @@
                     </div>
                 </div>
 
-          
-
                 <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />-->
 
             </div>
             
+                <!-- Address and copyright footer -->
                 <div class="container1 col-sm-8 well equal-test1">
-                    <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
+                    <a href="https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/" id="fblink7" class="fa fa-facebook" style="font-size:40px; text-decoration:none;"></a>
                     <i class="material-icons" style="font-size:40px;color:black;margin-right:10px;">place</i>
                     <asp:Label ID="Label2" Text="239 West River East Side Road, West River Station, NS, B0K 1ZO" CssClass="instructions" runat="server" />
                 </div>
@@ -1562,6 +1718,7 @@
             
        </div>
 
+        <!-- Image gallery panel -->
         <div id="galleryPanel" class="container2 col-sm-12 well" style="display:none;" runat="server">
             <!-- Start Display Data -->
                     <!-- Repeater to display the images -->
@@ -1577,6 +1734,7 @@
                                         <asp:Label ID="lblImageTitle" Text='<%# Eval("title") %>' ForeColor="white" runat="server" /> <br />
                                     </td>
                                     <td>
+                                        <!-- Note: the 57329 instance info must be changed to whatever the localhost instance is when deployed, as it changes with every new deployment -->
                                         <img class="gallery" src="http://localhost:57329/StaghornSite v2/siteImages/<%# Eval("image")%>" alt="image" height="100%" width="100%" /><br />
                                     </td>
                                     <td>
