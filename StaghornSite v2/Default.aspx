@@ -106,12 +106,24 @@
         //loadData();
     }
 
+    protected void tosChecked(Object src, EventArgs args) {
+        Response.Write("checkbox checked");
+        if (chkAgree.Checked == true) {
+            btnSubmit.Enabled = true;
+            Response.Write("checkbox checked");
+        } else {
+            btnSubmit.Enabled = false;
+            Response.Write("checkbox unchecked");
+        }
+    }
+
     protected void loadData() {
         // Loads the data for the about us section
         lblAboutUs.Text = Convert.ToString(admin.getAboutUsData());
         displayEvents();
         displayNews();
         displayImages();
+        btnSubmit.Enabled = false;
     }
 
     protected void setLoginState() {
@@ -779,6 +791,21 @@
                 window.open('https://www.facebook.com/Staghorn-Shooting-Club-143762139756474/'); return false;
             });
 
+            // Handles ensuring tos agreement checkbox is checked when ordering membership
+            $("#chkAgree").click(function () {
+                var $submit = $('#btnSubmit');
+                var $agree = $('#chkAgree');
+                var disabled = true;
+                // Sets the disabled status based on whether the checkbox is checked or not. Button is disabled unless the agree box is checked
+                if ($(this).is(':checked')) {
+                    disabled = false;
+                    disabled ? $submit.attr('disabled', true) : $submit.removeAttr('disabled');
+                } else {
+                    disabled = true;
+                    disabled ? $submit.attr('disabled', true) : $submit.removeAttr('disabled');
+                }
+            });
+
             // Handles button enabling/disabling
             // Variables
             var $input = $('input:text');
@@ -1043,8 +1070,8 @@
                 <asp:Label ID="lblEstablished" Text="Established 1976" CssClass="label label-success titleHeader" runat="server" />
             </div>
             <div class="container1 col-sm-6 well">
-                <asp:Label ID="lblHomeTitle" Text="Welcome to Staghorn Shooting Club" runat="server" /><br /><br />
-                <asp:Label ID="lblHomeContent" Text="Bacon ipsum dolor amet leberkas ullamco duis eu, beef reprehenderit strip steak cillum bresaola in magna pork chop t-bone buffalo cupim. Incididunt sunt ea lorem short loin landjaeger. Bacon ipsum dolor amet leberkas ullamco duis eu, beef reprehenderit strip steak cillum bresaola in magna pork chop t-bone buffalo cupim. Incididunt sunt ea lorem short loin landjaeger." runat="server" />
+                <asp:Label ID="lblHomeTitle" Text="Welcome to Staghorn Shooting Club" runat="server" /><br />
+                <asp:Label ID="lblHomeContent" Text="Our Mission: <br /><br /> To provide a fun and safe indoor and outdoor target shooting environment for people of all ages." runat="server" />
                 <br /><br /><br />
             </div>
             <div class="container col-sm-3 ">
@@ -1399,7 +1426,8 @@
                 </div>
                 <!-- Regulations image (click for modal popup) -->
                 <div class="container col-sm-6 backgroundFix" style="text-align:center;">
-                    <asp:Image class="img-rounded img-responsive" ImageAlign="Middle" data-toggle="modal" data-target="#regulationsModal1" ID="imgRegs" ImageUrl="images/regulations.jpg" Height="200px" Width="700px" runat="server" AlternateText="reglations" />
+                    <asp:Image class="img-rounded img-responsive" ImageAlign="Middle" data-toggle="modal" data-target="#regulationsModal1" ID="imgRegs" ImageUrl="images/regulations.jpg" Height="200px" Width="700px" runat="server" AlternateText="reglations" /><br />
+                    <asp:Label ID="lblWrittenRegs" data-toggle="modal" data-target="#tosModal" Text="View Full Text" runat="server" />
                 </div>
                 <div class="container col-sm-3" style="text-align:center;">
                     <!-- Empty div for positioning and layout -->
@@ -1559,8 +1587,8 @@
             <!-- Membership rates info panel -->
             <div class="container1 col-sm-12 well">
                 <asp:Label ID="lblRatesTitle" Text="Current Membership Rates:" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /><br />
-                <asp:Label ID="lblRegularRate" Text="Regular Membership ($50)" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /><br />
-                <asp:Label ID="lblSeniorRate" Text="Seniors (65+) Membership ($40)" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /><br />
+                <li><asp:Label ID="lblRegularRate" Text="Regular Membership ($50)" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /></li><br />
+                <li><asp:Label ID="lblSeniorRate" Text="Seniors (65+) Membership ($40)" Font-Size="Small" CssClass="instructions" ForeColor="white" runat="server" /></li><br />
             </div>
 
                 <!-- Membership registration form -->
@@ -1579,7 +1607,6 @@
                     <!--<input type="text" class="inputTextBox" name="os1" size="20" />-->
                     <input type="hidden" name="on1" value="Civic Address" />
                     <asp:RequiredFieldValidator ID="valCivic" ControlToValidate="os1" runat="server" CssClass="errorColor" Text="*Your civic number is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br />
-
 
                     <!-- Town -->
                     <asp:Label ID="lblTown" Text="Town" CssClass="label label-success" Font-Size="Small" runat="server" />
@@ -1635,7 +1662,9 @@
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ControlToValidate="os8" runat="server" CssClass="errorColor" Text="*Your FLN expiration date is a required field" Font-Size="XX-Small"></asp:RequiredFieldValidator><br /><br /> 
 
                     <!-- -->
-                    <asp:Button ID="btnSubmit" Text="Order Membership" CssClass="btn btn-success" PostBackUrl="https://www.paypal.com/cgi-bin/webscr" runat="server" />
+                    <asp:Button ID="btnSubmit" Text="Order Membership" CssClass="btn btn-success" PostBackUrl="https://www.paypal.com/cgi-bin/webscr" runat="server" /><br />
+                    <asp:CheckBox ID="chkAgree" OnCheckedChanged="tosChecked" CssClass="form-control1" Text=" I agree to the terms and conditions of membership" runat="server" />
+                    <asp:Label ID="lblAgree" data-toggle="modal" data-target="#tosModal" Text=" listed here" runat="server" />
                     <!-- Set up to use canadian currency -->
                     <input type="hidden" name="currency_code" value="CAD" />
                     <input type="hidden" name="charset" value="utf-8" />
@@ -1658,7 +1687,7 @@
                     <!--Benefits of membership panel info -->
                     <!-- Dummy text because we were given no info to put in this -->
                     These are the benefits of membership:<br />
-                    <li>Bacon ipsum dolor amet jowl ham biltong, landjaeger picanha kielbasa tail. Landjaeger chicken alcatra pancetta. Kevin venison chicken sausage. Salami ham hock ham pork chop, shankle spare ribs flank ribeye.</li>
+                    <li>Having a club membership is a requirement by law in order to transport and possess restricted firearms in the province of Nova Scotia. As a member, you get first hand exposure to the safe operation of restricted firearms.</li>
                     <br /><br /><br /><br /><br />
                 </div>
                 <!-- Info as to where to buy memberships -->
@@ -1881,6 +1910,149 @@
             </div>
             <div class="modal-footer" style="background-color:darkolivegreen">
                 <h3><asp:Label ID="Label36" Text="This is our opening/closing schedule for May 2018" ForeColor="white" runat="server" /></h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal for the tos agreement on the membership page -->
+        <div class="modal fade" id="tosModal" role="dialog" style="display:none">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:darkolivegreen">
+                    <span class="close">&times;</span>
+                    <h2><asp:Label ID="Label37" Text="Membership Registration -- Club Bylaws" ForeColor="white" runat="server" /></h2>
+                </div>
+            <div class="modal-body" style="background-color:darkseagreen; text-align:center">
+                <!-- Tos Agreement/Club Regulations -->
+                <h3>MEMBERS AND GUESTS ONLY. YOU MUST HAVE YOUR MEMBERSHIP CARD WITH YOU.</h3>
+                <h3>NO SHOOTING ON SUNDAYS.</h3>
+                <h3>WARNING</h3>
+                <h3>THE USE OF ALCOHOL OR DRUGS IS PROHIBITED ON THIS RANGE. PERSONS UNDER THE INFLUENCE OF EITHER ARE NOT PERMITTED TO USE FIREARMS. THOSE DOING SO WILL BE REPORTED TO THE AUTHORITIES, AS WELL AS TO THE CLUB FOR POSSIBLE ACTION.</h3>
+                <h3>RANGE STANDING ORDERS
+                100 YARD RANGE (OUTDOORS)</h3>
+                <h3>ISSUED OCTOBER 2000</h3>
+                <em><strong>STAGHORN SHOOTING CLUB</strong></em>
+                <em><strong>100 YARD RANGE (OUTDOORS), STANDING ORDERS</strong></em>
+                <em><strong>GENERAL INSTRUCTIONS</strong></em>
+                <ol>
+                    <li>Control (access and use) of the range is the responsibility of the STAGHORN SHOOTING CLUB</li>
+                    <li>Users are responsible for the safe conduct of all range practices, therefore, all appointed range Safety officers in charge (RSO) will read and adhere to all the pertinent range safety Publications and Procedures.</li>
+                    <li>All designated Range Safety Officers are required to read and adhere to CONDUCT OF RANGE PRACTICES before conducting any range practice.</li>
+                    <li>Users are requested to report immediately, any range deficiencies or repairs that are needed to the Staghorn Shooting Club c/o Nancy McGregor <a href="tel:+19023310548">(902) 331 0548</a>, or the board of directors.</li>
+                    <li>Users must clean the range once shooting has ceased.</li>
+                    <li>These RANGE STANDING ORDERS will be reviewed annually and updated as required.</li>
+                </ol>
+                <em><strong>RANGE COMMANDS FOR ORGANIZED SHOOTS</strong></em>
+                <ol>
+                    <li>Number () relay, to the firing point.</li>
+                    <li>This practice is () rounds applications. When you have completed the practice ceasefire: Point your firearm down range at all times. CEASE FIRE when the command is given. If you have AC problem with your firearm, notify the RSO before removing the firearm from the firing point.</li>
+                    <li>EAR DEFENDERS ON</li>
+                    <li>Number () relay, TAKE YOUR POSITION:</li>
+                    <li>Relay, LOAD:</li>
+                    <li>Number () relay, at 25, 50, or 100 yds, at your own target in front:</li>
+                    <li>In your own time (or allotted) FIRE:</li>
+                    <li>Relay, CEASE FIRE</li>
+                    <li>PREPARE FOR INSPECTION:</li>
+                    <li>REST YOUR FIREARMS (or remove from firing point if required):</li>
+                    <li>CHANGE, (retrieve) TARGETS</li>
+                </ol>
+                <em><strong>STAGHORN SHOOTING CLUB</strong></em>
+                <em><strong>100 YARD RANGE (OUTDOORS), STANDING ORDERS</strong></em>
+                <em><strong>RANGE ORDERS</strong></em>
+                <ol>
+                    <li>LOCATION AND DESCRIPTION
+                <ol type="a">
+                    <li>The STAGHORN SHOOTING CLUB outdoor range is located on Reeves road Coalburn.</li>
+                    <li>The range is 100 yards, 4 lanes.</li>
+                    <li>The entrance to the range is controlled by lock and key.</li>
+                    <li>Numbered tags affixed to the top of the target frames.</li>
+                </ol>
+                </li>
+                    <li>AMMUNITION ACCIDENT AND INCIDENTS REPORTING
+                <ul style="list-style-type: none;">
+                    <li>All ammunition accidents and incidents shall be reported to the appropriate agencies as required by law.</li>
+                </ul>
+                </li>
+                    <li>RANGE SAFETY OFFICER (RSO)
+                <ul style="list-style-type: none;">
+                    <li>The RSOs are to be qualified as per requirements as laid down by the Chief Provincial Firearms Officer of Nova Scotia. RSO names shall be attached to the range standing orders as appendix 1.</li>
+                </ul>
+                </li>
+                    <li>WEAPONS PERMITTED
+                <ul style="list-style-type: none;">
+                    <li>All handgun calibers but rifles are limited to .308 diameter bullets. Heavy magnum calibers are to be fired at Station 4 only.</li>
+                </ul>
+                </li>
+                    <li>MEDICAL REQUIREMENTS
+                <ol type="a">
+                    <li>Medical assistance is available at the Aberdeen Hospital, New Glasgow, (911)</li>
+                    <li>Hearing protection must be worn.</li>
+                </ol>
+                </li>
+                    <li>FIRING POINTS
+                <ul style="list-style-type: none;">
+                    <li>Firing may take place only at the covered firing lane. The range has 4 target positions numbered 1 through 4.</li>
+                </ul>
+                </li>
+                    <li>TARGETS
+                <ol type="a">
+                    <li>A maximum of four targets are to be used at any time.</li>
+                    <li>The book stop consists of wood frame and earth mind.</li>
+                    <li>Only paper targets shall be used. NO GLASS OR CANS</li>
+                </ol>
+                </li>
+                    <li>SAFETY PRECAUTIONS
+                <ol type="a">
+                    <li>Firearms will always be proved when handing to or receiving from another person.</li>
+                    <li>Firearms are never to be pointed at another person.</li>
+                    <li>Horseplay is forbidden on or near the range.</li>
+                    <li>Loaded firearms are not permitted anywhere except on the firing line in use and then only with the RSO's permission.</li>
+                    <li>Firearms are always to be pointed at the back stops.</li>
+                    <li>A loaded firearm is never to be left unattended.</li>
+                    <li>Firearms will only be loaded at the firing line.</li>
+                    <li>Only the RSO and authorized personnel will occupy the firing line.</li>
+                    <li>Repairs to weapons during shooting will be at the RSO's discretion and then only by a qualified person.</li>
+                    <li>All personnel shall read the range safety orders.</li>
+                    <li>The RSO's orders and instructions are to be obeyed at all times.</li>
+                </ol>
+                </li>
+                    <li>EMERGENCY CEASEFIRE DURING SHOOTS
+                <ol type="a">
+                    <li>A whistle will be used for signaling a ceasefire.</li>
+                    <li>When signaled to ceasefire, fingers are to be removed from triggers, the safety catch applied.</li>
+                </ol>
+                </li>
+                    <li>MISFIRE PROCEDURE
+                <ol type="a">
+                    <li>When a misfire occurs bring to the attention of the RSO.</li>
+                    <li>The RSO will determine the procedure to follow in the event of faulty ammunition.</li>
+                </ol>
+                </li>
+                    <li>START OF SHOOT
+                <ol type="a">
+                    <li>Personnel re to read or have been read to, these orders.</li>
+                    <li>Prepare targets, firearms, and ammunition.</li>
+                    <li>Brief all personnel.</li>
+                    <li>First relay to the firing line and remember to remain in designated waiting area.</li>
+                </ol>
+                </li>
+                    <li>FINISH OF SHOOT
+                <ol type="a">
+                    <li>All firearms to be unloaded and proven.</li>
+                    <li>All ammunition to be collected.</li>
+                    <li>Empty cases to be collected and deposited in appropriate containers.</li>
+                    <li>Firearms and targets to be returned to proper area.</li>
+                    <li>Area is always to be left in a clean condition and everything properly stored.</li>
+                </ol>
+                </li>
+                    <li>CONDUCT OF SHOOTS
+                <ul style="list-style-type: none;">
+                    <li>Prior to each shoot, the sequence of events and the orders for the type of shoot will be explained.</li>
+                </ul>
+                </li>
+                </ol>
+            </div>
+            <div class="modal-footer" style="background-color:darkolivegreen">
+                <h3><asp:Label ID="Label38" Text="Club Bylaws/Membership Agreement" ForeColor="white" runat="server" /></h3>
             </div>
           </div>
         </div>

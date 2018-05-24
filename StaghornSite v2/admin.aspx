@@ -10,7 +10,7 @@
 <script runat="server">
     // Admin object
     Admin admin;
-
+    // Connection variables
     MySqlConnection dbConnection;
     MySqlCommand dbCommand;
     MySqlDataAdapter dbAdapter;
@@ -18,8 +18,8 @@
     MySqlDataReader dbReader;
     string sqlString;
 
-
     protected void page_load() {
+        // Construct a new admin object on startup
         admin = new Admin();
         
         // test - works
@@ -40,7 +40,7 @@
             Console.Write("news visibility: " + Session["newsVisibility"].ToString());
         }
         
-        
+        // Only populates data when the page is first loaded
         if (!Page.IsPostBack) {
             // Populates the about us field with the existing info
             txtAboutUs.Text = Convert.ToString(admin.getAboutUsData());
@@ -67,12 +67,14 @@
         }
     }
 
+    // Logs the user out and redirects them to the main site
     protected void userLogout(Object src, EventArgs args) {
         Session.Remove("username");
         Session.Remove("weblogin");
         Response.Redirect("Default.aspx");
     }
 
+    // Handles display of the edit news section
     protected void selectEditNews(Object src, EventArgs args) {
         // test
         Console.Write("news button clicked");
@@ -92,6 +94,7 @@
         }
     }
 
+    // Handles display of the edit events section
     protected void selectEditEvents(Object src, EventArgs args) {
         if (eventsPanel.Style["display"] == "none") {
             eventsPanel.Style.Add("display", "block");
@@ -102,6 +105,7 @@
         }
     }
 
+    // Handles display of the edit about section
     protected void selectEditAbout(Object src, EventArgs args) {
         if (aboutPanel.Style["display"] == "none") {
             aboutPanel.Style.Add("display", "block");
@@ -112,6 +116,7 @@
         }
     }
 
+    // Handles display of the edit image gallery section
     protected void selectImages() {
         if (imagePanel.Style["display"] == "none") {
             imagePanel.Style.Add("display", "block");
@@ -367,6 +372,7 @@
         repDisplayImages.DataBind();
     }
 
+    // Handles upload of an image for the image gallery, both to database and a folder on the site
     protected void uploadImage(Object src, EventArgs args) {
         string filename;
         int filesize;
@@ -657,17 +663,19 @@
     <form runat="server">
     <div class="container2 col-sm-12 well">
         <div class="container col-sm-4">
+            <!-- Login info -->
             <asp:Label ID="lblUsername" Text="" runat="server" />
         </div>
         <div class="container col-sm-4">
-            
+            <!-- Empty div doe positioning and layout -->
         </div>
+        <!-- Navigation instructions and logout button -->
         <div class="container col-sm-4" style="text-align:right;">
             <a href="http://localhost:57329/StaghornSite%20v2/" style=" text-decoration:none; color:white; font-weight:bold">click here</a>
             <asp:Label ID="lblInstructions" Text=" to return to the site as an admin" runat="server" />     
             <asp:Button ID="btnLogout" Text="Logout" CssClass="btn btn-success" OnClick="userLogout" Width="75px" runat="server" /><br /><br />
         </div>
-
+        <!-- Navigation -->
         <div class="container2 col-sm-12 well btn-group btn-group-justified" style="text-align:center;">
             <asp:Button ID="btnNews" OnClientClick="return false" Text="News" CssClass="btn btn-success" Width="75px" runat="server" />
             <asp:Button ID="btnEvents" OnClientClick="return false" Text="Events" CssClass="btn btn-success" Width="75px" runat="server" />
@@ -679,31 +687,36 @@
         <div id="eventsPanel" class="container2 col-sm-12 " style="display:none" runat="server">
             <div class="container2 col-sm-6 well">
                 <div class="container1 col-sm-12 well" style="text-align:center;">
+                    <!-- Instructions -->
                     add new event
                 </div>
 
                 <div class="container1 col-sm-12 well">
+                    <!-- Event name -->
                     <asp:Label ID="lblEventName" Text="Event Name" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtEventName" Text="" CssClass="form-control" MaxLength="100" runat="server" />
                     <asp:Label ID="lblEventNameRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <asp:Label ID="lblEventNameChars" Text="100" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br />
+                    <!-- Event location -->
                     <asp:Label ID="lblEventLocationTitle" Text="Event Location" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtEventLocation" Text="" CssClass="form-control" MaxLength="100" runat="server" />
                     <asp:Label ID="lblEventLocationRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <asp:Label ID="lblEventLocationChars" Text="100" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br />
+                    <!-- Event date -->
                     <asp:Label ID="lblEventDateTitle" Text="Event Date" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtEventDate" Text="" CssClass="form-control" MaxLength="50" runat="server" />
                     <asp:Label ID="lblEventDateRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <asp:Label ID="lblEventDateChars" Text="50" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br />
+                    <!-- Event description -->
                     <asp:Label ID="lblEventDescriptionTitle" Text="Event Description" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtEventDescription" TextMode="MultiLine" Text="" CssClass="form-control" MaxLength="500" Height="125px" runat="server" />
-
                     <asp:Label ID="lblEventDescriptionRemaining" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <asp:Label ID="lblEventDescriptionChars" Text="500" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br /><br />
+                    <!-- Submit event button and event error output -->
                     <asp:Button ID="btnSubmitEvent" OnClick="addEventEntry" Text="Post Event" CssClass="btn btn-success" runat="server" />
                     <asp:Label ID="lblEventError" Text="" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                 </div>  
@@ -725,22 +738,27 @@
                             <ItemTemplate>  
                                 <div id="displayEvents" class="news well" style="text-align:center; padding:2px; color:black;">
                                     <td>
+                                        <!-- Event name -->
                                         <asp:Label ID="lblEventNameTitle" Text="Name of Event: " ForeColor="white" Font-Bold="true" runat="server" />
                                         <asp:Label ID="lblEventName" Text='<%# Eval("name") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- Event location -->
                                         <asp:Label ID="lblEventLocationTitle" Text="Location of Event: " ForeColor="white" Font-Bold="true" runat="server" />
                                         <asp:Label ID="lblEventLocation" Text='<%# Eval("location") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- Event date -->
                                         <asp:Label ID="lblEventDateTitle" Text="Date of Event: " ForeColor="white" Font-Bold="true" runat="server" />
                                         <asp:Label ID="lblEventDate" Text='<%# Eval("eventdate") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- Event description -->
                                         <asp:Label ID="lblEventDescriptionTitle" Text="Description of Event: " ForeColor="white" Font-Bold="true" runat="server" /><br />
                                         <asp:Label ID="lblEventDescription" Text='<%# Eval("description") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- Date that the event was published -->
                                         <asp:Label ID="lblEventPublishedTitle" Text="This event was published: " ForeColor="white" Font-Bold="true" runat="server" />
                                         <asp:Label ID="lblEventPublished" Text='<%# Eval("publishdate") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
@@ -771,27 +789,31 @@
         <div id="newsPanel" class="container2 col-sm-12 " style="display:block;" runat="server">
             <div class="container2 col-sm-6 well">
                 <div class="container1 col-sm-12 well" style="text-align:center;">
+                    <!-- Instructions -->
                     add new news article
                 </div>
 
                 <div class="container1 col-sm-12 well">
+                    <!-- News title -->
                     <asp:Label ID="lblNewsTitle" Text="Article Title" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtNewsTitle" Text="" CssClass="form-control" MaxLength="100" runat="server" />
                     <asp:Label ID="lblNewsTitleCharsTitle" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <asp:Label ID="lblNewsTitleChars" Text="100" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br />
+                    <!-- News article content -->
                     <asp:Label ID="lblNewsContent" Text="Article Content" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
                     <asp:TextBox ID="txtNewsContent" TextMode="MultiLine" Text="" CssClass="form-control" MaxLength="500" Height="125px" runat="server" />
-
                     <asp:Label ID="lblNewsContentCharsTitle" Text="Remaining Characters: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <asp:Label ID="lblNewsContentChars" Text="500" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                     <br /><br />
+                    <!-- Submit button and error output -->
                     <asp:Button ID="btnSubmitNews" Text="Post" CssClass="btn btn-success" OnClick="addNewsEntry" runat="server" />
                     <asp:Label ID="lblNewsError" Text="" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                 </div>  
             </div>
             <div class="container2 col-sm-6 well">
                 <div class="container1 col-sm-12 well" style="text-align:center;">
+                    <!-- Instructions -->
                     view existing news articles
                 </div>
 
@@ -807,12 +829,15 @@
                             <ItemTemplate>  
                                 <div id="displayNews" class="news well" style="text-align:center; padding:2px; color:black;">
                                     <td>
+                                        <!-- News date -->
                                         <asp:Label ID="lblDate" Text='<%# Eval("date") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- News title -->
                                         <asp:Label ID="lblTitle" Text='<%# Eval("title") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- News content -->
                                         <asp:Label ID="lblContent" Text='<%# Eval("content") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                 </div>
@@ -832,8 +857,7 @@
                         </ul><br />
                     </div> 
                     <!-- End Display Data -->
-                </div> 
-                
+                </div>      
             </div>
         </div>
 
@@ -841,21 +865,19 @@
         <div class="container2 col-sm-12">
         <div id="aboutPanel" class="container2 col-sm-12 well" style="display:none" runat="server">
             <div class="container1 col-sm-6 well">
-                <asp:TextBox ID="txtAboutUs" TextMode="MultiLine" CssClass="form-control" MaxLength="200" Height="300px" runat="server" />
-                
+                <!-- About us -->
+                <asp:TextBox ID="txtAboutUs" TextMode="MultiLine" CssClass="form-control" MaxLength="200" Height="300px" runat="server" />    
                 <asp:Label ID="lblAboutCharsTitle" Text="Characters Remaining: " Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                 <asp:Label ID="lblAboutChars" Text="500" Font-Size="XX-Small" CssClass="errorColor" runat="server" /> 
                 <br /><br />
+                <!-- Submit button and edit error output -->
                 <asp:Button ID="btnSubmitAbout" OnClick="updateAboutUs" Text="Edit" CssClass="btn btn-success" runat="server" />
                 <asp:Label ID="lblEditError" Text="" Font-Size="XX-Small" CssClass="errorColor" runat="server" />    
             </div>
             <div class="container2 col-sm-6 well8">
-                <asp:Label ID="lblEditInfoTitle" CssClass="positioning" Text="To edit the about me change the text and click edit" runat="server" />
-                  
+                <asp:Label ID="lblEditInfoTitle" CssClass="positioning" Text="To edit the about me change the text and click edit" runat="server" />             
             </div>
-
             </div>
-
         </div>
 
         <!-- Images -->
@@ -863,13 +885,17 @@
         <div id="imagePanel" class="container2 col-sm-12 well" style="display:none" runat="server">
             <div class="container1 col-sm-6 well12">
                 <asp:Label ID="lblBlock" Text="." CssClass="block" Font-Size="XX-Small" runat="server" />
-                <!-- image controls -->
+                <!-- Image controls -->
                 <asp:Label ID="lblUploadTitle" Text="Choose an image file to upload" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
+                <!-- Image uploader -->
                 <asp:FileUpload ID="upFileImage" runat="server" /><br />
                 <asp:Label ID="Label1" Text="Enter a name for the image" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
+                <!-- Image name/title -->
                 <asp:TextBox ID="txtImageName" CssClass="form-control" MaxLength="50" runat="server" /><br />
                 <asp:Label ID="Label2" Text="Enter a caption for the image" CssClass="label label-success" Font-Size="XX-Small" runat="server" />
+                <!-- Image caption -->
                 <asp:TextBox ID="txtImageCaption" CssClass="form-control" MaxLength="50" runat="server" /><br />
+                <!-- Upload button and upload error output -->
                 <asp:Button ID="btnUpload" Text="Upload" CssClass="btn btn-success" OnClick="uploadImage" runat="server" /> 
                 <asp:Label ID="lblUploadError" Text="" CssClass="errorColor" Font-Size="XX-Small" runat="server" />
             </div>
@@ -885,12 +911,15 @@
                             <ItemTemplate>  
                                 <div id="displayImages" class="news well well11" style="text-align:center; padding:2px; color:black;">
                                     <td>
+                                        <!-- Image name/title -->
                                         <asp:Label ID="lblImageTitle" Text='<%# Eval("title") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                     <td>
+                                        <!-- Image (note: 57329 must be changed to whatever the server instance is during deployment) -->
                                         <img src="http://localhost:57329/StaghornSite v2/siteImages/<%# Eval("image")%>" alt="image" height="150" width="150" class="gallery" /><br /><br />
                                     </td>
                                     <td>
+                                        <!-- Image caption -->
                                         <asp:Label ID="lblImageContent" Text='<%# Eval("caption") %>' ForeColor="white" runat="server" /> <br /><br />
                                     </td>
                                 </div>
@@ -906,6 +935,7 @@
                             <li><asp:Label ID="lblPageInfoImage" ForeColor="white" BackColor="darkolivegreen" runat="server" /></li>
                             <li><asp:HyperLink ID="linkNextImage" ForeColor="white" BackColor="darkolivegreen" Font-Bold="true" Font-Underline="false" OnClientClick="return false" runat="server">>></asp:HyperLink></li><br />
                             <asp:Button ID="btnImageDelete" Text="Delete" CssClass="btn btn-success deleteButton" OnClick="deleteImage" runat="server" /><br />
+                            <!-- This is included (and invisible) as it is required to track the id of the image to allow for deletion -->
                             <asp:Label ID="lblCurrentImage" Text="" ForeColor="darkseagreen" runat="server" />
                         </ul><br />
                     </div> 

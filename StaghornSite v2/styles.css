@@ -254,6 +254,11 @@ table tr:nth-child(odd) {
     max-width:100%;
 }
 
+.form-control1 {
+    background-color:darkolivegreen;
+    max-width:60%;
+}
+
 
 /* Modal Header */
 .modal-header {
